@@ -10,6 +10,7 @@
 
 #maven ignore
 target/
+out/
 
 #eclipse ignore
 .settings
@@ -22,7 +23,7 @@ target/
 *.ipr
 *.iml
 *.iws
-/out
+
 
 #temp file
 *.log
