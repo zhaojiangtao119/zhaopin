@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd   
+    http://www.springframework.org/schema/util 
+    http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+    <description>Shiro 配置</description>
+
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="myRealm"/>
+        <property name="sessionMode" value="native">
+        </property>
+    </bean>
+    <!-- 启用shrio授权注解拦截方式 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 装配 securityManager -->
+        <property name="securityManager" ref="securityManager"/>
+        <!-- 配置登陆页面 -->
+        <property name="loginUrl" value="/index.jsp"/>
+        <!-- 登陆成功后的页面-->
+        <property name="successUrl" value="/jsp/success.jsp"/>
+        <!--没有权限跳转的url-->
+        <property name="unauthorizedUrl" value="/jsp/unauthorized.jsp"/>
+        <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截.  -->
+        <property name="filterChainDefinitions">
+            <value>
+
+            </value>
+        </property>
+    </bean>
+
+<!--
+    &lt;!&ndash; 配置进行授权和认证的 Realm &ndash;&gt;
+    <bean id="myRealm" class="com.gray.base.shiro.ShiroDbRealm">
+        <property name="userService" ref="userService"/>
+    </bean>
+    <bean id="userService" class="com.gray.user.service.impl.UserServiceImpl"/>
+    &lt;!&ndash; 配置 Shiro 的 SecurityManager Bean. &ndash;&gt;
+
+    &lt;!&ndash; 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. &ndash;&gt;
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+    -->
+
+</beans>

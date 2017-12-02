@@ -1,26 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.labelwall.mall.dao.UserMapper">
     <resultMap id="BaseResultMap" type="com.labelwall.mall.entity.User">
         <constructor>
-            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-            <arg column="username" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="role" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-            <arg column="school_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="location_province" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="location_city" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
-            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="role" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="school_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="location_province" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="location_city" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
     id, username, password, email, phone, role, school_name, location_province, location_city, 
     create_time, update_time
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from wall_user
@@ -38,7 +38,7 @@
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, 
       #{schoolName,jdbcType=VARCHAR}, #{locationProvince,jdbcType=VARCHAR}, #{locationCity,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+      now(), now())
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.User">
         insert into wall_user
@@ -106,10 +106,10 @@
                 #{locationCity,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
+                now(),
             </if>
             <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
+                now(),
             </if>
         </trim>
     </insert>
@@ -144,7 +144,7 @@
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
+                update_time = now(),
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -160,7 +160,18 @@
       location_province = #{locationProvince,jdbcType=VARCHAR},
       location_city = #{locationCity,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      update_time = now()
     where id = #{id,jdbcType=INTEGER}
-  </update>
+    </update>
+    <select id="checkUsername" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM wall_user
+        WHERE username = #{username}
+    </select>
+    <select id="login" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_user
+        WHERE username = #{username} AND password = #{password}
+    </select>
 </mapper>
