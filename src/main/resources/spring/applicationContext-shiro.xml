@@ -7,28 +7,28 @@
     http://www.springframework.org/schema/util/spring-util-3.0.xsd">
     <description>Shiro 配置</description>
 
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+   <!-- <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="myRealm"/>
         <property name="sessionMode" value="native">
         </property>
     </bean>
-    <!-- 启用shrio授权注解拦截方式 -->
+    &lt;!&ndash; 启用shrio授权注解拦截方式 &ndash;&gt;
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-        <!-- 装配 securityManager -->
+        &lt;!&ndash; 装配 securityManager &ndash;&gt;
         <property name="securityManager" ref="securityManager"/>
-        <!-- 配置登陆页面 -->
+        &lt;!&ndash; 配置登陆页面 &ndash;&gt;
         <property name="loginUrl" value="/index.jsp"/>
-        <!-- 登陆成功后的页面-->
+        &lt;!&ndash; 登陆成功后的页面&ndash;&gt;
         <property name="successUrl" value="/jsp/success.jsp"/>
-        <!--没有权限跳转的url-->
+        &lt;!&ndash;没有权限跳转的url&ndash;&gt;
         <property name="unauthorizedUrl" value="/jsp/unauthorized.jsp"/>
-        <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截.  -->
+        &lt;!&ndash; 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截.  &ndash;&gt;
         <property name="filterChainDefinitions">
             <value>
 
             </value>
         </property>
-    </bean>
+    </bean>-->
 
 <!--
     &lt;!&ndash; 配置进行授权和认证的 Realm &ndash;&gt;

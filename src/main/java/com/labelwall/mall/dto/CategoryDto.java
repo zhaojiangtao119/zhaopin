@@ -1,24 +1,23 @@
 package com.labelwall.mall.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.labelwall.mall.common.web.SessionUser;
-import com.labelwall.mall.entity.User;
+import com.labelwall.mall.entity.Category;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by Administrator on 2017-12-02.
+ * Created by Administrator on 2017-12-04.
  */
-
-public class UserDto extends User implements SessionUser {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class CategoryDto extends Category {
 
     private String createTimeStr;
+
     private String updateTimeStr;
 
-    @JsonIgnore
-    @Override
-    public Integer getUserId() {
-        return this.getId();
-    }
+    private List<CategoryDto> subCategoryList = new ArrayList<>();
+
 
     public String getCreateTimeStr() {
         return createTimeStr;
@@ -34,5 +33,13 @@ public class UserDto extends User implements SessionUser {
 
     public void setUpdateTimeStr(String updateTimeStr) {
         this.updateTimeStr = updateTimeStr;
+    }
+
+    public List<CategoryDto> getSubCategoryList() {
+        return subCategoryList;
+    }
+
+    public void setSubCategoryList(List<CategoryDto> subCategoryList) {
+        this.subCategoryList = subCategoryList;
     }
 }

@@ -6,6 +6,7 @@
             <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
             <arg column="username" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="password" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="head" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="role" javaType="java.lang.Integer" jdbcType="INTEGER"/>
@@ -17,7 +18,7 @@
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
-    id, username, password, email, phone, role, school_name, location_province, location_city, 
+    id, username, password, head,email, phone, role, school_name, location_province, location_city,
     create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -31,11 +32,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.labelwall.mall.entity.User">
-    insert into wall_user (id, username, password, 
+    insert into wall_user (id, username, password, head,
       email, phone, role, 
       school_name, location_province, location_city, 
       create_time, update_time)
-    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{head,jdbcType=VARCHAR},
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, 
       #{schoolName,jdbcType=VARCHAR}, #{locationProvince,jdbcType=VARCHAR}, #{locationCity,jdbcType=VARCHAR}, 
       now(), now())
@@ -51,6 +52,9 @@
             </if>
             <if test="password != null">
                 password,
+            </if>
+            <if test="head != null">
+                head,
             </if>
             <if test="email != null">
                 email,
@@ -87,6 +91,9 @@
             <if test="password != null">
                 #{password,jdbcType=VARCHAR},
             </if>
+            <if test="head != null">
+                #{head,jdbcType=VARCHAR},
+            </if>
             <if test="email != null">
                 #{email,jdbcType=VARCHAR},
             </if>
@@ -122,6 +129,9 @@
             <if test="password != null">
                 password = #{password,jdbcType=VARCHAR},
             </if>
+            <if test="head != null">
+                head = #{password,jdbcType=VARCHAR},
+            </if>
             <if test="email != null">
                 email = #{email,jdbcType=VARCHAR},
             </if>
@@ -143,9 +153,7 @@
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="updateTime != null">
-                update_time = now(),
-            </if>
+            update_time = now(),
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -153,6 +161,7 @@
     update wall_user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
+      head = #{head,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
@@ -173,5 +182,10 @@
         <include refid="Base_Column_List"/>
         FROM wall_user
         WHERE username = #{username} AND password = #{password}
+    </select>
+    <select id="checkEmail" resultType="int" parameterType="string">
+        SELECT COUNT(1)
+        FROM wall_user
+        WHERE email = #{email}
     </select>
 </mapper>

@@ -10,4 +10,9 @@ public interface IUserService {
 
     ResponseObject<UserDto> login(String username,String password);
 
+    ResponseObject register(UserDto userDto);
+
+    ResponseObject checkUsernameEmail(String str, String type);
+
+    ResponseObject modifyUserInfo(UserDto userDto);
 }
