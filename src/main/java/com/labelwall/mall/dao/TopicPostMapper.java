@@ -1,5 +1,6 @@
 package com.labelwall.mall.dao;
 
+import com.labelwall.mall.dto.TopicPostDto;
 import com.labelwall.mall.entity.TopicPost;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,13 +13,13 @@ public interface TopicPostMapper {
 
     int insertSelective(TopicPost record);
 
-    TopicPost selectByPrimaryKey(Integer id);
+    TopicPostDto selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(TopicPost record);
 
     int updateByPrimaryKey(TopicPost record);
 
-    List<TopicPost> getTopicPost(TopicPost topicPost);
+    List<TopicPostDto> getTopicPost(TopicPost topicPost);
 
     int updatePostLike(@Param("topicPostId") Integer topicPostId);
 

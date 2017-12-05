@@ -38,7 +38,7 @@ public class TopicPostServiceImpl implements ITopicPostService {
         if (topicPostDto == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
-        List<TopicPost> topicPostList = topicPostMapper.getTopicPost(topicPostDto);
+        List<TopicPostDto> topicPostList = topicPostMapper.getTopicPost(topicPostDto);
         List<TopicPostDto> topicPostDtoList = Lists.newArrayList();
         for (TopicPost item : topicPostList) {
             TopicPostDto dto = new TopicPostDto();
@@ -101,5 +101,17 @@ public class TopicPostServiceImpl implements ITopicPostService {
             return ResponseObject.successStatusMessage("操作成功");
         }
         return ResponseObject.failStatusMessage("操作失败");
+    }
+
+    @Override
+    public ResponseObject<TopicPostDto> getTopicPostById(Integer topicPostId) {
+        if(topicPostId == null){
+            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        TopicPostDto topicPostDto = topicPostMapper.selectByPrimaryKey(topicPostId);
+        if(topicPostDto != null){
+            return ResponseObject.successStautsData(topicPostDto);
+        }
+        return ResponseObject.failStatusMessage("加载失败");
     }
 }

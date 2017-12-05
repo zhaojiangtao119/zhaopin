@@ -75,4 +75,9 @@ public class TopicController {
         }
         return topicPostService.updatePostLikeDislike(topicPostId, type);
     }
+
+    @RequestMapping(value = "get_topic_post_by_id",method = RequestMethod.GET)
+    public ResponseObject<TopicPostDto> getTopicPostById(@RequestParam(value = "topicPostId")Integer topicPostId){
+        return topicPostService.getTopicPostById(topicPostId);
+    }
 }

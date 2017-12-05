@@ -32,4 +32,11 @@ public interface ITopicPostService {
      * @return
      */
     ResponseObject updatePostLikeDislike(Integer topicPostId,Integer type);
+
+    /**
+     * 根据主键查询
+     * @param topicPostId
+     * @return
+     */
+    ResponseObject<TopicPostDto> getTopicPostById(Integer topicPostId);
 }

@@ -1,22 +1,17 @@
 package com.labelwall.mall.dto;
 
-import com.labelwall.mall.entity.TopicPost;
+import com.labelwall.mall.entity.TopicPostReply;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Administrator on 2017-12-05.
  */
-public class TopicPostDto extends TopicPost {
+public class TopicPostReplyDto extends TopicPostReply {
 
     private String createTimeStr;
     private String updateTimeStr;
-    private String keyword;
     private MultipartFile multipartFile;
     private UserDto userDto;
-
-    public TopicPostDto() {
-        super();
-    }
 
     public String getCreateTimeStr() {
         return createTimeStr;
@@ -32,14 +27,6 @@ public class TopicPostDto extends TopicPost {
 
     public void setUpdateTimeStr(String updateTimeStr) {
         this.updateTimeStr = updateTimeStr;
-    }
-
-    public String getKeyword() {
-        return keyword;
-    }
-
-    public void setKeyword(String keyword) {
-        this.keyword = keyword;
     }
 
     public MultipartFile getMultipartFile() {
