@@ -76,7 +76,11 @@
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="wall_school" domainObjectName="School" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="wall_category" domainObjectName="Category" enableCountByExample="false" enableUpdateByExample="false"
+        <!--<table tableName="wall_category_product" domainObjectName="ProductCategory" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <!--<table tableName="wall_category_topic" domainObjectName="TopicCategory" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="wall_topic_post" domainObjectName="TopicPost" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!-- geelynote mybatis插件的搭建 -->
     </context>

@@ -13,9 +13,13 @@ import com.labelwall.util.MD5Util;
 import com.labelwall.util.PropertiesUtil;
 import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 /**
  * Created by Administrator on 2017-12-02.
@@ -23,6 +27,8 @@ import org.springframework.stereotype.Service;
 @SuppressWarnings("unused")
 @Service("userService")
 public class UserServiceImpl implements IUserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private static final String DEFAULT_USER_HEAD = PropertiesUtil.getProperty("userInfo.head");
 
@@ -111,6 +117,18 @@ public class UserServiceImpl implements IUserService {
         }
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
+        //判断用户是否修改了头像
+        if (userDto.getMultipartFile() != null && userDto.getMultipartFile().getSize() > 0) {
+            //TODO 用户修改了头像，将用户的新头像上传到七牛云存储，是否删除用户的旧头像，
+            try {
+                byte[] userhead = userDto.getMultipartFile().getBytes();
+                String userheadKey = QiniuStorage.uploadUserHead(userhead);
+                user.setHead(userheadKey);
+            } catch (IOException e) {
+                logger.error("用户头像解析图片失败",e);
+                return ResponseObject.failStatusMessage("上传图片失败！");
+            }
+        }
         int rowCountUpdate = userMapper.updateByPrimaryKeySelective(user);
         if (rowCountUpdate == 0) {
             return ResponseObject.failStatusMessage(UserResponseMessage.MODIFY_FAIL.getValue());

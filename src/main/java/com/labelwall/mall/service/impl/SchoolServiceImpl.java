@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Administrator on 2017-12-04.
  */
 @Service("schoolSchool")
-public class SchoolService implements ISchoolService {
+public class SchoolServiceImpl implements ISchoolService {
 
     @Autowired
     private SchoolMapper schoolMapper;

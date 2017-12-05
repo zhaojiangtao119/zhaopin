@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Administrator on 2017-12-04.
  */
 @Service("provinceService")
-public class ProvinceService implements IProvinceService {
+public class ProvinceServiceImpl implements IProvinceService {
 
     @Autowired
     private ProvinceMapper provinceMapper;

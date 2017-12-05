@@ -1,26 +1,17 @@
 package com.labelwall.mall.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.labelwall.mall.common.web.SessionUser;
-import com.labelwall.mall.entity.User;
+import com.labelwall.mall.entity.TopicPost;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * Created by Administrator on 2017-12-02.
+ * Created by Administrator on 2017-12-05.
  */
-
-public class UserDto extends User implements SessionUser {
+public class TopicPostDto extends TopicPost {
 
     private String createTimeStr;
     private String updateTimeStr;
+    private String keyword;
     private MultipartFile multipartFile;
-
-    @JsonIgnore
-    @Override
-    public Integer getUserId() {
-        return this.getId();
-    }
 
     public String getCreateTimeStr() {
         return createTimeStr;
@@ -36,6 +27,14 @@ public class UserDto extends User implements SessionUser {
 
     public void setUpdateTimeStr(String updateTimeStr) {
         this.updateTimeStr = updateTimeStr;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public MultipartFile getMultipartFile() {

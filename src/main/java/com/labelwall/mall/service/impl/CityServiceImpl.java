@@ -14,7 +14,7 @@ import java.util.List;
  * Created by Administrator on 2017-12-04.
  */
 @Service("cityService")
-public class CityService implements ICityService {
+public class CityServiceImpl implements ICityService {
 
     @Autowired
     private CityMapper cityMapper;

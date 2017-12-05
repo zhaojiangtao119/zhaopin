@@ -20,4 +20,8 @@ public class QiniuKeyGenerator {
         return MessageFormat.format(key,"user","head", CommonUtil.getUUID());
     }
 
+    public static String generatorPostImageKey(){
+        return MessageFormat.format(key,"topicPost","image",CommonUtil.getUUID());
+    }
+
 }

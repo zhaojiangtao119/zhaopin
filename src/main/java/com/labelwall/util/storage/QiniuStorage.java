@@ -8,8 +8,17 @@ import org.apache.commons.lang3.StringUtils;
 public class QiniuStorage {
 
     //上传用户头像
-    public static String uoloadUserHead(byte[] buff) {
+    public static String uploadUserHead(byte[] buff) {
         String key = QiniuWrapper.upload(buff, QiniuKeyGenerator.generatorUserHeadKey(), false);
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
+        return key;
+    }
+
+    //上传帖子的图片
+    public static String uploadPostImage(byte[] buff) {
+        String key = QiniuWrapper.upload(buff, QiniuKeyGenerator.generatorPostImageKey(), false);
         if (StringUtils.isBlank(key)) {
             return null;
         }

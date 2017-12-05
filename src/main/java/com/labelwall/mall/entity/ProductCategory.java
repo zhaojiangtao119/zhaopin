@@ -2,7 +2,7 @@ package com.labelwall.mall.entity;
 
 import java.util.Date;
 
-public class Category {
+public class ProductCategory {
     private Integer id;
 
     private Integer parentId;
@@ -17,7 +17,7 @@ public class Category {
 
     private Date updateTime;
 
-    public Category(Integer id, Integer parentId, String name, Boolean status, Integer sortOrder, Date createTime, Date updateTime) {
+    public ProductCategory(Integer id, Integer parentId, String name, Boolean status, Integer sortOrder, Date createTime, Date updateTime) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
@@ -27,7 +27,7 @@ public class Category {
         this.updateTime = updateTime;
     }
 
-    public Category() {
+    public ProductCategory() {
         super();
     }
 

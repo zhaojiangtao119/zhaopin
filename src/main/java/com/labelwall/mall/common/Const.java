@@ -16,4 +16,8 @@ public class Const {
         int ROLE_CUSTOMER = 1;
     }
 
+    public interface PostClickType {
+        Integer LIKE_CLICK = 0;
+        Integer DISLIKE_CLICK = 1;
+    }
 }

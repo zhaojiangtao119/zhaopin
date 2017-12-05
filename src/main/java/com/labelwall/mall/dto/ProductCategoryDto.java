@@ -1,7 +1,7 @@
 package com.labelwall.mall.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.labelwall.mall.entity.Category;
+import com.labelwall.mall.entity.ProductCategory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +10,13 @@ import java.util.List;
  * Created by Administrator on 2017-12-04.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CategoryDto extends Category {
+public class ProductCategoryDto extends ProductCategory {
 
     private String createTimeStr;
 
     private String updateTimeStr;
 
-    private List<CategoryDto> subCategoryList = new ArrayList<>();
+    private List<ProductCategoryDto> subCategoryList = new ArrayList<>();
 
 
     public String getCreateTimeStr() {
@@ -35,11 +35,11 @@ public class CategoryDto extends Category {
         this.updateTimeStr = updateTimeStr;
     }
 
-    public List<CategoryDto> getSubCategoryList() {
+    public List<ProductCategoryDto> getSubCategoryList() {
         return subCategoryList;
     }
 
-    public void setSubCategoryList(List<CategoryDto> subCategoryList) {
+    public void setSubCategoryList(List<ProductCategoryDto> subCategoryList) {
         this.subCategoryList = subCategoryList;
     }
 }
