@@ -10,6 +10,8 @@ import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.DateTimeUtil;
 import com.labelwall.util.MD5Util;
+import com.labelwall.util.PropertiesUtil;
+import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ import org.springframework.stereotype.Service;
 @SuppressWarnings("unused")
 @Service("userService")
 public class UserServiceImpl implements IUserService {
+
+    private static final String DEFAULT_USER_HEAD = PropertiesUtil.getProperty("userInfo.head");
 
     @Autowired
     private UserMapper userMapper;
@@ -40,15 +44,17 @@ public class UserServiceImpl implements IUserService {
             return ResponseObject.failStatusMessage(UserResponseMessage.PASSWORD_ERROR.getValue());
         }
         UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user, userDto);
         userDto.setCreateTimeStr(DateTimeUtil.dateToStr(user.getCreateTime()));
         userDto.setUpdateTimeStr(DateTimeUtil.dateToStr(user.getUpdateTime()));
-        BeanUtils.copyProperties(user, userDto);
         userDto.setPassword(StringUtils.EMPTY);
         userDto.setCreateTime(null);
         userDto.setUpdateTime(null);
-        if(StringUtils.isBlank(userDto.getHead())){
-            //TODO 如果用户头像为null设置一个默认的头像给用户
-            userDto.setHead("默认的头像");
+        if (StringUtils.isBlank(userDto.getHead())) {
+            //如果用户头像为null设置一个默认的头像给用户getUserHeadUrl
+            userDto.setHead(QiniuStorage.getUserHeadUrl(DEFAULT_USER_HEAD));
+        } else {
+            userDto.setHead(QiniuStorage.getUserHeadUrl(userDto.getHead()));
         }
         return ResponseObject.success(UserResponseMessage.SUCCESS.getValue(), userDto);
     }
@@ -66,6 +72,7 @@ public class UserServiceImpl implements IUserService {
         }
         userDto.setRole(Const.Role.ROLE_CUSTOMER);
         userDto.setPassword(MD5Util.MD5EncodeUtf8(userDto.getPassword()));
+        userDto.setHead(DEFAULT_USER_HEAD);
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
         int rowCount = userMapper.insert(user);

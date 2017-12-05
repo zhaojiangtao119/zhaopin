@@ -52,28 +52,29 @@ public class CategoryService implements ICategoryService {
         return ResponseObject.successStautsData(categoryDtoList);
     }
 
-    //获取当前品类和其子品类(递归获取)的id
+
     @Override
-    public ResponseObject<List<Integer>> getCategoryAndChildrenByCategoryId(Integer categoryId){
+    public ResponseObject<List<Integer>> getCategoryAndChildrenByCategoryId(Integer categoryId) {
         Set<Category> categorySet = Sets.newHashSet();
-        findChildrenCategoryList(categorySet,categoryId);
+        findChildrenCategoryList(categorySet, categoryId);
         List<Integer> categoryIdList = Lists.newArrayList();
-        if(categoryId != null){
-            for(Category item : categorySet){
+        if (categoryId != null) {
+            for (Category item : categorySet) {
                 categoryIdList.add(item.getId());
             }
         }
         return ResponseObject.successStautsData(categoryIdList);
     }
 
+    //获取当前品类和其子品类(递归获取)的id
     private Set<Category> findChildrenCategoryList(Set<Category> categorySet, Integer categoryId) {
         Category category = categoryMapper.selectByPrimaryKey(categoryId);
-        if(category != null){
+        if (category != null) {
             categorySet.add(category);
         }
         List<Category> categoryList = categoryMapper.getCategoryChildrenByParentId(categoryId);
-        for(Category item : categoryList){
-            findChildrenCategoryList(categorySet,item.getId());
+        for (Category item : categoryList) {
+            findChildrenCategoryList(categorySet, item.getId());
         }
         return categorySet;
     }

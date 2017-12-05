@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.Properties;
 
 /**
- * Created by Administrator on 2017-12-02. 读取系统配置文件属性工具类
+ * Created by Administrator on 2017-12-02. 读取系统配置文件(labelwall.properties)属性工具类
  */
 public class PropertiesUtil {
 
