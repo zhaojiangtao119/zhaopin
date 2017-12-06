@@ -136,4 +136,31 @@ public class UserServiceImpl implements IUserService {
         }
         return ResponseObject.success(UserResponseMessage.MODIFY_SUCCESS.getValue(), userDto);
     }
+
+    @Override
+    public ResponseObject restPassword(Integer id, String passwordOld, String passwordNew) {
+        if(id == null || StringUtils.isBlank(passwordOld) || StringUtils.isBlank(passwordNew)){
+            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //判断旧密码是正确
+        User user = userMapper.selectByPrimaryKey(id);
+        if(user == null){
+            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //对旧密码加密
+        String md5PasswordOld = MD5Util.MD5EncodeUtf8(passwordOld);
+        if(!md5PasswordOld.equals(user.getPassword())){
+            return ResponseObject.failStatusMessage("旧密码不正确");
+        }
+        if(passwordOld.equals(passwordNew)){
+            return ResponseObject.failStatusMessage("新密码与旧密码不能相同");
+        }
+        //将新密码设置进去
+        String md5PasswordNew = MD5Util.MD5EncodeUtf8(passwordNew);
+        int rowCount = userMapper.restPassword(id,md5PasswordNew);
+        if(rowCount > 0){
+            return ResponseObject.successStatusMessage("修改成功");
+        }
+        return ResponseObject.failStatusMessage("修改失败");
+    }
 }

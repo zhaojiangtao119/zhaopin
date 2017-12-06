@@ -35,8 +35,19 @@ public interface IUserService {
 
     /**
      * 修改用户信息
+     *
      * @param userDto
      * @return
      */
     ResponseObject modifyUserInfo(UserDto userDto);
+
+    /**
+     * 登录后的重置密码
+     *
+     * @param id
+     * @param passwordOld
+     * @param passwordNew
+     * @return
+     */
+    ResponseObject restPassword(Integer id, String passwordOld, String passwordNew);
 }

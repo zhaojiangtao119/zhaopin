@@ -124,5 +124,18 @@ public class UserController {
         return response;
     }
 
-    
+    //登录后修改用户密码
+    @RequestMapping(value = "reset_password", method = RequestMethod.POST)
+    public ResponseObject resetPassword(@RequestParam("passwordOld") String passwordOld,
+                                        @RequestParam("passwordNew") String passwordNew,
+                                        HttpSession session) {
+        //判断用户是否登录
+        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+        if (userDto == null) {
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
+        }
+        return userService.restPassword(userDto.getId(),passwordOld,passwordNew);
+
+    }
+
 }

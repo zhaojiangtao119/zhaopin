@@ -188,4 +188,9 @@
         FROM wall_user
         WHERE email = #{email}
     </select>
+    <update id="restPassword" parameterType="map">
+        UPDATE wall_user
+        set password = #{passwordNew}
+        WHERE id = #{userId}
+    </update>
 </mapper>
