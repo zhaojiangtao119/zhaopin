@@ -39,4 +39,11 @@ public interface ITopicPostService {
      * @return
      */
     ResponseObject<TopicPostDto> getTopicPostById(Integer topicPostId);
+
+    /**
+     * 修改帖子的回复数量
+     * @param topicPostId
+     * @return
+     */
+    int updatePostRelpyNum(Integer topicPostId);
 }

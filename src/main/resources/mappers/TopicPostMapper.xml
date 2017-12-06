@@ -29,6 +29,7 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
+            <result column="userId" property="id" jdbcType="INTEGER"/>
             <result column="username" property="username" jdbcType="VARCHAR"/>
             <result column="head" property="head" jdbcType="VARCHAR"/>
             <result column="school_name" property="schoolName" jdbcType="VARCHAR"/>
@@ -44,7 +45,7 @@
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
-              wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
+              wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
         WHERE wtp.user_id = wu.id AND wtp.id = #{id,jdbcType=INTEGER}
     </select>
@@ -190,7 +191,7 @@
       </update>
     <select id="getTopicPost" resultMap="BaseResultMap" parameterType="com.labelwall.mall.dto.TopicPostDto">
         SELECT wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
-              wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
+            wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
         WHERE wtp.user_id = wu.id
         <if test="keyword != null">
@@ -224,6 +225,11 @@
     <update id="updatePostDislike" parameterType="int">
         UPDATE wall_topic_post
         SET dislike_num = dislike_num + 1
+        WHERE id = #{topicPostId}
+    </update>
+    <update id="updatePostRelpyNum" parameterType="int">
+        UPDATE wall_topic_post
+        SET reply_num = reply_num + 1
         WHERE id = #{topicPostId}
     </update>
 </mapper>

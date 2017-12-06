@@ -30,8 +30,6 @@ public class UserServiceImpl implements IUserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private static final String DEFAULT_USER_HEAD = PropertiesUtil.getProperty("userInfo.head");
-
     @Autowired
     private UserMapper userMapper;
 
@@ -58,7 +56,7 @@ public class UserServiceImpl implements IUserService {
         userDto.setUpdateTime(null);
         if (StringUtils.isBlank(userDto.getHead())) {
             //如果用户头像为null设置一个默认的头像给用户getUserHeadUrl
-            userDto.setHead(QiniuStorage.getUserHeadUrl(DEFAULT_USER_HEAD));
+            userDto.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
         } else {
             userDto.setHead(QiniuStorage.getUserHeadUrl(userDto.getHead()));
         }
@@ -78,7 +76,7 @@ public class UserServiceImpl implements IUserService {
         }
         userDto.setRole(Const.Role.ROLE_CUSTOMER);
         userDto.setPassword(MD5Util.MD5EncodeUtf8(userDto.getPassword()));
-        userDto.setHead(DEFAULT_USER_HEAD);
+        userDto.setHead(Const.DEFAULT_USER_HEAD);
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
         int rowCount = userMapper.insert(user);
@@ -125,13 +123,16 @@ public class UserServiceImpl implements IUserService {
                 String userheadKey = QiniuStorage.uploadUserHead(userhead);
                 user.setHead(userheadKey);
             } catch (IOException e) {
-                logger.error("用户头像解析图片失败",e);
+                logger.error("用户头像解析图片失败", e);
                 return ResponseObject.failStatusMessage("上传图片失败！");
             }
         }
         int rowCountUpdate = userMapper.updateByPrimaryKeySelective(user);
         if (rowCountUpdate == 0) {
             return ResponseObject.failStatusMessage(UserResponseMessage.MODIFY_FAIL.getValue());
+        }
+        if (userDto.getHead() != null) {
+            userDto.setHead(QiniuStorage.getUserHeadUrl(userDto.getHead()));
         }
         return ResponseObject.success(UserResponseMessage.MODIFY_SUCCESS.getValue(), userDto);
     }

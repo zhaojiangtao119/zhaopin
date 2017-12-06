@@ -24,4 +24,6 @@ public interface TopicPostMapper {
     int updatePostLike(@Param("topicPostId") Integer topicPostId);
 
     int updatePostDislike(@Param("topicPostId") Integer topicPostId);
+
+    int updatePostRelpyNum(Integer topicPostId);
 }

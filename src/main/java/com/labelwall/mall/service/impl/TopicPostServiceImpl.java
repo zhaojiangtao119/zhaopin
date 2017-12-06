@@ -38,16 +38,22 @@ public class TopicPostServiceImpl implements ITopicPostService {
         if (topicPostDto == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
-        List<TopicPostDto> topicPostList = topicPostMapper.getTopicPost(topicPostDto);
-        List<TopicPostDto> topicPostDtoList = Lists.newArrayList();
-        for (TopicPost item : topicPostList) {
-            TopicPostDto dto = new TopicPostDto();
-            BeanUtils.copyProperties(item, dto);
-            dto.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
-            dto.setUpdateTimeStr(DateTimeUtil.dateToStr(item.getUpdateTime()));
-            dto.setCreateTime(null);
-            dto.setUpdateTime(null);
-            topicPostDtoList.add(dto);
+        List<TopicPostDto> topicPostDtoList = topicPostMapper.getTopicPost(topicPostDto);
+        for (TopicPostDto item : topicPostDtoList) {
+            item.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
+            item.setUpdateTimeStr(DateTimeUtil.dateToStr(item.getUpdateTime()));
+            item.setCreateTime(null);
+            item.setUpdateTime(null);
+            //加载帖子图片
+            if (item.getImage() != null) {
+                item.setImage(QiniuStorage.getUrl(item.getImage()));
+            }
+            //加载用户头像
+            if (item.getUserDto().getHead() != null) {
+                item.getUserDto().setHead(QiniuStorage.getUserHeadUrl(item.getUserDto().getHead()));
+            } else {
+                item.getUserDto().setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
+            }
         }
         PageInfo pageInfo = new PageInfo(topicPostDtoList);
         return ResponseObject.successStautsData(pageInfo);
@@ -72,13 +78,21 @@ public class TopicPostServiceImpl implements ITopicPostService {
         int rowCount = topicPostMapper.insertSelective(topicPost);
         if (rowCount > 0) {
             //新增成功，获取新增的数据
-            TopicPost topicPostNew = topicPostMapper.selectByPrimaryKey(topicPost.getId());
-            TopicPostDto topicPostDtoNew = new TopicPostDto();
-            BeanUtils.copyProperties(topicPostNew, topicPostDtoNew);
+            TopicPostDto topicPostDtoNew = topicPostMapper.selectByPrimaryKey(topicPost.getId());
             topicPostDtoNew.setCreateTimeStr(DateTimeUtil.dateToStr(topicPostDtoNew.getCreateTime()));
             topicPostDtoNew.setUpdateTimeStr(DateTimeUtil.dateToStr(topicPostDtoNew.getUpdateTime()));
             topicPostDtoNew.setCreateTime(null);
             topicPostDtoNew.setUpdateTime(null);
+            //获取图片
+            if (topicPostDtoNew.getImage() != null) {
+                topicPostDtoNew.setImage(QiniuStorage.getUrl(topicPostDtoNew.getImage()));
+            }
+            //加载用户头像
+            if (topicPostDtoNew.getUserDto().getHead() != null) {
+                topicPostDtoNew.getUserDto().setHead(QiniuStorage.getUserHeadUrl(topicPostDtoNew.getUserDto().getHead()));
+            } else {
+                topicPostDtoNew.getUserDto().setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
+            }
             return ResponseObject.successStautsData(topicPostDtoNew);
         }
         return ResponseObject.failStatusMessage("发表失败");
@@ -105,13 +119,28 @@ public class TopicPostServiceImpl implements ITopicPostService {
 
     @Override
     public ResponseObject<TopicPostDto> getTopicPostById(Integer topicPostId) {
-        if(topicPostId == null){
+        if (topicPostId == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         TopicPostDto topicPostDto = topicPostMapper.selectByPrimaryKey(topicPostId);
-        if(topicPostDto != null){
+        if (topicPostDto != null) {
+            //加载帖子图片
+            if (topicPostDto.getImage() != null) {
+                topicPostDto.setImage(QiniuStorage.getUrl(topicPostDto.getImage()));
+            }
+            //加载用户头像
+            if (topicPostDto.getUserDto().getHead() != null) {
+                topicPostDto.getUserDto().setHead(QiniuStorage.getUserHeadUrl(topicPostDto.getUserDto().getHead()));
+            } else {
+                topicPostDto.getUserDto().setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
+            }
             return ResponseObject.successStautsData(topicPostDto);
         }
         return ResponseObject.failStatusMessage("加载失败");
+    }
+
+    @Override
+    public int updatePostRelpyNum(Integer topicPostId) {
+        return topicPostMapper.updatePostRelpyNum(topicPostId);
     }
 }

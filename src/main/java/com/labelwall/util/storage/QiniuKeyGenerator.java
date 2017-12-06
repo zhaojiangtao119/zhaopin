@@ -24,4 +24,8 @@ public class QiniuKeyGenerator {
         return MessageFormat.format(key,"topicPost","image",CommonUtil.getUUID());
     }
 
+    public static String generatorReplyImageKey(){
+        return MessageFormat.format(key,"topicPostReply","image",CommonUtil.getUUID());
+    }
+
 }

@@ -12,6 +12,7 @@
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
+            <result column="userId" property="id" jdbcType="INTEGER"/>
             <result column="username" property="username" jdbcType="VARCHAR"/>
             <result column="head" property="head" jdbcType="VARCHAR"/>
             <result column="school_name" property="schoolName" jdbcType="VARCHAR"/>
@@ -24,10 +25,10 @@
     id, user_id, topic_post_id, image,content, like_num, dislike_num, create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-        select
-        <include refid="Base_Column_List"/>
-        from wall_topic_post_reply
-        where id = #{id,jdbcType=INTEGER}
+        SELECT wtpr.id,wtpr.user_id,wtpr.topic_post_id, wtpr.image,wtpr.content,wtpr.like_num,wtpr.dislike_num,wtpr.create_time,wtpr.update_time,
+              wu.id userId,wu.username,wu.school_name,wu.head,wu.location_province,wu.location_city
+        FROM wall_topic_post_reply wtpr,wall_user wu
+        WHERE wtpr.user_id = wu.id AND wtpr.id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from wall_topic_post_reply
@@ -40,10 +41,10 @@
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{topicPostId,jdbcType=INTEGER}, 
       #{image,jdbcType=VARCHAR}, #{likeNum,jdbcType=INTEGER}, #{dislikeNum,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{content,jdbcType=VARCHAR}
+      #{createTime,jdbcType=TIMESTAMP}, now(), now()
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.TopicPostReply">
+    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.TopicPostReply" useGeneratedKeys="true" keyProperty="id">
         insert into wall_topic_post_reply
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -64,12 +65,8 @@
             <if test="dislikeNum != null">
                 dislike_num,
             </if>
-            <if test="createTime != null">
                 create_time,
-            </if>
-            <if test="updateTime != null">
                 update_time,
-            </if>
             <if test="content != null">
                 content,
             </if>
@@ -93,12 +90,8 @@
             <if test="dislikeNum != null">
                 #{dislikeNum,jdbcType=INTEGER},
             </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
-            </if>
+              now(),
+              now(),
             <if test="content != null">
                 #{content,jdbcType=VARCHAR},
             </if>
@@ -125,9 +118,7 @@
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
-            </if>
+                update_time = now(),
             <if test="content != null">
                 content = #{content,jdbcType=VARCHAR},
             </if>
@@ -142,8 +133,24 @@
           content = #{content,jdbcType=VARCHAR}
           like_num = #{likeNum,jdbcType=INTEGER},
           dislike_num = #{dislikeNum,jdbcType=INTEGER},
-          create_time = #{createTime,jdbcType=TIMESTAMP},
-          update_time = #{updateTime,jdbcType=TIMESTAMP}
+          update_time = now()
         where id = #{id,jdbcType=INTEGER}
+    </update>
+    <select id="getTopicReplyByPostId" resultMap="BaseResultMap" parameterType="int">
+        SELECT wtpr.id,wtpr.image,wtpr.content,wtpr.like_num,wtpr.dislike_num,wtpr.create_time,
+              wu.id userId,wu.username,wu.school_name,wu.head,wu.location_province,wu.location_city
+        FROM wall_topic_post_reply wtpr,wall_user wu
+        WHERE wtpr.user_id = wu.id AND wtpr.topic_post_id = #{postId}
+        ORDER BY wtpr.like_num DESC,wtpr.create_time DESC
+    </select>
+    <update id="updatePostReplyLike" parameterType="int">
+        UPDATE wall_topic_post_reply
+        SET like_num = like_num + 1
+        WHERE id = #{postReplyId}
+    </update>
+    <update id="updatePostReplyDislike" parameterType="int">
+        UPDATE wall_topic_post_reply
+        SET dislike_num = dislike_num + 1
+        WHERE id = #{postReplyId}
     </update>
 </mapper>

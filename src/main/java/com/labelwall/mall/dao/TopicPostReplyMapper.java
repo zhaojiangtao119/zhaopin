@@ -1,6 +1,10 @@
 package com.labelwall.mall.dao;
 
+import com.labelwall.mall.dto.TopicPostReplyDto;
 import com.labelwall.mall.entity.TopicPostReply;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TopicPostReplyMapper {
     int deleteByPrimaryKey(Integer id);
@@ -9,11 +13,15 @@ public interface TopicPostReplyMapper {
 
     int insertSelective(TopicPostReply record);
 
-    TopicPostReply selectByPrimaryKey(Integer id);
+    TopicPostReplyDto selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(TopicPostReply record);
 
-    int updateByPrimaryKeyWithBLOBs(TopicPostReply record);
-
     int updateByPrimaryKey(TopicPostReply record);
+
+    List<TopicPostReplyDto> getTopicReplyByPostId(Integer postId);
+
+    int updatePostReplyLike(@Param("postReplyId") Integer postReplyId);
+
+    int updatePostReplyDislike(@Param("postReplyId") Integer postReplyId);
 }

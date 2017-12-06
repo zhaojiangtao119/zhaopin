@@ -24,6 +24,14 @@ public class QiniuStorage {
         }
         return key;
     }
+    //上传回复的图片
+    public static String uploadReplyImage(byte[] buff){
+        String key = QiniuWrapper.upload(buff, QiniuKeyGenerator.generatorReplyImageKey(), false);
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
+        return key;
+    }
 
     public static String getUserHeadUrl(String key){
         return QiniuWrapper.getUrl(key,ThumbModel.THUMB_64.getValue());

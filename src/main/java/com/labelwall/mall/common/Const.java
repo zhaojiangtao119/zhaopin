@@ -1,9 +1,13 @@
 package com.labelwall.mall.common;
 
+import com.labelwall.util.PropertiesUtil;
+
 /**
  * Created by Administrator on 2017-12-04.
  */
 public class Const {
+
+    public static final String DEFAULT_USER_HEAD = PropertiesUtil.getProperty("userInfo.head");
 
     public static final String CURRENT_USER = "courrent_user";
 
