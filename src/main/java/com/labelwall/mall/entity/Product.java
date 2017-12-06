@@ -6,6 +6,8 @@ import java.util.Date;
 public class Product {
     private Integer id;
 
+    private Integer categoryId;
+
     private String name;
 
     private String subtitle;
@@ -28,8 +30,9 @@ public class Product {
 
     private Date updateTime;
 
-    public Product(Integer id, String name, String subtitle, String mainImage, String subImages, String detail, BigDecimal price, Integer stock, Integer status, Integer shopId, Date createTime, Date updateTime) {
+    public Product(Integer id, Integer categoryId, String name, String subtitle, String mainImage, String subImages, String detail, BigDecimal price, Integer stock, Integer status, Integer shopId, Date createTime, Date updateTime) {
         this.id = id;
+        this.categoryId = categoryId;
         this.name = name;
         this.subtitle = subtitle;
         this.mainImage = mainImage;
@@ -53,6 +56,14 @@ public class Product {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {

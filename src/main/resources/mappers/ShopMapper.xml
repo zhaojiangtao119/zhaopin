@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.labelwall.mall.dao.ShopMapper" >
-  <resultMap id="BaseResultMap" type="com.labelwall.mall.entity.Shop" >
-    <constructor >
-      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="description" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="product_category_id" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="status" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="level" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-    </constructor>
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.labelwall.mall.dao.ShopMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.mall.dto.ShopDto">
+        <id property="id" column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="name" column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="description" column="description" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="productCategoryId" column="product_category_id" jdbcType="INTEGER"
+                javaType="java.lang.Integer"/>
+        <result property="status" column="status" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="level" column="level" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="createTimeStr" column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="updateTimeStr" column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
+            <result property="id" column="userId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <result property="username" column="username" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="head" column="head" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="schoolName" column="school_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="locationProvince" column="location_province" jdbcType="VARCHAR"
+                    javaType="java.lang.String"/>
+            <result property="locationCity" column="location_city" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, user_id, name, description, product_category_id, status, level, create_time, 
     update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from wall_shop
-    where id = #{id,jdbcType=INTEGER}
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select  ws.id,ws.user_id,ws.name,ws.description,ws.product_category_id,ws.status,ws.level,ws.create_time,ws.update_time,
+            DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+            wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
+    from wall_shop ws,wall_user wu
+    where  ws.user_id = wu.id AND ws.id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from wall_shop
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.labelwall.mall.entity.Shop" >
+    <insert id="insert" parameterType="com.labelwall.mall.entity.Shop">
     insert into wall_shop (id, user_id, name, 
       description, product_category_id, status, 
       level, create_time, update_time
@@ -38,98 +49,98 @@
       #{level,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Shop" >
-    insert into wall_shop
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="description != null" >
-        description,
-      </if>
-      <if test="productCategoryId != null" >
-        product_category_id,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="level != null" >
-        level,
-      </if>
-      <if test="createTime != null" >
-        create_time,
-      </if>
-      <if test="updateTime != null" >
-        update_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="productCategoryId != null" >
-        #{productCategoryId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="level != null" >
-        #{level,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Shop" >
-    update wall_shop
-    <set >
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null" >
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="productCategoryId != null" >
-        product_category_id = #{productCategoryId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="level != null" >
-        level = #{level,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.labelwall.mall.entity.Shop" >
+    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Shop">
+        insert into wall_shop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="productCategoryId != null">
+                product_category_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="level != null">
+                level,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="productCategoryId != null">
+                #{productCategoryId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                #{level,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Shop">
+        update wall_shop
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="productCategoryId != null">
+                product_category_id = #{productCategoryId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="level != null">
+                level = #{level,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.labelwall.mall.entity.Shop">
     update wall_shop
     set user_id = #{userId,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
@@ -141,4 +152,27 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="getShopList" parameterType="com.labelwall.mall.dto.ShopDto" resultMap="BaseResultMap">
+        SELECT
+        ws.id,ws.user_id,ws.name,ws.description,ws.product_category_id,ws.status,ws.level,ws.create_time,ws.update_time,
+        DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%I:%S')
+        update_time_str,
+        wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
+        FROM wall_shop ws,wall_user wu
+        <where>
+            ws.user_id = wu.id AND ws.id = #{id,jdbcType=INTEGER}
+            <if test="keyword != null">
+                AND ws.name like CONCAT('%',#{keyword},'%') OR ws.description like CONCAT('%',#{keyword},'%')
+            </if>
+            <if test="productCategoryId != null">
+                AND ws.product_category_id = #{productCategoryId}
+            </if>
+            <if test="userId != null">
+                AND ws.user_id = #{userId}
+            </if>
+            <if test="level != null">
+                AND ws.level &gt;= #{level}
+            </if>
+        </where>
+    </select>
 </mapper>

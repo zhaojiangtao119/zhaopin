@@ -7,6 +7,7 @@ import com.qiniu.storage.BucketManager;
 import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
+import com.qiniu.storage.model.FileInfo;
 import com.qiniu.util.Auth;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -127,4 +128,16 @@ public class QiniuWrapper {
         return flag;
     }
 
+    public static boolean fileIsExist(String key) {
+        boolean flag = false;
+        try {
+            FileInfo fileInfo = bucketManager.stat(bucketName,key);
+            if(fileInfo.hash != null){
+                flag = true;
+            }
+        } catch (QiniuException e) {
+            logger.error("七牛查询文件是否存在失败",e);
+        }
+        return flag;
+    }
 }

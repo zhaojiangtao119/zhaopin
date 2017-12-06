@@ -1,5 +1,6 @@
 package com.labelwall.mall.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.dto.ProductCategoryDto;
 import com.labelwall.mall.dto.ProductDto;
@@ -38,16 +39,27 @@ public class ProductController {
     }
 
     /**
+     * 获取商品列表，查询条件（category_id,shop_id,keyword,price）
      *
      * @param productDto
      * @param pageNum
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "get_product_list",method = RequestMethod.POST)
-    public ResponseObject<List<ProductDto>> getProductList(ProductDto productDto,
-                                                           @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
-                                                           @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize){
-        return productService.getProductList(productDto,pageNum,pageSize);
+    @RequestMapping(value = "get_product_list", method = RequestMethod.POST)
+    public ResponseObject<PageInfo> getProductList(ProductDto productDto,
+                                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                                   @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        return productService.getProductList(productDto, pageNum, pageSize);
+    }
+
+    /**
+     * 根据id获取商品详情
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "get_product_detail", method = RequestMethod.GET)
+    public ResponseObject<ProductDto> getProductDetail(@RequestParam(value = "productId") Integer productId) {
+        return productService.getProductDetail(productId);
     }
 }

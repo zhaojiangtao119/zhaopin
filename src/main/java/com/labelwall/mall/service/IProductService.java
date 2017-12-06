@@ -1,5 +1,6 @@
 package com.labelwall.mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.dto.ProductDto;
 
@@ -10,6 +11,7 @@ import java.util.List;
  */
 public interface IProductService {
 
-    ResponseObject<List<ProductDto>> getProductList(ProductDto productDto, Integer pageNum, Integer pageSize);
+    ResponseObject<PageInfo> getProductList(ProductDto productDto, Integer pageNum, Integer pageSize);
 
+    ResponseObject<ProductDto> getProductDetail(Integer productId);
 }

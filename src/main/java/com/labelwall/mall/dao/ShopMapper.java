@@ -1,6 +1,9 @@
 package com.labelwall.mall.dao;
 
+import com.labelwall.mall.dto.ShopDto;
 import com.labelwall.mall.entity.Shop;
+
+import java.util.List;
 
 public interface ShopMapper {
     int deleteByPrimaryKey(Integer id);
@@ -9,9 +12,11 @@ public interface ShopMapper {
 
     int insertSelective(Shop record);
 
-    Shop selectByPrimaryKey(Integer id);
+    ShopDto selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(Shop record);
 
     int updateByPrimaryKey(Shop record);
+
+    List<ShopDto> getShopList(ShopDto shopDto);
 }

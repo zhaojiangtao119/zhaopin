@@ -1,7 +1,9 @@
 package com.labelwall.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.mall.common.ResponseStatus;
 import com.labelwall.mall.dao.ProductMapper;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductService;
@@ -20,9 +22,24 @@ public class ProductServiceImpl implements IProductService {
     private ProductMapper productMapper;
 
     @Override
-    public ResponseObject<List<ProductDto>> getProductList(ProductDto productDto, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
+    public ResponseObject<PageInfo> getProductList(ProductDto productDto, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<ProductDto> productDtoList = productMapper.getProductList(productDto);
-        return null;
+        //TODO 商品图片的转化
+
+        PageInfo pageInfo = new PageInfo(productDtoList);
+        return ResponseObject.successStautsData(pageInfo);
+    }
+
+    @Override
+    public ResponseObject<ProductDto> getProductDetail(Integer productId) {
+        if (productId == null) {
+            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        ProductDto productDto = productMapper.selectByPrimaryKey(productId);
+        if (productDto != null) {
+            return ResponseObject.successStautsData(productDto);
+        }
+        return ResponseObject.failStatusMessage("获取失败");
     }
 }

@@ -177,10 +177,10 @@ public class TopicController {
                                                      @RequestParam("clickType") Integer type,
                                                      HttpSession session) {
         //TODO 回复的like/dislike 判断是否登录
-        /*UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
             return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }*/
+        }
         return topicPostReplyService.updatePostReplyLikeDislike(topicPostReplyId, type);
     }
 }

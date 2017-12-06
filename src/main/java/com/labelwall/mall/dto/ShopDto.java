@@ -1,19 +1,16 @@
 package com.labelwall.mall.dto;
 
-import com.labelwall.mall.entity.Product;
 import com.labelwall.mall.entity.Shop;
 
 /**
  * Created by Administrator on 2017-12-06.
  */
-public class ProductDto extends Product {
+public class ShopDto extends Shop {
 
     private String createTimeStr;
     private String updateTimeStr;
     private String keyword;
-    private Shop shop;
-    private double minPrice;
-    private double maxPrice;
+    private UserDto userDto;
 
     public String getCreateTimeStr() {
         return createTimeStr;
@@ -39,27 +36,11 @@ public class ProductDto extends Product {
         this.keyword = keyword;
     }
 
-    public Shop getShop() {
-        return shop;
+    public UserDto getUserDto() {
+        return userDto;
     }
 
-    public void setShop(Shop shop) {
-        this.shop = shop;
-    }
-
-    public double getMinPrice() {
-        return minPrice;
-    }
-
-    public void setMinPrice(double minPrice) {
-        this.minPrice = minPrice;
-    }
-
-    public double getMaxPrice() {
-        return maxPrice;
-    }
-
-    public void setMaxPrice(double maxPrice) {
-        this.maxPrice = maxPrice;
+    public void setUserDto(UserDto userDto) {
+        this.userDto = userDto;
     }
 }

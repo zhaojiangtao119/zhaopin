@@ -3,6 +3,7 @@
 <mapper namespace="com.labelwall.mall.dao.ProductMapper">
     <resultMap id="BaseResultMap" type="com.labelwall.mall.dto.ProductDto">
         <id property="id" column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="name" column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="subtitle" column="subtitle" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="mainImage" column="main_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
@@ -23,10 +24,10 @@
         </association>
     </resultMap>
     <sql id="Base_Column_List">
-      id, name, subtitle, main_image,sub_image,detail, price, stock, status, shop_id, create_time, update_time
+      id,category_id, name, subtitle, main_image,sub_image,detail, price, stock, status, shop_id, create_time, update_time
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-        SELECT wp.id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
+        SELECT wp.id,wp.category_id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
         DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
           ws.name shopName,ws.level
         FROM wall_product wp,wall_shop ws
@@ -37,12 +38,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.labelwall.mall.entity.Product">
-    insert into wall_product (id, name, subtitle, 
+    insert into wall_product (id, category_id,name, subtitle,
       main_image, price, stock, 
       status, shop_id, create_time, 
       update_time, sub_image, detail
       )
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER},#{categoryId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR},
       #{mainImage,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{stock,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{subImage,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}
@@ -53,6 +54,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
+            </if>
+            <if test="categoryId != null">
+                category_id,
             </if>
             <if test="name != null">
                 name,
@@ -92,6 +96,9 @@
             <if test="id != null">
                 #{id,jdbcType=INTEGER},
             </if>
+            <if test="categoryId != null">
+                #{categoryId,jdbcType=INTEGER},
+            </if>
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
@@ -130,6 +137,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Product">
         update wall_product
         <set>
+            <if test="categoryId != null">
+                category_id = #{categoryId,jdbcType=INTEGER}
+            </if>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
             </if>
@@ -168,7 +178,8 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.labelwall.mall.entity.Product">
     update wall_product
-    set name = #{name,jdbcType=VARCHAR},
+    set category_id = #{categoryId,jdbcType=INTEGER}
+      name = #{name,jdbcType=VARCHAR},
       subtitle = #{subtitle,jdbcType=VARCHAR},
       main_image = #{mainImage,jdbcType=VARCHAR},
       price = #{price,jdbcType=DECIMAL},
@@ -182,16 +193,33 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <select id="getProductList" parameterType="com.labelwall.mall.dto.ProductDto" resultMap="BaseResultMap">
-        SELECT wp.id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
-        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+        SELECT
+        wp.id,wp.category_id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S')
+        update_time_str,
         ws.name shopName,ws.level
         FROM wall_product wp,wall_shop ws
-        <!--<where>
+        <where>
             wp.shop_id = ws.id
             <if test="keyword != null">
-                AND
+                AND wp.name like CONCAT('%',#{keyword},'%') OR wp.subtitle like CONCAT('%',#{keyword},'%')
             </if>
-        </where>-->
-
+            <if test="minPrice != null and maxPrice != null">
+                AND wp.price &gt; minPrice AND wp.price &lt; maxPrice
+            </if>
+            <if test="minPrice != null and maxPrice == null">
+                AND wp.price &lt; minPrice
+            </if>
+            <if test="minPrice == null and maxPrice != null">
+                AND wp.price &gt; maxPrice
+            </if>
+            <if test="categoryId != null">
+                AND wp.category_id = #{categoryId}
+            </if>
+            <if test="shopId != null">
+                AND wp.shop_id = #{shopId}
+            </if>
+        </where>
+        ORDER BY wp.price
     </select>
 </mapper>

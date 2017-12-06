@@ -28,4 +28,8 @@ public class QiniuKeyGenerator {
         return MessageFormat.format(key,"topicPostReply","image",CommonUtil.getUUID());
     }
 
+    public static String generatorProductRichImageKey(){
+        return MessageFormat.format(key,"product","detail",CommonUtil.getUUID());
+    }
+
 }

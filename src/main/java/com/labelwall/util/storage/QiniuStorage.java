@@ -33,6 +33,15 @@ public class QiniuStorage {
         return key;
     }
 
+    //上传商品的富文本图片
+    public static String uploadProductRichImage(byte[] buff){
+        String key = QiniuWrapper.upload(buff, QiniuKeyGenerator.generatorProductRichImageKey(), false);
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
+        return key;
+    }
+
     public static String getUserHeadUrl(String key){
         return QiniuWrapper.getUrl(key,ThumbModel.THUMB_64.getValue());
     }
@@ -51,5 +60,9 @@ public class QiniuStorage {
 
     public static boolean deleteFile(String key) {
         return QiniuWrapper.deleteFile(key);
+    }
+
+    public static boolean fileIsExist(String key){
+        return QiniuWrapper.fileIsExist(key);
     }
 }
