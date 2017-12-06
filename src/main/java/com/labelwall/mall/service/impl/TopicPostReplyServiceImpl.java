@@ -46,10 +46,10 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
             return ResponseObject.successStatusMessage("该帖子暂没有回复！");
         }
         for (TopicPostReplyDto item : topicPostReplyDtoList) {
-            item.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
+           /* item.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
             item.setUpdateTimeStr(DateTimeUtil.dateToStr(item.getUpdateTime()));
             item.setCreateTime(null);
-            item.setUpdateTimeStr(null);
+            item.setUpdateTimeStr(null);*/
             //加载回复图片
             if (item.getImage() != null) {
                 item.setImage(QiniuStorage.getUrl(item.getImage()));
@@ -88,10 +88,10 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
             topicPostService.updatePostRelpyNum(topicPostReply.getTopicPostId());
 
             TopicPostReplyDto topicPostReplyDtoNew = topicPostReplyMapper.selectByPrimaryKey(topicPostReply.getId());
-            topicPostReplyDtoNew.setCreateTimeStr(DateTimeUtil.dateToStr(topicPostReplyDtoNew.getCreateTime()));
+            /*topicPostReplyDtoNew.setCreateTimeStr(DateTimeUtil.dateToStr(topicPostReplyDtoNew.getCreateTime()));
             topicPostReplyDtoNew.setUpdateTimeStr(DateTimeUtil.dateToStr(topicPostReplyDtoNew.getUpdateTime()));
             topicPostReplyDtoNew.setCreateTime(null);
-            topicPostReplyDtoNew.setUpdateTimeStr(null);
+            topicPostReplyDtoNew.setUpdateTimeStr(null);*/
             //加载回复图片
             if (topicPostReplyDtoNew.getImage() != null) {
                 topicPostReplyDtoNew.setImage(QiniuStorage.getUrl(topicPostReplyDtoNew.getImage()));

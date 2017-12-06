@@ -11,6 +11,8 @@
         <result property="dislikeNum" column="dislike_num" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="createTimeStr" column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="updateTimeStr" column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
             <result column="userId" property="id" jdbcType="INTEGER"/>
             <result column="username" property="username" jdbcType="VARCHAR"/>
@@ -26,6 +28,7 @@
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT wtpr.id,wtpr.user_id,wtpr.topic_post_id, wtpr.image,wtpr.content,wtpr.like_num,wtpr.dislike_num,wtpr.create_time,wtpr.update_time,
+              DATE_FORMAT(wtpr.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtpr.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
               wu.id userId,wu.username,wu.school_name,wu.head,wu.location_province,wu.location_city
         FROM wall_topic_post_reply wtpr,wall_user wu
         WHERE wtpr.user_id = wu.id AND wtpr.id = #{id,jdbcType=INTEGER}
@@ -138,6 +141,7 @@
     </update>
     <select id="getTopicReplyByPostId" resultMap="BaseResultMap" parameterType="int">
         SELECT wtpr.id,wtpr.image,wtpr.content,wtpr.like_num,wtpr.dislike_num,wtpr.create_time,
+              DATE_FORMAT(wtpr.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtpr.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
               wu.id userId,wu.username,wu.school_name,wu.head,wu.location_province,wu.location_city
         FROM wall_topic_post_reply wtpr,wall_user wu
         WHERE wtpr.user_id = wu.id AND wtpr.topic_post_id = #{postId}

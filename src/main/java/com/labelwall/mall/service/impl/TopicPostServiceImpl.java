@@ -40,10 +40,10 @@ public class TopicPostServiceImpl implements ITopicPostService {
         }
         List<TopicPostDto> topicPostDtoList = topicPostMapper.getTopicPost(topicPostDto);
         for (TopicPostDto item : topicPostDtoList) {
-            item.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
+           /* item.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
             item.setUpdateTimeStr(DateTimeUtil.dateToStr(item.getUpdateTime()));
             item.setCreateTime(null);
-            item.setUpdateTime(null);
+            item.setUpdateTime(null);*/
             //加载帖子图片
             if (item.getImage() != null) {
                 item.setImage(QiniuStorage.getUrl(item.getImage()));
@@ -79,10 +79,10 @@ public class TopicPostServiceImpl implements ITopicPostService {
         if (rowCount > 0) {
             //新增成功，获取新增的数据
             TopicPostDto topicPostDtoNew = topicPostMapper.selectByPrimaryKey(topicPost.getId());
-            topicPostDtoNew.setCreateTimeStr(DateTimeUtil.dateToStr(topicPostDtoNew.getCreateTime()));
+            /*topicPostDtoNew.setCreateTimeStr(DateTimeUtil.dateToStr(topicPostDtoNew.getCreateTime()));
             topicPostDtoNew.setUpdateTimeStr(DateTimeUtil.dateToStr(topicPostDtoNew.getUpdateTime()));
             topicPostDtoNew.setCreateTime(null);
-            topicPostDtoNew.setUpdateTime(null);
+            topicPostDtoNew.setUpdateTime(null);*/
             //获取图片
             if (topicPostDtoNew.getImage() != null) {
                 topicPostDtoNew.setImage(QiniuStorage.getUrl(topicPostDtoNew.getImage()));

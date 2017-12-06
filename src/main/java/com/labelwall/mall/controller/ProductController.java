@@ -2,7 +2,9 @@ package com.labelwall.mall.controller;
 
 import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.dto.ProductCategoryDto;
+import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductCategoryService;
+import com.labelwall.mall.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +22,8 @@ public class ProductController {
 
     @Autowired
     private IProductCategoryService productCategoryService;
+    @Autowired
+    private IProductService productService;
 
     @RequestMapping(value = "get_category", method = RequestMethod.GET)
     public ResponseObject<List<ProductCategoryDto>>
@@ -31,5 +35,19 @@ public class ProductController {
     public ResponseObject<List<Integer>>
     getCategoryByCategoryId(@RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
         return productCategoryService.getCategoryAndChildrenByCategoryId(categoryId);
+    }
+
+    /**
+     *
+     * @param productDto
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "get_product_list",method = RequestMethod.POST)
+    public ResponseObject<List<ProductDto>> getProductList(ProductDto productDto,
+                                                           @RequestParam(value = "pageNum",defaultValue = "1")Integer pageNum,
+                                                           @RequestParam(value = "pageSize",defaultValue = "10")Integer pageSize){
+        return productService.getProductList(productDto,pageNum,pageSize);
     }
 }

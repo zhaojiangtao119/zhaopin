@@ -28,6 +28,8 @@
         <result property="dislikeNum" column="dislike_num" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="createTimeStr" column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="updateTimeStr" column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
             <result column="userId" property="id" jdbcType="INTEGER"/>
             <result column="username" property="username" jdbcType="VARCHAR"/>
@@ -45,6 +47,7 @@
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
+                DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
               wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
         WHERE wtp.user_id = wu.id AND wtp.id = #{id,jdbcType=INTEGER}
@@ -65,7 +68,8 @@
       now(), now(), #{content,jdbcType=VARCHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.TopicPost" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.TopicPost" useGeneratedKeys="true"
+            keyProperty="id">
         insert into wall_topic_post
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -190,32 +194,27 @@
         where id = #{id,jdbcType=INTEGER}
       </update>
     <select id="getTopicPost" resultMap="BaseResultMap" parameterType="com.labelwall.mall.dto.TopicPostDto">
-        SELECT wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
-            wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
+        SELECT
+        wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
+                DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+        wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
-        WHERE wtp.user_id = wu.id
-        <if test="keyword != null">
-            <where>
-                title like CONCAT(CONCAT('%',#{kayword}),'%')
-                AND content like CONCAT(CONCAT('%',#{kayword}),'%')
-            </where>
-        </if>
-        <if test="schoolId != null">
-            <where>
-                school_id=#{schoolId}
-            </where>
-        </if>
-        <if test="topicId != null">
-            <where>
-                topic_id=#{topicId}
-            </where>
-        </if>
-        <if test="userId != null">
-            <where>
-                user_id=#{userId}
-            </where>
-        </if>
-        ORDER BY like_num DESC
+        <where>
+            wtp.user_id = wu.id
+            <if test="keyword != null and keyword != ''">
+                AND wtp.title like CONCAT('%',#{keyword},'%') OR wtp.content like CONCAT('%',#{keyword},'%')
+            </if>
+            <if test="schoolId != null">
+                AND wtp.school_id=#{schoolId}
+            </if>
+            <if test="topicId != null">
+                AND wtp.topic_id=#{topicId}
+            </if>
+            <if test="userId != null">
+                AND wtp.user_id=#{userId}
+            </if>
+        </where>
+        ORDER BY wtp.like_num DESC,wtp.create_time DESC
     </select>
     <update id="updatePostLike" parameterType="int">
         UPDATE wall_topic_post

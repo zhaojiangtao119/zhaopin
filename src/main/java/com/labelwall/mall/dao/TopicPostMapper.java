@@ -19,7 +19,7 @@ public interface TopicPostMapper {
 
     int updateByPrimaryKey(TopicPost record);
 
-    List<TopicPostDto> getTopicPost(TopicPost topicPost);
+    List<TopicPostDto> getTopicPost(TopicPostDto topicPostDto);
 
     int updatePostLike(@Param("topicPostId") Integer topicPostId);
 

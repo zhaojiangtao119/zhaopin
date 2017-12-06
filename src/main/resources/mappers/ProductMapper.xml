@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.labelwall.mall.dao.ProductMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.mall.dto.ProductDto">
+        <id property="id" column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="name" column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="subtitle" column="subtitle" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="mainImage" column="main_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="subImages" column="sub_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="detail" column="detail" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="price" column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+        <result property="stock" column="stock" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="status" column="status" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="shopId" column="shop_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+        <result property="createTimeStr" column="create_time_str" jdbcType="TIMESTAMP" javaType="java.lang.String"/>
+        <result property="updateTimeStr" column="update_time_str" jdbcType="TIMESTAMP" javaType="java.lang.String"/>
+        <association property="shop" javaType="com.labelwall.mall.entity.Shop">
+            <!--<result property="id" column="shopId" jdbcType="INTEGER" javaType="java.lang.Integer"/>-->
+            <result property="name" column="shopName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="level" column="level" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+      id, name, subtitle, main_image,sub_image,detail, price, stock, status, shop_id, create_time, update_time
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        SELECT wp.id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+          ws.name shopName,ws.level
+        FROM wall_product wp,wall_shop ws
+        WHERE wp.shop_id = ws.id AND wp.id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wall_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.labelwall.mall.entity.Product">
+    insert into wall_product (id, name, subtitle, 
+      main_image, price, stock, 
+      status, shop_id, create_time, 
+      update_time, sub_image, detail
+      )
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{subtitle,jdbcType=VARCHAR}, 
+      #{mainImage,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{stock,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{shopId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{subImage,jdbcType=VARCHAR}, #{detail,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Product">
+        insert into wall_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="subtitle != null">
+                subtitle,
+            </if>
+            <if test="mainImage != null">
+                main_image,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="stock != null">
+                stock,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="shopId != null">
+                shop_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="subImage != null">
+                sub_image,
+            </if>
+            <if test="detail != null">
+                detail,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null">
+                #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null">
+                #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="stock != null">
+                #{stock,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="shopId != null">
+                #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="subImage != null">
+                #{subImage,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                #{detail,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Product">
+        update wall_product
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="subtitle != null">
+                subtitle = #{subtitle,jdbcType=VARCHAR},
+            </if>
+            <if test="mainImage != null">
+                main_image = #{mainImage,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="stock != null">
+                stock = #{stock,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="shopId != null">
+                shop_id = #{shopId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="subImage != null">
+                sub_image = #{subImage,jdbcType=VARCHAR},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.labelwall.mall.entity.Product">
+    update wall_product
+    set name = #{name,jdbcType=VARCHAR},
+      subtitle = #{subtitle,jdbcType=VARCHAR},
+      main_image = #{mainImage,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      stock = #{stock,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      shop_id = #{shopId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      sub_image = #{subImage,jdbcType=VARCHAR},
+      detail = #{detail,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="getProductList" parameterType="com.labelwall.mall.dto.ProductDto" resultMap="BaseResultMap">
+        SELECT wp.id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+        ws.name shopName,ws.level
+        FROM wall_product wp,wall_shop ws
+        <!--<where>
+            wp.shop_id = ws.id
+            <if test="keyword != null">
+                AND
+            </if>
+        </where>-->
+
+    </select>
+</mapper>
