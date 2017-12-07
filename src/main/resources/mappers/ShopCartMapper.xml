@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.labelwall.mall.dao.ShopCartMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.mall.dto.ShopCartDto">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="product_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="quantity" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="checked" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+        <association property="productDto" javaType="com.labelwall.mall.dto.ProductDto">
+            <result property="name" column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="subtitle" column="subtitle" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="mainImage" column="main_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <result property="price" column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+        </association>
+    </resultMap>
+    <sql id="Base_Column_List">
+        wc.id, wc.user_id, wc.product_id, wc.quantity, wc.checked, wc.create_time, wc.update_time,
+            DATE_FORMAT(wc.create_time,'%Y-%m-%d %H-%I-%S') create_time_str,
+            DATE_FORMAT(wc.update_time,'%Y-%m-%d %H-%I-%S') update_time_str,
+    </sql>
+    <sql id="product_column">
+        wp.name,wp.subtitle,wp.main_image,wp.price
+    </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>,
+        <include refid="product_column"/>
+        from wall_cart wc,wall_product wp
+        where wc.id = #{id,jdbcType=INTEGER} and wc.product_id = wp.id
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from wall_cart
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.labelwall.mall.entity.ShopCart">
+    insert into wall_cart (id, user_id, product_id, 
+      quantity, checked, create_time, 
+      update_time)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, 
+      #{quantity,jdbcType=INTEGER}, #{checked,jdbcType=INTEGER}, now(),
+      now())
+  </insert>
+    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.ShopCart">
+        insert into wall_cart
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="productId != null">
+                product_id,
+            </if>
+            <if test="quantity != null">
+                quantity,
+            </if>
+            <if test="checked != null">
+                checked,
+            </if>
+            create_time,
+            update_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="productId != null">
+                #{productId,jdbcType=INTEGER},
+            </if>
+            <if test="quantity != null">
+                #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="checked != null">
+                #{checked,jdbcType=INTEGER},
+            </if>
+            now(),
+            now()
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.ShopCart">
+        update wall_cart
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="productId != null">
+                product_id = #{productId,jdbcType=INTEGER},
+            </if>
+            <if test="quantity != null">
+                quantity = #{quantity,jdbcType=INTEGER},
+            </if>
+            <if test="checked != null">
+                checked = #{checked,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            update_time = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.labelwall.mall.entity.ShopCart">
+    update wall_cart
+    set user_id = #{userId,jdbcType=INTEGER},
+      product_id = #{productId,jdbcType=INTEGER},
+      quantity = #{quantity,jdbcType=INTEGER},
+      checked = #{checked,jdbcType=INTEGER},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="getCartItemByUserId" resultMap="BaseResultMap" parameterType="int">
+        SELECT
+        <include refid="Base_Column_List"/>,
+        <include refid="product_column"/>
+        FROM wall_cart wc,wall_product wp
+        WHERE wc.product_id = wp.id and wc.user_id = #{userId}
+        ORDER BY wc.create_time DESC
+    </select>
+    <select id="selectCartProductCheckedStatusByUserId" resultType="int" parameterType="int">
+        SELECT COUNT(1)
+        FROM wall_cart
+        WHERE checked == 0
+        AND user_id = #{userId}
+    </select>
+    <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_cart wc
+        WHERE wc.user_id = #{userId} AND wc.product_id = #{productId}
+    </select>
+    <delete id="deleteByUserIdProductIds" parameterType="map">
+        DELETE FROM wall_cart
+        WHERE user_id = #{userId}
+        <if test="productIdList != null">
+            AND product_id IN
+            <foreach collection="productIdList" index="index" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </delete>
+    <!--productId等于null:全选；productId不等于null；单选-->
+    <update id="checkedOrUncheckedProduct" parameterType="map">
+        UPDATE wall_cart
+        SET checked =#{checked},update_time = now()
+        WHERE user_id = #{userId}
+        <if test="productId ！= null">
+            AND product_id = #{productId}
+        </if>
+    </update>
+    <select id="selectCartProductCount" parameterType="int" resultType="int">
+        SELECT IFNULL(SUM(quantity),0) AS count
+        FROM wall_cart
+        WHERE user_id = #{userId}
+    </select>
+</mapper>

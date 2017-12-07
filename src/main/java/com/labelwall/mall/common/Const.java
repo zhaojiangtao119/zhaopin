@@ -28,4 +28,15 @@ public class Const {
         Integer LIKE_CLICK = 0;
         Integer DISLIKE_CLICK = 1;
     }
+
+    //购物车商品是否勾选
+    public interface Cart {
+        int CHECKED = 1;
+        int UN_CHECKED = 0;
+
+        String LIMIT_NUM_FAIL = "LIMIT_NUM_FAIL";
+        String LIMIT_NUM_SUCCESS = "LIMIT_NUM_SUCCESS";
+    }
+
+
 }
