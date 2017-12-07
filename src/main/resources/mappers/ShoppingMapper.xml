@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.labelwall.mall.dao.ShoppingMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.mall.dto.ShoppingDto">
+        <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="receiver_name" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_phone" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_mobile" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_province" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_city" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_county" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_address" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="receiver_zip" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_id, receiver_name, receiver_phone, receiver_mobile, receiver_province, receiver_city, 
+    receiver_county, receiver_address, receiver_zip, create_time, update_time
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map">
+        select
+        <include refid="Base_Column_List"/>,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
+        from wall_shopping
+        where id = #{id,jdbcType=INTEGER} and user_id = #{userId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="map">
+    delete from wall_shopping
+    where id = #{id,jdbcType=INTEGER} and user_id = #{userId}
+  </delete>
+    <insert id="insert" parameterType="com.labelwall.mall.entity.Shopping">
+    insert into wall_shopping (id, user_id, receiver_name, 
+      receiver_phone, receiver_mobile, receiver_province, 
+      receiver_city, receiver_county, receiver_address, 
+      receiver_zip, create_time, update_time
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
+      #{receiverPhone,jdbcType=VARCHAR}, #{receiverMobile,jdbcType=VARCHAR}, #{receiverProvince,jdbcType=VARCHAR}, 
+      #{receiverCity,jdbcType=VARCHAR}, #{receiverCounty,jdbcType=VARCHAR}, #{receiverAddress,jdbcType=VARCHAR}, 
+      #{receiverZip,jdbcType=VARCHAR}, now(), now()
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Shopping" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into wall_shopping
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="receiverName != null">
+                receiver_name,
+            </if>
+            <if test="receiverPhone != null">
+                receiver_phone,
+            </if>
+            <if test="receiverMobile != null">
+                receiver_mobile,
+            </if>
+            <if test="receiverProvince != null">
+                receiver_province,
+            </if>
+            <if test="receiverCity != null">
+                receiver_city,
+            </if>
+            <if test="receiverCounty != null">
+                receiver_county,
+            </if>
+            <if test="receiverAddress != null">
+                receiver_address,
+            </if>
+            <if test="receiverZip != null">
+                receiver_zip,
+            </if>
+            create_time,
+            update_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="receiverName != null">
+                #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverPhone != null">
+                #{receiverPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverMobile != null">
+                #{receiverMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverProvince != null">
+                #{receiverProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverCity != null">
+                #{receiverCity,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverCounty != null">
+                #{receiverCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverAddress != null">
+                #{receiverAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverZip != null">
+                #{receiverZip,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Shopping">
+        update wall_shopping
+        <set>
+            <if test="receiverName != null">
+                receiver_name = #{receiverName,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverPhone != null">
+                receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverMobile != null">
+                receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverProvince != null">
+                receiver_province = #{receiverProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverCity != null">
+                receiver_city = #{receiverCity,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverCounty != null">
+                receiver_county = #{receiverCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverAddress != null">
+                receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="receiverZip != null">
+                receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            update_time = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.labelwall.mall.entity.Shopping">
+    update wall_shopping
+    set user_id = #{userId,jdbcType=INTEGER},
+      receiver_name = #{receiverName,jdbcType=VARCHAR},
+      receiver_phone = #{receiverPhone,jdbcType=VARCHAR},
+      receiver_mobile = #{receiverMobile,jdbcType=VARCHAR},
+      receiver_province = #{receiverProvince,jdbcType=VARCHAR},
+      receiver_city = #{receiverCity,jdbcType=VARCHAR},
+      receiver_county = #{receiverCounty,jdbcType=VARCHAR},
+      receiver_address = #{receiverAddress,jdbcType=VARCHAR},
+      receiver_zip = #{receiverZip,jdbcType=VARCHAR},
+      update_time = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <select id="getShoppingByUserId" resultMap="BaseResultMap" parameterType="int">
+        SELECT
+        <include refid="Base_Column_List"/>,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
+        FROM wall_shopping
+        WHERE user_id = #{userId}
+    </select>
+</mapper>
