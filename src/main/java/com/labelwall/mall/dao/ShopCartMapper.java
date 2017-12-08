@@ -47,7 +47,28 @@ public interface ShopCartMapper {
      */
     int deleteByUserIdProductIds(@Param("userId") Integer userId, @Param("productIdList") List<String> productIdList);
 
+    /**
+     * 勾选与取消勾选
+     *
+     * @param userId
+     * @param productId
+     * @param checked
+     * @return
+     */
     int checkedOrUncheckedProduct(@Param("userId") Integer userId, @Param("productId") Integer productId, @Param("checked") Integer checked);
 
+    /**
+     * 获取购物中的商品总数
+     *
+     * @param userId
+     * @return
+     */
     int selectCartProductCount(Integer userId);
+
+    /**
+     * 获取购物车中被选中的商品
+     * @param userId
+     * @return
+     */
+    List<ShopCartDto> selectCheckedCartByUserId(Integer userId);
 }

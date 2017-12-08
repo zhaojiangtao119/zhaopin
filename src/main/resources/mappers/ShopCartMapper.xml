@@ -19,6 +19,7 @@
             <result property="mainImage" column="main_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <result property="price" column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
             <result property="stock" column="stock" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <result property="status" column="status" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         </association>
     </resultMap>
     <sql id="Base_Column_List">
@@ -27,7 +28,7 @@
             DATE_FORMAT(wc.update_time,'%Y-%m-%d %H-%I-%S') update_time_str
     </sql>
     <sql id="product_column">
-        wp.name,wp.subtitle,wp.main_image,wp.price,wp.stock
+        wp.name,wp.subtitle,wp.main_image,wp.price,wp.stock,wp.status
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -159,9 +160,16 @@
             AND product_id = #{productId}
         </if>
     </update>
+    <!--IFNULL-->
     <select id="selectCartProductCount" parameterType="int" resultType="int">
         SELECT IFNULL(SUM(quantity),0) AS count
         FROM wall_cart
         WHERE user_id = #{userId}
+    </select>
+    <select id="selectCheckedCartByUserId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,<include refid="product_column"/>
+        FROM wall_cart wc
+        WHERE wc.checked = 1 AND wc.user_id = #{userId}
     </select>
 </mapper>

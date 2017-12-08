@@ -133,8 +133,14 @@ public class ShopCartController {
         return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.UN_CHECKED);
     }
 
-    @RequestMapping(value = "get_cart_product_num",method = RequestMethod.GET)
-    public ResponseObject<Integer> getCartProductNum(HttpSession session){
+    /**
+     * 获取购物车中的商品数量
+     *
+     * @param session
+     * @return
+     */
+    @RequestMapping(value = "get_cart_product_num", method = RequestMethod.GET)
+    public ResponseObject<Integer> getCartProductNum(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
             return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
