@@ -44,7 +44,7 @@ public class ShopCartServiceImpl implements IShopCartService {
 
     @Override
     public ResponseObject<CartVo> addCart(ShopCartDto shopCartDto) {
-        if (shopCartDto.getQuantity() <= 0 || shopCartDto.getProductId() == null) {
+        if (shopCartDto.getQuantity() == null || shopCartDto.getProductId() == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         //判断购物车中是否存在该商品
@@ -63,7 +63,7 @@ public class ShopCartServiceImpl implements IShopCartService {
 
     @Override
     public ResponseObject<CartVo> updateQuantity(ShopCartDto shopCartDto) {
-        if (shopCartDto.getQuantity() <= 0 || shopCartDto.getProductId() == null) {
+        if (shopCartDto.getQuantity() == null || shopCartDto.getProductId() == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         ShopCart shopCart = shopCartMapper.selectCartByUserIdProductId(shopCartDto.getUserId(), shopCartDto.getProductId());
@@ -121,7 +121,7 @@ public class ShopCartServiceImpl implements IShopCartService {
                     //判断购买数量与商品表中库存字段的关系
                     int buyLimitCount = 0;
                     if (productDto.getStock() >= shopCartDtoItem.getQuantity()) {//
-                        buyLimitCount = productDto.getStock();
+                        buyLimitCount = shopCartDtoItem.getQuantity();
                         cartProductVo.setLimitQuantity(Const.Cart.LIMIT_NUM_SUCCESS);
                     } else {
                         //购买数量超出了商品的stock

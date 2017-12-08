@@ -18,15 +18,16 @@
             <result property="subtitle" column="subtitle" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <result property="mainImage" column="main_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <result property="price" column="price" jdbcType="DECIMAL" javaType="java.math.BigDecimal"/>
+            <result property="stock" column="stock" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         </association>
     </resultMap>
     <sql id="Base_Column_List">
         wc.id, wc.user_id, wc.product_id, wc.quantity, wc.checked, wc.create_time, wc.update_time,
             DATE_FORMAT(wc.create_time,'%Y-%m-%d %H-%I-%S') create_time_str,
-            DATE_FORMAT(wc.update_time,'%Y-%m-%d %H-%I-%S') update_time_str,
+            DATE_FORMAT(wc.update_time,'%Y-%m-%d %H-%I-%S') update_time_str
     </sql>
     <sql id="product_column">
-        wp.name,wp.subtitle,wp.main_image,wp.price
+        wp.name,wp.subtitle,wp.main_image,wp.price,wp.stock
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -130,7 +131,7 @@
     <select id="selectCartProductCheckedStatusByUserId" resultType="int" parameterType="int">
         SELECT COUNT(1)
         FROM wall_cart
-        WHERE checked == 0
+        WHERE checked = 0
         AND user_id = #{userId}
     </select>
     <select id="selectCartByUserIdProductId" resultMap="BaseResultMap" parameterType="map">
@@ -154,7 +155,7 @@
         UPDATE wall_cart
         SET checked =#{checked},update_time = now()
         WHERE user_id = #{userId}
-        <if test="productId ！= null">
+        <if test="productId != null">
             AND product_id = #{productId}
         </if>
     </update>

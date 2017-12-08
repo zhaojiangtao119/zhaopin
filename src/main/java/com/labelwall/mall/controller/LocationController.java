@@ -41,7 +41,7 @@ public class LocationController {
         return response;
     }
 
-    @RequestMapping(value="get_school_list_proviunce_id",method = RequestMethod.GET)
+    @RequestMapping(value="get_school_list_province_id",method = RequestMethod.GET)
     public ResponseObject<List<School>> getSchoolListByProvinceId(@RequestParam(value = "provinceId",defaultValue = "1") Integer provinceId){
         ResponseObject<List<School>> response = schoolService.getSchoolByProvinceId(provinceId);
         return response;

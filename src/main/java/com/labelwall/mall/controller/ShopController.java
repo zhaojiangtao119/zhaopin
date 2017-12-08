@@ -45,5 +45,4 @@ public class ShopController {
     public ResponseObject<ShopDto> getShopDetail(@RequestParam(value = "shopId") Integer shopId) {
         return shopService.getShopDetail(shopId);
     }
-
 }

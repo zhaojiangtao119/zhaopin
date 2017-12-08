@@ -17,6 +17,8 @@ public class User {
 
     private Integer role;
 
+    private Date schoolDate;
+
     private String schoolName;
 
     private String locationProvince;
@@ -27,7 +29,7 @@ public class User {
 
     private Date updateTime;
 
-    public User(Integer id, String username, String password,String head,String email, String phone, Integer role, String schoolName, String locationProvince, String locationCity, Date createTime, Date updateTime) {
+    public User(Integer id, String username, String password, String head, String email, String phone, Integer role, Date schoolDate, String schoolName, String locationProvince, String locationCity, Date createTime, Date updateTime) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -35,6 +37,7 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.role = role;
+        this.schoolDate = schoolDate;
         this.schoolName = schoolName;
         this.locationProvince = locationProvince;
         this.locationCity = locationCity;
@@ -100,6 +103,14 @@ public class User {
 
     public void setRole(Integer role) {
         this.role = role;
+    }
+
+    public Date getSchoolDate() {
+        return schoolDate;
+    }
+
+    public void setSchoolDate(Date schoolDate) {
+        this.schoolDate = schoolDate;
     }
 
     public String getSchoolName() {

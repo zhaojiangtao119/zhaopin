@@ -160,7 +160,7 @@
         wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_shop ws,wall_user wu
         <where>
-            ws.user_id = wu.id AND ws.id = #{id,jdbcType=INTEGER}
+             ws.user_id = wu.id
             <if test="keyword != null">
                 AND ws.name like CONCAT('%',#{keyword},'%') OR ws.description like CONCAT('%',#{keyword},'%')
             </if>

@@ -5,6 +5,7 @@ import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.common.ResponseStatus;
 import com.labelwall.mall.dto.ShopCartDto;
 import com.labelwall.mall.dto.UserDto;
+import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IShopCartService;
 import com.labelwall.mall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> getCartList(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.getCartList(userDto.getId());
     }
@@ -45,7 +46,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> addCart(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         shopCartDto.setUserId(userDto.getId());
         return shopCartService.addCart(shopCartDto);
@@ -55,7 +56,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> updateQuantity(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         shopCartDto.setUserId(userDto.getId());
         return shopCartService.updateQuantity(shopCartDto);
@@ -65,7 +66,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> removeCart(HttpSession session, String productIds) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.removeCart(userDto.getId(), productIds);
     }
@@ -80,7 +81,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> selectAll(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.selectOrUnSelect(userDto.getId(), null, Const.Cart.CHECKED);
     }
@@ -95,7 +96,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> unSelectAll(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.selectOrUnSelect(userDto.getId(), null, Const.Cart.UN_CHECKED);
     }
@@ -111,13 +112,13 @@ public class ShopCartController {
     public ResponseObject<CartVo> select(HttpSession session, Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.CHECKED);
     }
 
     /**
-     * 单选
+     * 单反选
      *
      * @param session
      * @param productId
@@ -127,7 +128,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> unSelect(HttpSession session, Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.UN_CHECKED);
     }
@@ -136,7 +137,7 @@ public class ShopCartController {
     public ResponseObject<Integer> getCartProductNum(HttpSession session){
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
         return shopCartService.getCartProductCount(userDto.getId());
     }

@@ -53,7 +53,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "logout", method = RequestMethod.POST)
+    @RequestMapping(value = "logout", method = RequestMethod.GET)
     public ResponseObject logout(HttpSession session) {
         session.removeAttribute(Const.CURRENT_USER);
         return ResponseObject.successStatus();
@@ -65,7 +65,7 @@ public class UserController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "get_user_info", method = RequestMethod.POST)
+    @RequestMapping(value = "get_user_info", method = RequestMethod.GET)
     public ResponseObject<User> getUserInfo(HttpSession session) {
         //TODO 获取用户信息需要登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);

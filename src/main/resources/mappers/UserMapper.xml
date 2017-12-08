@@ -10,6 +10,7 @@
             <arg column="email" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="phone" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="role" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="school_date" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
             <arg column="school_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="location_province" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="location_city" javaType="java.lang.String" jdbcType="VARCHAR"/>
@@ -18,7 +19,7 @@
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
-    id, username, password, head,email, phone, role, school_name, location_province, location_city,
+    id, username, password, head,email, phone, role, school_date,school_name, location_province, location_city,
     create_time, update_time
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -33,11 +34,11 @@
   </delete>
     <insert id="insert" parameterType="com.labelwall.mall.entity.User">
     insert into wall_user (id, username, password, head,
-      email, phone, role, 
+      email, phone, role, school_date
       school_name, location_province, location_city, 
       create_time, update_time)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{head,jdbcType=VARCHAR},
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{schoolDate,jdbcType=TIMESTAMP}
       #{schoolName,jdbcType=VARCHAR}, #{locationProvince,jdbcType=VARCHAR}, #{locationCity,jdbcType=VARCHAR}, 
       now(), now())
   </insert>
@@ -64,6 +65,9 @@
             </if>
             <if test="role != null">
                 role,
+            </if>
+            <if test="schoolDate != null">
+                school_date,
             </if>
             <if test="schoolName != null">
                 school_name,
@@ -103,6 +107,9 @@
             <if test="role != null">
                 #{role,jdbcType=INTEGER},
             </if>
+            <if test="schoolDate != null">
+                #{schoolDate,jdbcType=TIMESTAMP},
+            </if>
             <if test="schoolName != null">
                 #{schoolName,jdbcType=VARCHAR},
             </if>
@@ -141,6 +148,9 @@
             <if test="role != null">
                 role = #{role,jdbcType=INTEGER},
             </if>
+            <if test="schoolDate != null">
+                school_date = #{schoolDate,jdbcType=TIMESTAMP},
+            </if>
             <if test="schoolName != null">
                 school_name = #{schoolName,jdbcType=VARCHAR},
             </if>
@@ -165,6 +175,7 @@
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
+      school_date = #{schoolDate,jdbcType=TIMESTAMP},
       school_name = #{schoolName,jdbcType=VARCHAR},
       location_province = #{locationProvince,jdbcType=VARCHAR},
       location_city = #{locationCity,jdbcType=VARCHAR},
