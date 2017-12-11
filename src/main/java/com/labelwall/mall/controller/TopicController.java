@@ -15,10 +15,7 @@ import com.labelwall.mall.service.ITopicPostReplyService;
 import com.labelwall.mall.service.ITopicPostService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -69,10 +66,10 @@ public class TopicController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "get_topic_post_list", method = RequestMethod.POST)
+    @RequestMapping(value = "get_topic_post_list/{pageNum}/{pageSize}", method = RequestMethod.POST)
     public ResponseObject<PageInfo> getTopicPostList(TopicPostDto topicPostDto,
-                                                     @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                     @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+                                                     @PathVariable(value = "pageNum") Integer pageNum,
+                                                     @PathVariable(value = "pageSize") Integer pageSize) {
         return topicPostService.getTopicPostList(topicPostDto, pageNum, pageSize);
     }
 
@@ -105,9 +102,9 @@ public class TopicController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "update_post_like_dislike", method = RequestMethod.GET)
-    public ResponseObject updatePostLikeDislike(@RequestParam("topicPostId") Integer topicPostId,
-                                                @RequestParam("clickType") Integer type,
+    @RequestMapping(value = "update_post_like_dislike/{topicPostId}/{clickType}", method = RequestMethod.PUT)
+    public ResponseObject updatePostLikeDislike(@PathVariable("topicPostId") Integer topicPostId,
+                                                @PathVariable("clickType") Integer type,
                                                 HttpSession session) {
         //TODO 帖子的like/dislike 判断是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
@@ -123,8 +120,8 @@ public class TopicController {
      * @param topicPostId
      * @return
      */
-    @RequestMapping(value = "get_topic_post_by_id", method = RequestMethod.GET)
-    public ResponseObject<TopicPostDto> getTopicPostById(@RequestParam(value = "topicPostId") Integer topicPostId) {
+    @RequestMapping(value = "get_topic_post_by_id/{topicPostId}", method = RequestMethod.GET)
+    public ResponseObject<TopicPostDto> getTopicPostById(@PathVariable("topicPostId") Integer topicPostId) {
         return topicPostService.getTopicPostById(topicPostId);
     }
 
@@ -136,10 +133,10 @@ public class TopicController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "get_topic_reply_by_post_id", method = RequestMethod.GET)
-    public ResponseObject<PageInfo> getTopicReplyByPostId(@RequestParam(value = "topicPostId") Integer topicPostId,
-                                                          @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                          @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+    @RequestMapping(value = "get_topic_reply_by_post_id/{topicPostId}/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    public ResponseObject<PageInfo> getTopicReplyByPostId(@PathVariable(value = "topicPostId") Integer topicPostId,
+                                                          @PathVariable(value = "pageNum") Integer pageNum,
+                                                          @PathVariable(value = "pageSize") Integer pageSize) {
         return topicPostReplyService.getTopicReplyByPostId(topicPostId, pageNum, pageSize);
     }
 
@@ -172,9 +169,9 @@ public class TopicController {
      * @param session
      * @return
      */
-    @RequestMapping(value = "update_post_reply_like_dislike", method = RequestMethod.GET)
-    public ResponseObject updatePostReplyLikeDislike(@RequestParam("topicPostReplyId") Integer topicPostReplyId,
-                                                     @RequestParam("clickType") Integer type,
+    @RequestMapping(value = "update_post_reply_like_dislike/{topicPostReplyId}/{clickType}", method = RequestMethod.PUT)
+    public ResponseObject updatePostReplyLikeDislike(@PathVariable("topicPostReplyId") Integer topicPostReplyId,
+                                                     @PathVariable("clickType") Integer type,
                                                      HttpSession session) {
         //TODO 回复的like/dislike 判断是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);

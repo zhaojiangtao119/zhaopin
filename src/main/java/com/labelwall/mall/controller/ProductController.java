@@ -7,10 +7,7 @@ import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductCategoryService;
 import com.labelwall.mall.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -46,20 +43,21 @@ public class ProductController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "get_product_list", method = RequestMethod.POST)
+    @RequestMapping(value = "get_product_list/{pageNum}/{pageSize}", method = RequestMethod.POST)
     public ResponseObject<PageInfo> getProductList(ProductDto productDto,
-                                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                   @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+                                                   @PathVariable(value = "pageNum") Integer pageNum,
+                                                   @PathVariable(value = "pageSize") Integer pageSize) {
         return productService.getProductList(productDto, pageNum, pageSize);
     }
 
     /**
      * 根据id获取商品详情
+     *
      * @param productId
      * @return
      */
-    @RequestMapping(value = "get_product_detail", method = RequestMethod.GET)
-    public ResponseObject<ProductDto> getProductDetail(@RequestParam(value = "productId") Integer productId) {
+    @RequestMapping(value = "get_product_detail/{productId}", method = RequestMethod.GET)
+    public ResponseObject<ProductDto> getProductDetail(@PathVariable(value = "productId") Integer productId) {
         return productService.getProductDetail(productId);
     }
 }

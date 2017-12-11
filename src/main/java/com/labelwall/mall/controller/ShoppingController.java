@@ -9,10 +9,7 @@ import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -27,8 +24,8 @@ public class ShoppingController {
     @Autowired
     private IShoppingService shoppingService;
 
-    @RequestMapping(value = "get_shopping_by_id", method = RequestMethod.GET)
-    public ResponseObject<ShoppingDto> getShoppingById(@RequestParam(value = "shoppingId") Integer shoppingId,
+    @RequestMapping(value = "get_shopping_by_id/{shoppingId}", method = RequestMethod.GET)
+    public ResponseObject<ShoppingDto> getShoppingById(@PathVariable(value = "shoppingId") Integer shoppingId,
                                                        HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
@@ -56,7 +53,12 @@ public class ShoppingController {
         return shoppingService.addShopping(shoppingDto);
     }
 
-    @RequestMapping(value = "update_shopping", method = RequestMethod.POST)
+    /*
+        如果是使用的是PUT方式，SpringMVC默认将不会辨认到请求体中的参数，
+        或者也有人说是Spirng MVC默认不支持 PUT请求带参数.
+        :将web.xml的HiddenHttpMethodFilter过滤器改为HttpPutFormContentFilter
+    */
+    @RequestMapping(value = "update_shopping", method = RequestMethod.PUT)
     public ResponseObject<ShoppingDto> updateShopping(HttpSession session, ShoppingDto shoppingDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
@@ -66,13 +68,13 @@ public class ShoppingController {
         return shoppingService.updateShopping(shoppingDto);
     }
 
-    @RequestMapping(value = "remove_shopping", method = RequestMethod.GET)
+    @RequestMapping(value = "remove_shopping/{shoppingId}", method = RequestMethod.DELETE)
     public ResponseObject removeShopping(HttpSession session,
-                                         @RequestParam(value = "shoppingId") Integer shoppingId) {
+                                         @PathVariable(value = "shoppingId") Integer shoppingId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
             return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
         }
-        return shoppingService.removeShopping(userDto.getId(),shoppingId);
+        return shoppingService.removeShopping(userDto.getId(), shoppingId);
     }
 }

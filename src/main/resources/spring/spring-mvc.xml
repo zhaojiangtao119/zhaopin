@@ -34,12 +34,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <!-- 文件上传解析器 -->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-        <property name="maxUploadSize" value="10485760"/> <!-- 10m -->
-        <property name="maxInMemorySize" value="4096"/>
-        <property name="defaultEncoding" value="UTF-8"></property>
-    </bean>
+
 
     <!--视图解析器-->
 </beans>

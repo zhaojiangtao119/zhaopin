@@ -5,10 +5,7 @@ import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.dto.ShopDto;
 import com.labelwall.mall.service.IShopService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Administrator on 2017-12-06.
@@ -28,10 +25,10 @@ public class ShopController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "get_shop_list", method = RequestMethod.POST)
+    @RequestMapping(value = "get_shop_list/{pageNum}/{pageSize}", method = RequestMethod.POST)
     public ResponseObject<PageInfo> getShopList(ShopDto shopDto,
-                                                @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+                                                @PathVariable(value = "pageNum") Integer pageNum,
+                                                @PathVariable(value = "pageSize") Integer pageSize) {
         return shopService.getShopList(shopDto, pageNum, pageSize);
     }
 
@@ -41,8 +38,8 @@ public class ShopController {
      * @param shopId
      * @return
      */
-    @RequestMapping(value = "get_shop_detail", method = RequestMethod.GET)
-    public ResponseObject<ShopDto> getShopDetail(@RequestParam(value = "shopId") Integer shopId) {
+    @RequestMapping(value = "get_shop_detail/{shopId}", method = RequestMethod.GET)
+    public ResponseObject<ShopDto> getShopDetail(@PathVariable(value = "shopId") Integer shopId) {
         return shopService.getShopDetail(shopId);
     }
 }

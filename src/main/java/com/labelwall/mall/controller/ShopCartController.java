@@ -10,6 +10,7 @@ import com.labelwall.mall.service.IShopCartService;
 import com.labelwall.mall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.client.RequestMatcher;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,12 @@ public class ShopCartController {
         return shopCartService.getCartList(userDto.getId());
     }
 
+    /**
+     * 添加商品到购物车
+     * @param session
+     * @param shopCartDto
+     * @return
+     */
     @RequestMapping(value = "add_cart", method = RequestMethod.POST)
     public ResponseObject<CartVo> addCart(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
@@ -52,7 +59,13 @@ public class ShopCartController {
         return shopCartService.addCart(shopCartDto);
     }
 
-    @RequestMapping(value = "update_quantity", method = RequestMethod.POST)
+    /**
+     * 修改购物车中商品的数量
+     * @param session
+     * @param shopCartDto
+     * @return
+     */
+    @RequestMapping(value = "update_quantity", method = RequestMethod.PUT)
     public ResponseObject<CartVo> updateQuantity(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
@@ -62,8 +75,10 @@ public class ShopCartController {
         return shopCartService.updateQuantity(shopCartDto);
     }
 
-    @RequestMapping(value = "remove_cart", method = RequestMethod.POST)
-    public ResponseObject<CartVo> removeCart(HttpSession session, String productIds) {
+    @RequestMapping(value = "remove_cart/{productIds}", method = RequestMethod.DELETE)
+    public ResponseObject<CartVo> removeCart(HttpSession session,
+                                             @PathVariable("productIds") String productIds) {
+        //TODO 批量删除的规则，可以使用 数组 来接收服务端传递的参数（商品的id），
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
             return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
@@ -108,8 +123,9 @@ public class ShopCartController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "select", method = RequestMethod.GET)
-    public ResponseObject<CartVo> select(HttpSession session, Integer productId) {
+    @RequestMapping(value = "select/{productId}", method = RequestMethod.GET)
+    public ResponseObject<CartVo> select(HttpSession session,
+                                         @PathVariable("productId")Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
             return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
@@ -124,8 +140,9 @@ public class ShopCartController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "un_select", method = RequestMethod.GET)
-    public ResponseObject<CartVo> unSelect(HttpSession session, Integer productId) {
+    @RequestMapping(value = "un_select/{productId}", method = RequestMethod.GET)
+    public ResponseObject<CartVo> unSelect(HttpSession session,
+                                           @PathVariable("productId") Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (userDto == null) {
             return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
