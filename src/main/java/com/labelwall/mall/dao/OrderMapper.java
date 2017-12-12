@@ -32,4 +32,11 @@ public interface OrderMapper {
      * @return
      */
     List<Order> userOrderList(Integer userId);
+
+    /**
+     * 通过订单号获取该订单
+     * @param orderNo
+     * @return
+     */
+    Order selectByOrderNo(Long orderNo);
 }

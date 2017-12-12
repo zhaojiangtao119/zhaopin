@@ -32,4 +32,8 @@ public class QiniuKeyGenerator {
         return MessageFormat.format(key,"product","detail",CommonUtil.getUUID());
     }
 
+    public static String generatorOrderPayImageKey(){
+        return MessageFormat.format(key,"order","online","pay");
+    }
+
 }

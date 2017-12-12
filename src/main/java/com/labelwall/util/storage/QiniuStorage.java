@@ -42,6 +42,15 @@ public class QiniuStorage {
         return key;
     }
 
+    //上传支付二维码图片
+    public static String updateOrderPayImage(byte[] buff,String uploadKey){
+        String key = QiniuWrapper.upload(buff, uploadKey, false);
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
+        return key;
+    }
+
     public static String getUserHeadUrl(String key){
         return QiniuWrapper.getUrl(key,ThumbModel.THUMB_64.getValue());
     }

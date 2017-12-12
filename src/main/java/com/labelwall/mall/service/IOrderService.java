@@ -5,6 +5,8 @@ import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.vo.OrderProductVo;
 import com.labelwall.mall.vo.OrderVo;
 
+import java.util.Map;
+
 /**
  * Created by Administrator on 2017-12-08.
  */
@@ -63,4 +65,21 @@ public interface IOrderService {
      * @return
      */
     ResponseObject orderPay(Long orderNo, Integer id, String path);
+
+    /**
+     * 支付宝回调验证回调参数是否正确，并修改订单的状态，添加支付信息
+     *
+     * @param params
+     * @return
+     */
+    ResponseObject aliCallback(Map<String, String> params);
+
+    /**
+     * 查询订单是否支付
+     *
+     * @param id
+     * @param orderNo
+     * @return
+     */
+    ResponseObject queryOrderPayStatus(Integer id, Long orderNo);
 }

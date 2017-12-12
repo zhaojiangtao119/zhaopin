@@ -92,9 +92,11 @@
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
         <!--<table tableName="wall_cart" domainObjectName="Cart" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
-        <table tableName="wall_order" domainObjectName="Order" enableCountByExample="false" enableUpdateByExample="false"
+        <!--<table tableName="wall_order" domainObjectName="Order" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <table tableName="wall_order_item" domainObjectName="OrderItem" enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>-->
+        <table tableName="wall_pay_info" domainObjectName="PayInfo" enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"></table>
         <!-- geelynote mybatis插件的搭建 -->
     </context>

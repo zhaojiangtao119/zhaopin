@@ -201,4 +201,10 @@
         WHERE user_id = #{userId}
         ORDER BY create_time DESC
     </select>
+    <select id="selectByOrderNo" parameterType="long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_order
+        WHERE order_no = #{orderNo}
+    </select>
 </mapper>
