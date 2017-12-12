@@ -1,6 +1,6 @@
 package com.labelwall.util;
 
-import com.labelwall.mall.common.web.SessionUser;
+import com.labelwall.common.web.SessionUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;

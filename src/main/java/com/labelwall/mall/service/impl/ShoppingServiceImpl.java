@@ -1,18 +1,16 @@
 package com.labelwall.mall.service.impl;
 
 import com.google.common.collect.Lists;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ShoppingMapper;
 import com.labelwall.mall.dto.ShoppingDto;
-import com.labelwall.mall.entity.Shop;
 import com.labelwall.mall.entity.Shopping;
 import com.labelwall.mall.service.IShoppingService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

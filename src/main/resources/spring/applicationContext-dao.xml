@@ -61,7 +61,7 @@
         <property name="dataSource" ref="dataSource"/>
         <!--扫描映射文件-->
         <property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml"/>
-        <property name="mapperLocations" value="classpath:mappers/*Mapper.xml"/>
+        <property name="mapperLocations" value="classpath:mappers/mall/*Mapper.xml"/>
         <!-- 分页插件 -->
         <property name="plugins">
             <array>

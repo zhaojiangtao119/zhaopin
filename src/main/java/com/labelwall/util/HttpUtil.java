@@ -9,7 +9,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class HttpUtil {
 
-    public static boolean isAjaxRequest(HttpServletRequest request){
+    /**
+     * 判断请求是否为ajax请求
+     *
+     * @param request
+     * @return
+     */
+    public static boolean isAjaxRequest(HttpServletRequest request) {
         String header = request.getHeader("X-Requested-with");
         return !StringUtils.isBlank(header) && "XMLHttpRequest".equals(header);
     }

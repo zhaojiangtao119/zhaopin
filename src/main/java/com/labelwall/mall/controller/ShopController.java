@@ -1,7 +1,7 @@
 package com.labelwall.mall.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ShopDto;
 import com.labelwall.mall.service.IShopService;
 import org.springframework.beans.factory.annotation.Autowired;

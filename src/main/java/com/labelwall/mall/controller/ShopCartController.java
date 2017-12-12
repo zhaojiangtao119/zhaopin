@@ -1,22 +1,18 @@
 package com.labelwall.mall.controller;
 
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ShopCartDto;
 import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IShopCartService;
 import com.labelwall.mall.vo.CartVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.client.RequestMatcher;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 /**
  * Created by Administrator on 2017-12-07.

@@ -1,13 +1,9 @@
 package com.labelwall.mall.controller;
 
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.entity.User;
-import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IUserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

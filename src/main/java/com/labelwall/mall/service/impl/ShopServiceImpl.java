@@ -2,12 +2,11 @@ package com.labelwall.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ShopMapper;
 import com.labelwall.mall.dto.ShopDto;
-import com.labelwall.mall.entity.Shop;
 import com.labelwall.mall.service.IShopService;
 import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.collections.CollectionUtils;

@@ -1,4 +1,4 @@
-package com.labelwall.mall.common;
+package com.labelwall.common;
 
 /**
  * Created by Administrator on 2017-12-02.

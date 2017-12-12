@@ -3,7 +3,7 @@ package com.labelwall.mall.service.impl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dao.TopicCategoryMapper;
 import com.labelwall.mall.dto.TopicCategoryDto;
 import com.labelwall.mall.entity.TopicCategory;

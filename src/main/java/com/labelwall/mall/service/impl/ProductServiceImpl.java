@@ -2,8 +2,8 @@ package com.labelwall.mall.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ProductMapper;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductService;

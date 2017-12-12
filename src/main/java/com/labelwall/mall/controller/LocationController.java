@@ -1,6 +1,6 @@
 package com.labelwall.mall.controller;
 
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.entity.City;
 import com.labelwall.mall.entity.Province;
 import com.labelwall.mall.entity.School;

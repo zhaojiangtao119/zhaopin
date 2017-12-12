@@ -1,14 +1,11 @@
 package com.labelwall.mall.controller;
 
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ShoppingDto;
 import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IShoppingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;

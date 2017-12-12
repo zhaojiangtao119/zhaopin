@@ -1,6 +1,6 @@
 package com.labelwall.mall.service;
 
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ShoppingDto;
 
 import java.util.List;

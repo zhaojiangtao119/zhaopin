@@ -1,6 +1,6 @@
 package com.labelwall.mall.controller;
 
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.message.UserResponseMessage;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

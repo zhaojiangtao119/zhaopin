@@ -1,10 +1,6 @@
-package com.labelwall.mall.common;
+package com.labelwall.common;
 
-import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.util.PropertiesUtil;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * Created by Administrator on 2017-12-04.

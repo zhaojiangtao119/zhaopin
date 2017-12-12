@@ -1,8 +1,8 @@
 package com.labelwall.mall.service.impl;
 
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.UserMapper;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.User;
@@ -10,7 +10,6 @@ import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.DateTimeUtil;
 import com.labelwall.util.MD5Util;
-import com.labelwall.util.PropertiesUtil;
 import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

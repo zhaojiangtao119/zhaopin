@@ -2,9 +2,9 @@ package com.labelwall.mall.service.impl;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ShopCartMapper;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.dto.ShopCartDto;

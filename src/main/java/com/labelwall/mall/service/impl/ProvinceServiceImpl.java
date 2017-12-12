@@ -1,6 +1,6 @@
 package com.labelwall.mall.service.impl;
 
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dao.ProvinceMapper;
 import com.labelwall.mall.entity.Province;
 import com.labelwall.mall.service.IProvinceService;

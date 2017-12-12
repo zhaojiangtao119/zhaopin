@@ -1,7 +1,7 @@
 package com.labelwall.mall.service;
 
 import com.github.pagehelper.PageInfo;
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.TopicPostReplyDto;
 
 /**

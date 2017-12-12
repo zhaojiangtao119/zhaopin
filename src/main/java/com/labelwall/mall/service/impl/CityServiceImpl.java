@@ -1,6 +1,6 @@
 package com.labelwall.mall.service.impl;
 
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dao.CityMapper;
 import com.labelwall.mall.entity.City;
 import com.labelwall.mall.service.ICityService;

@@ -1,6 +1,6 @@
 package com.labelwall.interceptor;
 
-import com.labelwall.mall.common.Const;
+import com.labelwall.common.Const;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.util.HttpUtil;
 import org.springframework.web.servlet.HandlerInterceptor;

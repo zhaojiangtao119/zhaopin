@@ -1,10 +1,8 @@
 package com.labelwall.mall.service;
 
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ShopCartDto;
 import com.labelwall.mall.vo.CartVo;
-
-import java.util.List;
 
 /**
  * Created by Administrator on 2017-12-07.

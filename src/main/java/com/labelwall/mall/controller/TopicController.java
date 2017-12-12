@@ -1,15 +1,13 @@
 package com.labelwall.mall.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.labelwall.mall.common.Const;
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.common.ResponseStatus;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dto.TopicCategoryDto;
 import com.labelwall.mall.dto.TopicPostDto;
 import com.labelwall.mall.dto.TopicPostReplyDto;
 import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.entity.TopicPost;
-import com.labelwall.mall.message.UserResponseMessage;
 import com.labelwall.mall.service.ITopicCategoryService;
 import com.labelwall.mall.service.ITopicPostReplyService;
 import com.labelwall.mall.service.ITopicPostService;

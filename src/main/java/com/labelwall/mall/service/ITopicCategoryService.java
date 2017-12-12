@@ -1,9 +1,7 @@
 package com.labelwall.mall.service;
 
-import com.labelwall.mall.common.ResponseObject;
-import com.labelwall.mall.dto.ProductCategoryDto;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.TopicCategoryDto;
-import com.labelwall.mall.entity.TopicCategory;
 
 import java.util.List;
 

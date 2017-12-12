@@ -1,8 +1,7 @@
 package com.labelwall.mall.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.labelwall.mall.common.web.SessionUser;
+import com.labelwall.common.web.SessionUser;
 import com.labelwall.mall.entity.User;
 import org.springframework.web.multipart.MultipartFile;
 

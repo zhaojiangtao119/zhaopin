@@ -1,7 +1,7 @@
 package com.labelwall.mall.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.labelwall.mall.common.ResponseObject;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ProductCategoryDto;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductCategoryService;
