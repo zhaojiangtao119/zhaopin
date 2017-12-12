@@ -18,6 +18,11 @@ public interface OrderItemMapper {
 
     int updateByPrimaryKey(OrderItem record);
 
+    /**
+     * 订单明细的批量插入
+     *
+     * @param orderItemList
+     */
     void batchInsert(@Param("orderItemList") List<OrderItem> orderItemList);
 
     /**

@@ -3,6 +3,7 @@ package com.labelwall.mall.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.labelwall.mall.common.Const;
 import com.labelwall.mall.common.ResponseObject;
 import com.labelwall.mall.common.ResponseStatus;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -146,9 +148,9 @@ public class OrderServiceImpl implements IOrderService {
     private void reduceProductStock(List<OrderItem> orderItemList) {
         for (OrderItem item : orderItemList) {
             ProductDto productDto = productMapper.selectByPrimaryKey(item.getProductId());
-            productDto.setStock(productDto.getStock() - item.getQuantity());
             Product product = new Product();
-            BeanUtils.copyProperties(productDto, product);
+            product.setStock(productDto.getStock() - item.getQuantity());
+            product.setId(productDto.getId());
             productMapper.updateByPrimaryKeySelective(product);
         }
     }
@@ -222,7 +224,6 @@ public class OrderServiceImpl implements IOrderService {
         return orderItemVo;
     }
 
-
     @Override
     public ResponseObject cancelOrder(Integer userId, Long orderNo) {
         if (orderNo == null) {
@@ -248,8 +249,8 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public ResponseObject<PageInfo> userOrderList(Integer userId, Integer pageNum, Integer pageSize) {
         List<Order> orderList = orderMapper.userOrderList(userId);
-        PageHelper.startPage(pageNum,pageSize);
-        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList,userId);
+        PageHelper.startPage(pageNum, pageSize);
+        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, userId);
         PageInfo pageInfo = new PageInfo(orderList);
         pageInfo.setList(orderVoList);
         return ResponseObject.successStautsData(pageInfo);
@@ -257,9 +258,9 @@ public class OrderServiceImpl implements IOrderService {
 
     private List<OrderVo> assembleOrderVoList(List<Order> orderList, Integer userId) {
         List<OrderVo> orderVoList = Lists.newArrayList();
-        for(Order item : orderList){
-            List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(item.getOrderNo(),userId);
-            OrderVo orderVo = this.assembleOrderVo(item,orderItemList);
+        for (Order item : orderList) {
+            List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(item.getOrderNo(), userId);
+            OrderVo orderVo = this.assembleOrderVo(item, orderItemList);
             orderVoList.add(orderVo);
         }
         return orderVoList;
@@ -267,15 +268,15 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public ResponseObject<OrderVo> getOrderDetail(Integer userId, Long orderNo) {
-        if(orderNo == null){
+        if (orderNo == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
-        Order order = orderMapper.selectByUserIdOrderNo(userId,orderNo);
-        if(order == null){
+        Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
+        if (order == null) {
             return ResponseObject.failStatusMessage("");
         }
-        List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(orderNo,userId);
-        OrderVo orderVo = this.assembleOrderVo(order,orderItemList);
+        List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(orderNo, userId);
+        OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
         return ResponseObject.successStautsData(orderVo);
     }
 
@@ -283,20 +284,26 @@ public class OrderServiceImpl implements IOrderService {
     public ResponseObject<OrderProductVo> getOrderCartProduct(Integer userId) {
         OrderProductVo orderProductVo = new OrderProductVo();
         List<ShopCartDto> shopCartDtoList = shopCartMapper.selectCheckedCartByUserId(userId);
-        ResponseObject response = this.getShopCartOrderItem(userId,shopCartDtoList);
-        if(!response.isSuccess()){
+        ResponseObject response = this.getShopCartOrderItem(userId, shopCartDtoList);
+        if (!response.isSuccess()) {
             return response;
         }
         List<OrderItem> orderItemList = (List<OrderItem>) response.getData();
         List<OrderItemVo> orderItemVoList = Lists.newArrayList();
         BigDecimal payment = new BigDecimal("0");
-        for(OrderItem orderItem : orderItemList){
-            payment = BigDecimalUtil.add(payment.doubleValue(),orderItem.getTotalPrice().doubleValue());
+        for (OrderItem orderItem : orderItemList) {
+            payment = BigDecimalUtil.add(payment.doubleValue(), orderItem.getTotalPrice().doubleValue());
             OrderItemVo orderItemVo = this.assembleOrderItemVo(orderItem);
             orderItemVoList.add(orderItemVo);
         }
         orderProductVo.setOrderItemVoList(orderItemVoList);
         orderProductVo.setProductTotalPrice(payment);
         return ResponseObject.successStautsData(orderProductVo);
+    }
+
+    @Override
+    public ResponseObject orderPay(Long orderNo, Integer id, String path) {
+        Map<String, String> resultMap = Maps.newHashMap();
+        return null;
     }
 }

@@ -14,6 +14,7 @@
             <arg column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         </constructor>
         <association property="productDto" javaType="com.labelwall.mall.dto.ProductDto">
+            <result property="id" column="product_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
             <result property="name" column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <result property="subtitle" column="subtitle" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <result property="mainImage" column="main_image" jdbcType="VARCHAR" javaType="java.lang.String"/>
@@ -27,8 +28,9 @@
             DATE_FORMAT(wc.create_time,'%Y-%m-%d %H-%I-%S') create_time_str,
             DATE_FORMAT(wc.update_time,'%Y-%m-%d %H-%I-%S') update_time_str
     </sql>
+
     <sql id="product_column">
-        wp.name,wp.subtitle,wp.main_image,wp.price,wp.stock,wp.status
+       wp.id product_id,wp.name,wp.subtitle,wp.main_image,wp.price,wp.stock,wp.status
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -168,8 +170,9 @@
     </select>
     <select id="selectCheckedCartByUserId" parameterType="int" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>,<include refid="product_column"/>
-        FROM wall_cart wc
-        WHERE wc.checked = 1 AND wc.user_id = #{userId}
+        <include refid="Base_Column_List"/>,
+        <include refid="product_column"/>
+        FROM wall_cart wc,wall_product wp
+        WHERE wc.product_id = wp.id AND wc.checked = 1 AND wc.user_id = #{userId}
     </select>
 </mapper>

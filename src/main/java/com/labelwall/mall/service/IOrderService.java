@@ -20,6 +20,7 @@ public interface IOrderService {
 
     /**
      * 取消订单，取消未支付的订单
+     *
      * @param id
      * @param orderNo
      * @return
@@ -28,6 +29,7 @@ public interface IOrderService {
 
     /**
      * 订单列表
+     *
      * @param id
      * @param pageNum
      * @param pageSize
@@ -37,6 +39,7 @@ public interface IOrderService {
 
     /**
      * 获取订单详情
+     *
      * @param id
      * @param orderNo
      * @return
@@ -45,8 +48,19 @@ public interface IOrderService {
 
     /**
      * 获取订单中的商品明细
+     *
      * @param id
      * @return
      */
     ResponseObject<OrderProductVo> getOrderCartProduct(Integer id);
+
+    /**
+     * 订单支付
+     *
+     * @param orderNo
+     * @param id
+     * @param path
+     * @return
+     */
+    ResponseObject orderPay(Long orderNo, Integer id, String path);
 }
