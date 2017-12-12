@@ -28,27 +28,18 @@ public class ShoppingController {
     public ResponseObject<ShoppingDto> getShoppingById(@PathVariable(value = "shoppingId") Integer shoppingId,
                                                        HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shoppingService.getShoppingById(userDto.getId(), shoppingId);
     }
 
     @RequestMapping(value = "get_shopping_by_user_id", method = RequestMethod.GET)
     public ResponseObject<List<ShoppingDto>> getShoppingByUserId(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shoppingService.getShoppingByUserId(userDto.getId());
     }
 
     @RequestMapping(value = "add_shopping", method = RequestMethod.POST)
     public ResponseObject<ShoppingDto> addShopping(HttpSession session, ShoppingDto shoppingDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         shoppingDto.setUserId(userDto.getId());
         return shoppingService.addShopping(shoppingDto);
     }
@@ -61,9 +52,6 @@ public class ShoppingController {
     @RequestMapping(value = "update_shopping", method = RequestMethod.PUT)
     public ResponseObject<ShoppingDto> updateShopping(HttpSession session, ShoppingDto shoppingDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         shoppingDto.setUserId(userDto.getId());
         return shoppingService.updateShopping(shoppingDto);
     }
@@ -72,9 +60,6 @@ public class ShoppingController {
     public ResponseObject removeShopping(HttpSession session,
                                          @PathVariable(value = "shoppingId") Integer shoppingId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shoppingService.removeShopping(userDto.getId(), shoppingId);
     }
 }

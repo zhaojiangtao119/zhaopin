@@ -37,9 +37,6 @@ public class ShopCartController {
     @RequestMapping(value = "get_cart_list", method = RequestMethod.GET)
     public ResponseObject<CartVo> getCartList(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.getCartList(userDto.getId());
     }
 
@@ -52,9 +49,6 @@ public class ShopCartController {
     @RequestMapping(value = "add_cart", method = RequestMethod.POST)
     public ResponseObject<CartVo> addCart(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         shopCartDto.setUserId(userDto.getId());
         return shopCartService.addCart(shopCartDto);
     }
@@ -68,9 +62,6 @@ public class ShopCartController {
     @RequestMapping(value = "update_quantity", method = RequestMethod.PUT)
     public ResponseObject<CartVo> updateQuantity(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         shopCartDto.setUserId(userDto.getId());
         return shopCartService.updateQuantity(shopCartDto);
     }
@@ -80,9 +71,6 @@ public class ShopCartController {
                                              @PathVariable("productIds") String productIds) {
         //TODO 批量删除的规则，可以使用 数组 来接收服务端传递的参数（商品的id），
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.removeCart(userDto.getId(), productIds);
     }
 
@@ -95,9 +83,6 @@ public class ShopCartController {
     @RequestMapping(value = "select_all", method = RequestMethod.GET)
     public ResponseObject<CartVo> selectAll(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.selectOrUnSelect(userDto.getId(), null, Const.Cart.CHECKED);
     }
 
@@ -110,9 +95,6 @@ public class ShopCartController {
     @RequestMapping(value = "un_select_all", method = RequestMethod.GET)
     public ResponseObject<CartVo> unSelectAll(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.selectOrUnSelect(userDto.getId(), null, Const.Cart.UN_CHECKED);
     }
 
@@ -127,9 +109,6 @@ public class ShopCartController {
     public ResponseObject<CartVo> select(HttpSession session,
                                          @PathVariable("productId")Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.CHECKED);
     }
 
@@ -144,9 +123,6 @@ public class ShopCartController {
     public ResponseObject<CartVo> unSelect(HttpSession session,
                                            @PathVariable("productId") Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.UN_CHECKED);
     }
 
@@ -159,9 +135,6 @@ public class ShopCartController {
     @RequestMapping(value = "get_cart_product_num", method = RequestMethod.GET)
     public ResponseObject<Integer> getCartProductNum(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return shopCartService.getCartProductCount(userDto.getId());
     }
 }

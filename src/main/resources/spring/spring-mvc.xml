@@ -34,7 +34,30 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-
+    <mvc:interceptors>
+        <!--登录拦截器-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/auth/**"/>
+            <!--用户登录注册-->
+            <mvc:exclude-mapping path="/user/login"/>
+            <mvc:exclude-mapping path="/user/register"/>
+            <mvc:exclude-mapping path="/user/check_username_email"/>
+            <!--区域-->
+            <mvc:exclude-mapping path="/location/**"/>
+            <!--帖子及回复-->
+            <mvc:exclude-mapping path="/topic/get_category"/>
+            <mvc:exclude-mapping path="/topic/get_category_id"/>
+            <mvc:exclude-mapping path="/topic/get_topic_post_list/**"/>
+            <mvc:exclude-mapping path="/topic/get_topic_post_by_id/**"/>
+            <mvc:exclude-mapping path="/topic/get_topic_reply_by_post_id/**"/>
+            <!--商铺-->
+            <mvc:exclude-mapping path="/shop/**"/>
+            <!--商品-->
+            <mvc:exclude-mapping path="/product/**"/>
+            <bean class="com.labelwall.interceptor.AuthInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
     <!--视图解析器-->
 </beans>

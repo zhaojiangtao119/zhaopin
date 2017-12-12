@@ -66,13 +66,10 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "get_user_info", method = RequestMethod.GET)
-    public ResponseObject<User> getUserInfo(HttpSession session) {
+    public ResponseObject<UserDto> getUserInfo(HttpSession session) {
         //TODO 获取用户信息需要登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto != null) {
-            return ResponseObject.successStautsData(userDto);
-        }
-        return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
+        return ResponseObject.successStautsData(userDto);
     }
 
     /**
@@ -112,9 +109,6 @@ public class UserController {
     public ResponseObject modifyUserInfo(HttpSession session, UserDto userDtoNew) {
         //TODO 修改信息,需要登录
         UserDto userDtoOld = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDtoOld == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         userDtoNew.setId(userDtoOld.getId());
         userDtoNew.setUsername(userDtoOld.getUsername());//不允许用户修改用户名
         ResponseObject response = userService.modifyUserInfo(userDtoNew);
@@ -138,9 +132,6 @@ public class UserController {
                                         HttpSession session) {
         //TODO 修改密码判断用户是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return userService.restPassword(userDto.getId(), passwordOld, passwordNew);
     }
 }

@@ -84,9 +84,6 @@ public class TopicController {
     public ResponseObject<TopicPostDto> publishPost(HttpSession session, TopicPostDto topicPostDto) {
         //TODO 创建帖子的，用户登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         if (topicPostDto == null || StringUtils.isBlank(topicPostDto.getTitle())) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
@@ -99,18 +96,12 @@ public class TopicController {
      *
      * @param topicPostId
      * @param type
-     * @param session
      * @return
      */
     @RequestMapping(value = "update_post_like_dislike/{topicPostId}/{clickType}", method = RequestMethod.PUT)
     public ResponseObject updatePostLikeDislike(@PathVariable("topicPostId") Integer topicPostId,
-                                                @PathVariable("clickType") Integer type,
-                                                HttpSession session) {
+                                                @PathVariable("clickType") Integer type) {
         //TODO 帖子的like/dislike 判断是否登录
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return topicPostService.updatePostLikeDislike(topicPostId, type);
     }
 
@@ -151,9 +142,6 @@ public class TopicController {
     public ResponseObject<TopicPostReplyDto> pulishPostReply(HttpSession session, TopicPostReplyDto topicPostReplyDto) {
         //TODO 帖子的回复 判断是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         if (StringUtils.isBlank(topicPostReplyDto.getImage()) && StringUtils.isBlank(topicPostReplyDto.getContent())) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
@@ -166,18 +154,12 @@ public class TopicController {
      *
      * @param topicPostReplyId
      * @param type
-     * @param session
      * @return
      */
     @RequestMapping(value = "update_post_reply_like_dislike/{topicPostReplyId}/{clickType}", method = RequestMethod.PUT)
     public ResponseObject updatePostReplyLikeDislike(@PathVariable("topicPostReplyId") Integer topicPostReplyId,
-                                                     @PathVariable("clickType") Integer type,
-                                                     HttpSession session) {
+                                                     @PathVariable("clickType") Integer type) {
         //TODO 回复的like/dislike 判断是否登录
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            return ResponseObject.failStatusMessage(UserResponseMessage.NOT_LOGIN.getValue());
-        }
         return topicPostReplyService.updatePostReplyLikeDislike(topicPostReplyId, type);
     }
 }
