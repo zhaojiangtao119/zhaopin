@@ -9,4 +9,9 @@ public class CourseConst {
 
     public static final String UPDATE_TIME = "update_time";
 
+    public interface CourseType {
+        int charges = 0;//付费
+        int free = 1;//免费
+    }
+
 }

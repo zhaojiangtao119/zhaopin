@@ -38,4 +38,11 @@ public interface ICourseService {
      * @return
      */
     ResponseObject<CourseDto> getCourse(Integer id);
+
+    /**
+     * 根据主键获取课程信息
+     * @param id
+     * @return
+     */
+    Course selectByPrimaryKey(Integer id);
 }

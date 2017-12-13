@@ -63,4 +63,10 @@ public class CourseServiceImpl implements ICourseService {
         courseDto.setUserDto(userDto);
         return ResponseObject.successStautsData(courseDto);
     }
+
+    @Override
+    public Course selectByPrimaryKey(Integer id) {
+        Course course = courseMapper.selectByPrimaryKey(id);
+        return course;
+    }
 }
