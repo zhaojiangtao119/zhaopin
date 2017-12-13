@@ -3,6 +3,7 @@ package com.labelwall.course.controller;
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.course.dto.CourseCategoryDto;
+import com.labelwall.course.dto.CourseDto;
 import com.labelwall.course.dto.CourseQueryDto;
 import com.labelwall.course.entity.Course;
 import com.labelwall.course.service.ICourseCategoryService;
@@ -54,12 +55,20 @@ public class CourseController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "get_course/{pageNum}/{pageSize}", method = RequestMethod.POST)
-    public ResponseObject<PageInfo> getCourse(CourseQueryDto courseQueryDto,
+    @RequestMapping(value = "get_course_list/{pageNum}/{pageSize}", method = RequestMethod.POST)
+    public ResponseObject<PageInfo> getCourseList(CourseQueryDto courseQueryDto,
                                               @PathVariable("pageNum") Integer pageNum,
                                               @PathVariable("pageSize") Integer pageSize) {
-        return courseService.getCourse(courseQueryDto, pageNum, pageSize);
+        return courseService.getCourseList(courseQueryDto, pageNum, pageSize);
     }
 
-
+    /**
+     * 课程详情（课程描述，讲师信息）
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "get_course/{id}",method = RequestMethod.GET)
+    public ResponseObject<CourseDto> getCourse(@PathVariable("id")Integer id){
+        return courseService.getCourse(id);
+    }
 }

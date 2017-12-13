@@ -31,5 +31,5 @@ public interface CourseMapper {
      * @param courseQueryDto
      * @return
      */
-    List<Course> getCourse(CourseQueryDto courseQueryDto);
+    List<Course> getCourseList(CourseQueryDto courseQueryDto);
 }

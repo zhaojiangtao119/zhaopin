@@ -204,4 +204,10 @@
         set password = #{passwordNew}
         WHERE id = #{userId}
     </update>
+    <select id="selectByUsername" resultMap="BaseResultMap" parameterType="string">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_user
+        WHERE username = #{username}
+    </select>
 </mapper>

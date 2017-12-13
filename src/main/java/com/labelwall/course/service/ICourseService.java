@@ -2,6 +2,7 @@ package com.labelwall.course.service;
 
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.course.dto.CourseDto;
 import com.labelwall.course.dto.CourseQueryDto;
 import com.labelwall.course.entity.Course;
 
@@ -22,9 +23,19 @@ public interface ICourseService {
      * 获取课程
      *
      * @param courseQueryDto 搜索条件
+     *                       排序（sortField:最新，最热）
+     *                       搜索条件：keyword(关键字)，classify/subClassify,free(免费与否)
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResponseObject<PageInfo> getCourse(CourseQueryDto courseQueryDto, Integer pageNum, Integer pageSize);
+    ResponseObject<PageInfo> getCourseList(CourseQueryDto courseQueryDto, Integer pageNum, Integer pageSize);
+
+    /**
+     * 获取课程详情
+     *
+     * @param id
+     * @return
+     */
+    ResponseObject<CourseDto> getCourse(Integer id);
 }

@@ -336,12 +336,15 @@
         WHERE free = #{free} AND del = 0 AND onsale = 1
         LIMIT 0,5
     </select>
-    <select id="getCourse" resultMap="BaseResultMap" parameterType="com.labelwall.course.dto.CourseQueryDto">
+    <select id="getCourseList" resultMap="BaseResultMap" parameterType="com.labelwall.course.dto.CourseQueryDto">
         SELECT
         <include refid="Base_Column_List"/>
         FROM wall_course
         <trim prefix="WHERE" prefixOverrides="AND|OR">
             AND del = 0 AND onsale = 1
+            <if test="free != null">
+                AND free = #{free}
+            </if>
             <if test="classify != null">
                 AND classify = #{classify}
             </if>

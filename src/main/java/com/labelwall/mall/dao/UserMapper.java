@@ -23,4 +23,6 @@ public interface UserMapper {
     int checkEmail(String str);
 
     int restPassword(@Param("userId") Integer id, @Param("passwordNew") String passwordNew);
+
+    User selectByUsername(@Param("username")String username);
 }

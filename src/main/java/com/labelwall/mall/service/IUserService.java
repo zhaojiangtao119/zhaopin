@@ -50,4 +50,11 @@ public interface IUserService {
      * @return
      */
     ResponseObject restPassword(Integer id, String passwordOld, String passwordNew);
+
+    /**
+     * 根据用户名获取用户对象
+     * @param username
+     * @return
+     */
+    UserDto selectByUsername(String username);
 }
