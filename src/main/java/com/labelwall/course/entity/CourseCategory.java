@@ -21,9 +21,9 @@ public class CourseCategory {
 
     private String updateUser;
 
-    private Boolean del;
+    private Integer del;
 
-    public CourseCategory(Integer id, String name, String code, String parentCode, Integer sort, Date createTime, String createUser, Date updateTime, String updateUser, Boolean del) {
+    public CourseCategory(Integer id, String name, String code, String parentCode, Integer sort, Date createTime, String createUser, Date updateTime, String updateUser, Integer del) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -112,11 +112,11 @@ public class CourseCategory {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
-    public Boolean getDel() {
+    public Integer getDel() {
         return del;
     }
 
-    public void setDel(Boolean del) {
+    public void setDel(Integer del) {
         this.del = del;
     }
 }

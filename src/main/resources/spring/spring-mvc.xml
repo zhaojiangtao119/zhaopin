@@ -59,6 +59,8 @@
             <mvc:exclude-mapping path="/course/**"/>
             <!--section-->
             <mvc:exclude-mapping path="/section/**"/>
+            <!--comment-->
+            <mvc:exclude-mapping path="/comment/get_comment/**"/>
             <bean class="com.labelwall.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

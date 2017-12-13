@@ -14,4 +14,9 @@ public class CourseConst {
         int free = 1;//免费
     }
 
+    public interface CommentType {
+        int comment = 0;//评论
+        int questions = 1;//问答
+    }
+
 }

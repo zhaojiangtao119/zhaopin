@@ -9,13 +9,13 @@
             <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="sort" jdbcType="INTEGER" javaType="java.lang.Integer"/>
             <arg column="time" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="onsale" jdbcType="BIT" javaType="java.lang.Boolean"/>
+            <arg column="onsale" jdbcType="INTEGER" javaType="java.lang.Integer"/>
             <arg column="video_url" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="create_user" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="update_user" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="del" jdbcType="BIT" javaType="java.lang.Boolean"/>
+            <arg column="del" jdbcType="INTEGER" javaType="java.lang.Integer"/>
             <arg column="section_desc" jdbcType="VARCHAR" javaType="java.lang.String"/>
         </constructor>
     </resultMap>
@@ -40,9 +40,9 @@
       update_time, update_user, del, 
       section_desc)
     values (#{id,jdbcType=INTEGER}, #{courseId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, 
-      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{time,jdbcType=VARCHAR}, #{onsale,jdbcType=BIT}, 
+      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{time,jdbcType=VARCHAR}, #{onsale,jdbcType=INTEGER},
       #{videoUrl,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR},
-      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{del,jdbcType=BIT}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, #{del,jdbcType=INTEGER},
       #{sectionDesc,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.course.entity.CourseSection">
@@ -111,7 +111,7 @@
                 #{time,jdbcType=VARCHAR},
             </if>
             <if test="onsale != null">
-                #{onsale,jdbcType=BIT},
+                #{onsale,jdbcType=INTEGER},
             </if>
             <if test="videoUrl != null">
                 #{videoUrl,jdbcType=VARCHAR},
@@ -129,7 +129,7 @@
                 #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="del != null">
-                #{del,jdbcType=BIT},
+                #{del,jdbcType=INTEGER},
             </if>
             <if test="sectionDesc != null">
                 #{sectionDesc,jdbcType=VARCHAR},
@@ -155,7 +155,7 @@
                 time = #{time,jdbcType=VARCHAR},
             </if>
             <if test="onsale != null">
-                onsale = #{onsale,jdbcType=BIT},
+                onsale = #{onsale,jdbcType=INTEGER},
             </if>
             <if test="videoUrl != null">
                 video_url = #{videoUrl,jdbcType=VARCHAR},
@@ -173,7 +173,7 @@
                 update_user = #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="del != null">
-                del = #{del,jdbcType=BIT},
+                del = #{del,jdbcType=INTEGER},
             </if>
             <if test="sectionDesc != null">
                 section_desc = #{sectionDesc,jdbcType=VARCHAR},
@@ -188,13 +188,13 @@
       name = #{name,jdbcType=VARCHAR},
       sort = #{sort,jdbcType=INTEGER},
       time = #{time,jdbcType=VARCHAR},
-      onsale = #{onsale,jdbcType=BIT},
+      onsale = #{onsale,jdbcType=INTEGER},
       video_url = #{videoUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=VARCHAR},
-      del = #{del,jdbcType=BIT},
+      del = #{del,jdbcType=INTEGER},
       section_desc = #{sectionDesc,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

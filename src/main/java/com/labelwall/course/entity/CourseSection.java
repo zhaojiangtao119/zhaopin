@@ -14,8 +14,10 @@ public class CourseSection {
     private Integer sort;
 
     private String time;
-
-    private Boolean onsale;
+    /**
+     * 未上架（0）、上架（1）
+     **/
+    private Integer onsale;
 
     private String videoUrl;
 
@@ -27,11 +29,11 @@ public class CourseSection {
 
     private String updateUser;
 
-    private Boolean del;
+    private Integer del;
 
     private String sectionDesc;
 
-    public CourseSection(Integer id, Integer courseId, Integer parentId, String name, Integer sort, String time, Boolean onsale, String videoUrl, Date createTime, String createUser, Date updateTime, String updateUser, Boolean del, String sectionDesc) {
+    public CourseSection(Integer id, Integer courseId, Integer parentId, String name, Integer sort, String time, Integer onsale, String videoUrl, Date createTime, String createUser, Date updateTime, String updateUser, Integer del, String sectionDesc) {
         this.id = id;
         this.courseId = courseId;
         this.parentId = parentId;
@@ -100,11 +102,11 @@ public class CourseSection {
         this.time = time == null ? null : time.trim();
     }
 
-    public Boolean getOnsale() {
+    public Integer getOnsale() {
         return onsale;
     }
 
-    public void setOnsale(Boolean onsale) {
+    public void setOnsale(Integer onsale) {
         this.onsale = onsale;
     }
 
@@ -148,11 +150,11 @@ public class CourseSection {
         this.updateUser = updateUser == null ? null : updateUser.trim();
     }
 
-    public Boolean getDel() {
+    public Integer getDel() {
         return del;
     }
 
-    public void setDel(Boolean del) {
+    public void setDel(Integer del) {
         this.del = del;
     }
 

@@ -12,7 +12,7 @@
             <arg column="create_user" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="update_user" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="del" jdbcType="BIT" javaType="java.lang.Boolean"/>
+            <arg column="del" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
@@ -37,7 +37,7 @@
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
       #{parentCode,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
-      #{del,jdbcType=BIT})
+      #{del,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.course.entity.CourseCategory">
         insert into wall_category_course
@@ -102,7 +102,7 @@
                 #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="del != null">
-                #{del,jdbcType=BIT},
+                #{del,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -134,7 +134,7 @@
                 update_user = #{updateUser,jdbcType=VARCHAR},
             </if>
             <if test="del != null">
-                del = #{del,jdbcType=BIT},
+                del = #{del,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -149,7 +149,7 @@
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=VARCHAR},
-      del = #{del,jdbcType=BIT}
+      del = #{del,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
     <select id="getCourseCategory" parameterType="string" resultMap="BaseResultMap">
@@ -168,7 +168,7 @@
         WHERE code = #{code}
     </select>
     <select id="selectByParentCode" parameterType="string" resultMap="BaseResultMap">
-        SELECT 
+        SELECT
         <include refid="Base_Column_List"/>
         FROM wall_category_course
         WHERE parent_code = #{code}
