@@ -9,7 +9,7 @@
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!--扫描bean，主要是controller-->
-    <context:component-scan base-package="com.labelwall.mall" annotation-config="true"/>
+    <context:component-scan base-package="com.labelwall" annotation-config="true"/>
 
     <!--注解驱动-->
     <mvc:annotation-driven>
@@ -55,6 +55,8 @@
             <mvc:exclude-mapping path="/shop/**"/>
             <!--商品-->
             <mvc:exclude-mapping path="/product/**"/>
+            <!--course-->
+            <mvc:exclude-mapping path="/course/**"/>
             <bean class="com.labelwall.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

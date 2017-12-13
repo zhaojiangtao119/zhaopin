@@ -61,7 +61,12 @@
         <property name="dataSource" ref="dataSource"/>
         <!--扫描映射文件-->
         <property name="configLocation" value="classpath:mybatis/sqlMapConfig.xml"/>
-        <property name="mapperLocations" value="classpath:mappers/mall/*Mapper.xml"/>
+        <property name="mapperLocations">
+            <array>
+                <value>classpath:mappers/mall/*Mapper.xml</value>
+                <value>classpath:mappers/course/*Mapper.xml</value>
+            </array>
+        </property>
         <!-- 分页插件 -->
         <property name="plugins">
             <array>
@@ -77,7 +82,7 @@
     </bean>
     <!--mybatis扫描dao（接口文件）-->
     <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.labelwall.mall.dao"/>
+        <property name="basePackage" value="com.labelwall.mall.dao,com.labelwall.course.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     </bean>
 
