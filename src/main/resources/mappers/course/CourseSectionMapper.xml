@@ -190,7 +190,6 @@
       time = #{time,jdbcType=VARCHAR},
       onsale = #{onsale,jdbcType=INTEGER},
       video_url = #{videoUrl,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=VARCHAR},

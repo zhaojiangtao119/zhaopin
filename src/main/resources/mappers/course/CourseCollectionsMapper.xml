@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.labelwall.course.dao.CourseCategoryMapper">
-    <resultMap id="BaseResultMap" type="com.labelwall.course.entity.CourseCategory">
+<mapper namespace="com.labelwall.course.dao.CourseCollectionsMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.course.entity.CourseCollections">
         <constructor>
             <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-            <arg column="name" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="code" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="parent_code" jdbcType="VARCHAR" javaType="java.lang.String"/>
-            <arg column="sort" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="classify" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="object_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="tips" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="create_user" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
@@ -16,50 +16,48 @@
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
-    id, name, code, parent_code, sort, create_time, create_user, update_time, update_user, 
+    id, user_id, classify, object_id, tips, create_time, create_user, update_time, update_user, 
     del
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
-        from wall_category_course
+        from wall_course_collections
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from wall_category_course
+    delete from wall_course_collections
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.labelwall.course.entity.CourseCategory">
-    insert into wall_category_course (id, name, code,
-      parent_code, sort, create_time, 
+    <insert id="insert" parameterType="com.labelwall.course.entity.CourseCollections">
+    insert into wall_course_collections (id, user_id, classify, 
+      object_id, tips, create_time, 
       create_user, update_time, update_user, 
       del)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, 
-      #{parentCode,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{classify,jdbcType=INTEGER}, 
+      #{objectId,jdbcType=INTEGER}, #{tips,jdbcType=VARCHAR}, now(),
       #{createUser,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{updateUser,jdbcType=VARCHAR}, 
       #{del,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType="com.labelwall.course.entity.CourseCategory">
-        insert into wall_category_course
+    <insert id="insertSelective" parameterType="com.labelwall.course.entity.CourseCollections">
+        insert into wall_course_collections
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
             </if>
-            <if test="name != null">
-                name,
+            <if test="userId != null">
+                user_id,
             </if>
-            <if test="code != null">
-                code,
+            <if test="classify != null">
+                classify,
             </if>
-            <if test="parentCode != null">
-                parent_code,
+            <if test="objectId != null">
+                object_id,
             </if>
-            <if test="sort != null">
-                sort,
+            <if test="tips != null">
+                tips,
             </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
+            create_time,
             <if test="createUser != null">
                 create_user,
             </if>
@@ -77,21 +75,19 @@
             <if test="id != null">
                 #{id,jdbcType=INTEGER},
             </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
             </if>
-            <if test="code != null">
-                #{code,jdbcType=VARCHAR},
+            <if test="classify != null">
+                #{classify,jdbcType=INTEGER},
             </if>
-            <if test="parentCode != null">
-                #{parentCode,jdbcType=VARCHAR},
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
             </if>
-            <if test="sort != null">
-                #{sort,jdbcType=INTEGER},
+            <if test="tips != null">
+                #{tips,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
-            </if>
+            now(),
             <if test="createUser != null">
                 #{createUser,jdbcType=VARCHAR},
             </if>
@@ -106,20 +102,20 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.course.entity.CourseCategory">
-        update wall_category_course
+    <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.course.entity.CourseCollections">
+        update wall_course_collections
         <set>
-            <if test="name != null">
-                name = #{name,jdbcType=VARCHAR},
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
             </if>
-            <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
+            <if test="classify != null">
+                classify = #{classify,jdbcType=INTEGER},
             </if>
-            <if test="parentCode != null">
-                parent_code = #{parentCode,jdbcType=VARCHAR},
+            <if test="objectId != null">
+                object_id = #{objectId,jdbcType=INTEGER},
             </if>
-            <if test="sort != null">
-                sort = #{sort,jdbcType=INTEGER},
+            <if test="tips != null">
+                tips = #{tips,jdbcType=VARCHAR},
             </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -139,37 +135,38 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.labelwall.course.entity.CourseCategory">
-    update wall_category_course
-    set name = #{name,jdbcType=VARCHAR},
-      code = #{code,jdbcType=VARCHAR},
-      parent_code = #{parentCode,jdbcType=VARCHAR},
-      sort = #{sort,jdbcType=INTEGER},
+    <update id="updateByPrimaryKey" parameterType="com.labelwall.course.entity.CourseCollections">
+    update wall_course_collections
+    set user_id = #{userId,jdbcType=INTEGER},
+      classify = #{classify,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=INTEGER},
+      tips = #{tips,jdbcType=VARCHAR},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=VARCHAR},
       del = #{del,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getCourseCategory" parameterType="string" resultMap="BaseResultMap">
+    <select id="selectByCollection" resultMap="BaseResultMap"
+            parameterType="com.labelwall.course.entity.CourseCollections">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM wall_category_course
-        <if test="code != null">
-            WHERE code = #{code} OR parent_code = #{code}
-        </if>
-        ORDER BY parent_code,sort
+        FROM wall_course_collections
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="classify != null">
+                AND classify = #{classify}
+            </if>
+            <if test="objectId != null">
+                AND object_id = #{objectId}
+            </if>
+        </trim>
+        ORDER BY id
     </select>
-    <select id="selectByCode" parameterType="string" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM wall_category_course
-        WHERE code = #{code}
-    </select>
-    <select id="selectByParentCode" parameterType="string" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM wall_category_course
-        WHERE parent_code = #{code}
-    </select>
+    <delete id="delete" parameterType="com.labelwall.course.entity.CourseCollections">
+        DELETE FROM wall_course_collections
+        WHERE id = #{id}
+    </delete>
 </mapper>

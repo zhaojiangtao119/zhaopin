@@ -19,4 +19,24 @@ public class CourseConst {
         int questions = 1;//问答
     }
 
+    public enum CollectionType {
+        COLLECTION_CLASSIFY_COURSE(1, "课程收藏");
+
+        private int code;
+        private String value;
+
+        CollectionType(int code, String value) {
+            this.code = code;
+            this.value = value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
 }

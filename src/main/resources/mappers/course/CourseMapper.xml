@@ -320,7 +320,6 @@
       recommend = #{recommend,jdbcType=INTEGER},
       weight = #{weight,jdbcType=INTEGER},
       study_count = #{studyCount,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=VARCHAR},

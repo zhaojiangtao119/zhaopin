@@ -201,7 +201,6 @@
       ref_id = #{refId,jdbcType=INTEGER},
       ref_content = #{refContent,jdbcType=VARCHAR},
       type = #{type,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
       create_user = #{createUser,jdbcType=VARCHAR},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       update_user = #{updateUser,jdbcType=VARCHAR},
