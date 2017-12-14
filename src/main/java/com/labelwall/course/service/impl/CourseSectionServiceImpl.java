@@ -75,4 +75,17 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
     public CourseSection selectByPrimaryKey(Integer sectionId) {
         return courseSectionMapper.selectByPrimaryKey(sectionId);
     }
+
+    @Override
+    public ResponseObject<CourseSection> getSectionDetail(Integer sectionId) {
+        if (sectionId == null) {
+            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        CourseSection courseSection = courseSectionMapper.selectByPrimaryKey(sectionId);
+        if (courseSection != null) {
+            //TODO 处理课程视频的播放地址url
+            return ResponseObject.successStautsData(courseSection);
+        }
+        return ResponseObject.failStatusMessage("获取失败");
+    }
 }

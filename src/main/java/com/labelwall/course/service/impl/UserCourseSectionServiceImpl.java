@@ -6,7 +6,6 @@ import com.labelwall.course.dao.UserCourseSectionMapper;
 import com.labelwall.course.entity.CourseSection;
 import com.labelwall.course.entity.UserCourseSection;
 import com.labelwall.course.service.ICourseSectionService;
-import com.labelwall.course.service.ICourseService;
 import com.labelwall.course.service.IUserCourseSectionService;
 import com.labelwall.mall.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;

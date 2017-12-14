@@ -25,4 +25,12 @@ public interface ICourseSectionService {
      * @return
      */
     CourseSection selectByPrimaryKey(Integer sectionId);
+
+    /**
+     * 获取小节的详情
+     *
+     * @param sectionId
+     * @return
+     */
+    ResponseObject<CourseSection> getSectionDetail(Integer sectionId);
 }
