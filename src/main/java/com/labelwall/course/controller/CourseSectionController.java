@@ -21,10 +21,17 @@ public class CourseSectionController {
     @Autowired
     private ICourseSectionService courseSectionService;
 
-    //组装课程章节，免费课程组装章节，付费课程只组装章
+    /**
+     * 组装课程章节，免费课程组装章节，付费课程只组装章
+     *
+     * @param courseId
+     * @return
+     */
     @RequestMapping(value = "get_section/{id}", method = RequestMethod.GET)
-    public ResponseObject<List<CourseSectionDto>> getSection(@PathVariable("id") Integer id) {
-        return courseSectionService.getSection(id);
+    public ResponseObject<List<CourseSectionDto>> getSection(@PathVariable("id") Integer courseId) {
+        return courseSectionService.getSection(courseId);
     }
+
+    //TODO 获取章节的信息（免费课程就观看视频，）
 
 }

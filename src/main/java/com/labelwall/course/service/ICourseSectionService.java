@@ -2,6 +2,7 @@ package com.labelwall.course.service;
 
 import com.labelwall.common.ResponseObject;
 import com.labelwall.course.dto.CourseSectionDto;
+import com.labelwall.course.entity.CourseSection;
 
 import java.util.List;
 
@@ -12,8 +13,16 @@ public interface ICourseSectionService {
     /**
      * 获取课程章节
      *
-     * @param id
+     * @param courseId
      * @return
      */
-    ResponseObject<List<CourseSectionDto>> getSection(Integer id);
+    ResponseObject<List<CourseSectionDto>> getSection(Integer courseId);
+
+    /**
+     * 根据主键获取对象
+     *
+     * @param sectionId
+     * @return
+     */
+    CourseSection selectByPrimaryKey(Integer sectionId);
 }

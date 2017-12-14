@@ -32,8 +32,8 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
     private ICourseService courseService;
 
     @Override
-    public ResponseObject<List<CourseSectionDto>> getSection(Integer id) {
-        Course course = courseService.selectByPrimaryKey(id);
+    public ResponseObject<List<CourseSectionDto>> getSection(Integer courseId) {
+        Course course = courseService.selectByPrimaryKey(courseId);
         if (course == null) {
             ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
@@ -69,5 +69,10 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
             courseSectionDtoList.add(entry.getValue());
         }
         return ResponseObject.successStautsData(courseSectionDtoList);
+    }
+
+    @Override
+    public CourseSection selectByPrimaryKey(Integer sectionId) {
+        return courseSectionMapper.selectByPrimaryKey(sectionId);
     }
 }
