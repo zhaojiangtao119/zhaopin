@@ -6,6 +6,8 @@ import com.labelwall.common.ResponseStatus;
 import com.labelwall.course.dao.CourseCollectionsMapper;
 import com.labelwall.course.entity.CourseCollections;
 import com.labelwall.course.service.ICourseCollectionsService;
+import com.labelwall.mall.dto.UserDto;
+import com.labelwall.mall.entity.User;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
 
     @Override
     public ResponseObject<Boolean> isCollection(Integer userId, Integer courseId) {
-        if (courseId == null) {
+        if (courseId == null || userId == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         CourseCollections courseCollections = new CourseCollections();
@@ -40,8 +42,9 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
     }
 
     @Override
-    public ResponseObject doCollection(Integer userId, Integer courseId) {
-        if (courseId == null) {
+    public ResponseObject doCollection(UserDto userDto, Integer courseId) {
+        Integer userId = userDto.getId();
+        if (courseId == null || userId == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         CourseCollections courseCollections = new CourseCollections();
@@ -51,6 +54,8 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
         List<CourseCollections> courseCollectionsList = courseCollectionsMapper.selectByCollection(courseCollections);
         if (CollectionUtils.isEmpty(courseCollectionsList)) {
             //没有收藏该课程，点击进行收藏（添加记录）
+            courseCollections.setCreateUser(userDto.getUsername());
+            courseCollections.setUpdateUser(userDto.getUsername());
             courseCollectionsMapper.insertSelective(courseCollections);
             return ResponseObject.successStatusMessage("收藏成功");
         } else {

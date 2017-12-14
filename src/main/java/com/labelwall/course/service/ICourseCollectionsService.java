@@ -1,6 +1,7 @@
 package com.labelwall.course.service;
 
 import com.labelwall.common.ResponseObject;
+import com.labelwall.mall.dto.UserDto;
 
 /**
  * Created by Administrator on 2017-12-13.
@@ -18,9 +19,9 @@ public interface ICourseCollectionsService {
     /**
      * 点击收藏按钮执行的动作
      *
-     * @param userId
+     * @param userDto
      * @param courseId
      * @return
      */
-    ResponseObject doCollection(Integer userId, Integer courseId);
+    ResponseObject doCollection(UserDto userDto, Integer courseId);
 }

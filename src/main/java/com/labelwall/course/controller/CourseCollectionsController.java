@@ -36,11 +36,17 @@ public class CourseCollectionsController {
         return courseCollectionsService.isCollection(userDto.getId(), courseId);
     }
 
-    //点击收藏按钮执行的动作
-    @RequestMapping(value = "do_collection/{id}",method = RequestMethod.POST)
+    /**
+     * 点击收藏按钮执行的动作
+     *
+     * @param session
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "do_collection/{id}", method = RequestMethod.POST)
     public ResponseObject doCollection(HttpSession session,
-                                                @PathVariable("id") Integer courseId){
+                                       @PathVariable("id") Integer courseId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return courseCollectionsService.doCollection(userDto.getId(), courseId);
+        return courseCollectionsService.doCollection(userDto, courseId);
     }
 }
