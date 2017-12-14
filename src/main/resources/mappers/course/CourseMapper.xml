@@ -361,4 +361,17 @@
             ORDER BY ${sortField} DESC
         </if>
     </select>
+    <select id="selectByCourseIds" resultMap="BaseResultMap" parameterType="list">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_course
+        <if test="courseIdList != null">
+            <where>
+                id IN
+                <foreach collection="courseIdList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </where>
+        </if>
+    </select>
 </mapper>

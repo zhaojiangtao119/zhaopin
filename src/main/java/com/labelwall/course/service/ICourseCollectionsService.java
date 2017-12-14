@@ -1,5 +1,6 @@
 package com.labelwall.course.service;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.UserDto;
 
@@ -24,4 +25,14 @@ public interface ICourseCollectionsService {
      * @return
      */
     ResponseObject doCollection(UserDto userDto, Integer courseId);
+
+    /**
+     * 获取当前用户的收藏的课程
+     *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    ResponseObject<PageInfo> getCourse(Integer userId, Integer pageNum, Integer pageSize);
 }

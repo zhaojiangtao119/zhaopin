@@ -1,5 +1,6 @@
 package com.labelwall.course.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.course.service.ITeacherFollowsService;
@@ -48,5 +49,21 @@ public class TeacherFollowsController {
                                     @PathVariable("id") Integer courseId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         return teacherFollowsService.doFollows(userDto, courseId);
+    }
+
+    /**
+     * 获取用户关注的教师信息
+     *
+     * @param session
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "get_teacher/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    public ResponseObject<PageInfo> getTeacher(HttpSession session,
+                                               @PathVariable("pageNum") Integer pageNum,
+                                               @PathVariable("pageSize") Integer pageSize) {
+        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+        return teacherFollowsService.getTeacher(userDto.getId(), pageNum, pageSize);
     }
 }

@@ -5,6 +5,7 @@ import com.labelwall.common.ResponseObject;
 import com.labelwall.course.dto.CourseDto;
 import com.labelwall.course.dto.CourseQueryDto;
 import com.labelwall.course.entity.Course;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -41,8 +42,17 @@ public interface ICourseService {
 
     /**
      * 根据主键获取课程信息
+     *
      * @param id
      * @return
      */
     Course selectByPrimaryKey(Integer id);
+
+    /**
+     * 根据id集合获取课程信息
+     *
+     * @param courseIdList
+     * @return
+     */
+    List<Course> selectByCourseIds(List<Integer> courseIdList);
 }

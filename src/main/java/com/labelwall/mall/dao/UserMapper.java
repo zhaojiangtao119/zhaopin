@@ -3,6 +3,8 @@ package com.labelwall.mall.dao;
 import com.labelwall.mall.entity.User;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface UserMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -24,5 +26,13 @@ public interface UserMapper {
 
     int restPassword(@Param("userId") Integer id, @Param("passwordNew") String passwordNew);
 
-    User selectByUsername(@Param("username")String username);
+    User selectByUsername(@Param("username") String username);
+
+    /**
+     * id集合获取对象
+     *
+     * @param userIdList
+     * @return
+     */
+    List<User> selectByUserIds(@Param("userIdList") List<Integer> userIdList);
 }

@@ -32,4 +32,11 @@ public interface CourseMapper {
      * @return
      */
     List<Course> getCourseList(CourseQueryDto courseQueryDto);
+
+    /**
+     * 获取课程信息，通过主键集合ids
+     * @param courseIdList
+     * @return
+     */
+    List<Course> selectByCourseIds(@Param("courseIdList") List<Integer> courseIdList);
 }

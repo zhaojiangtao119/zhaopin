@@ -128,4 +128,10 @@
         FROM wall_teacher_follows
         WHERE user_id = #{currentUserId} AND follow_id = #{userId};
     </select>
+    <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_teacher_follows
+        WHERE user_id = #{userId}
+    </select>
 </mapper>

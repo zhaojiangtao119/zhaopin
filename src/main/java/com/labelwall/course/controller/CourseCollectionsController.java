@@ -1,7 +1,9 @@
 package com.labelwall.course.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.course.dto.CourseDto;
 import com.labelwall.course.service.ICourseCollectionsService;
 import com.labelwall.mall.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017-12-13.
@@ -48,5 +51,21 @@ public class CourseCollectionsController {
                                        @PathVariable("id") Integer courseId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         return courseCollectionsService.doCollection(userDto, courseId);
+    }
+
+    /**
+     * 获取用户收藏的课程
+     *
+     * @param session
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "get_course/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    public ResponseObject<PageInfo> getCourse(HttpSession session,
+                                              @PathVariable("pageNum") Integer pageNum,
+                                              @PathVariable("pageSize") Integer pageSize) {
+        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+        return courseCollectionsService.getCourse(userDto.getId(), pageNum, pageSize);
     }
 }

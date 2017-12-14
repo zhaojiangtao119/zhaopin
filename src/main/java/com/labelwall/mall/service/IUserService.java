@@ -2,6 +2,9 @@ package com.labelwall.mall.service;
 
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.UserDto;
+import com.labelwall.mall.entity.User;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2017-12-02.
@@ -53,8 +56,17 @@ public interface IUserService {
 
     /**
      * 根据用户名获取用户对象
+     *
      * @param username
      * @return
      */
     UserDto selectByUsername(String username);
+
+    /**
+     * 根据id集合获取用户信息
+     *
+     * @param userIdList
+     * @return
+     */
+    List<User> selectByUserIds(List<Integer> userIdList);
 }

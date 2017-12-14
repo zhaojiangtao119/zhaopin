@@ -1,6 +1,7 @@
 package com.labelwall.course.dao;
 
 import com.labelwall.course.entity.CourseCollections;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -27,8 +28,17 @@ public interface CourseCollectionsMapper {
 
     /**
      * 取消收藏，物理删除记录
+     *
      * @param courseCollections
      * @return
      */
     int delete(CourseCollections courseCollections);
+
+    /**
+     * 获取用户的收藏课程
+     *
+     * @param userId
+     * @return
+     */
+    List<CourseCollections> selectByUserId(@Param("userId") Integer userId);
 }

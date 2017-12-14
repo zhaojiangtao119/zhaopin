@@ -169,4 +169,10 @@
         DELETE FROM wall_course_collections
         WHERE id = #{id}
     </delete>
+    <select id="selectByUserId" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_course_collections
+        WHERE user_id = #{userId}
+    </select>
 </mapper>

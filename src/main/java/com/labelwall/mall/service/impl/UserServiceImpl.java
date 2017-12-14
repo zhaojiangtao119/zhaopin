@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017-12-02.
@@ -178,5 +179,16 @@ public class UserServiceImpl implements IUserService {
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user, userDto);
         return userDto;
+    }
+
+    @Override
+    public List<User> selectByUserIds(List<Integer> userIdList) {
+        List<User> userList = userMapper.selectByUserIds(userIdList);
+        for (User user : userList) {
+            user.setPassword(null);
+            user.setPhone(null);
+            user.setEmail(null);
+        }
+        return userList;
     }
 }

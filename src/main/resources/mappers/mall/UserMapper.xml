@@ -210,4 +210,17 @@
         FROM wall_user
         WHERE username = #{username}
     </select>
+    <select id="selectByUserIds" parameterType="list" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_user
+        <if test="userIdList != null">
+            <where>
+                id IN
+                <foreach collection="userIdList" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+            </where>
+        </if>
+    </select>
 </mapper>

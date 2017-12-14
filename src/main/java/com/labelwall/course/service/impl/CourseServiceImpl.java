@@ -13,6 +13,7 @@ import com.labelwall.course.service.ICourseService;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,14 +53,14 @@ public class CourseServiceImpl implements ICourseService {
 
     @Override
     public ResponseObject<CourseDto> getCourse(Integer id) {
-        if(id == null){
+        if (id == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         Course course = courseMapper.selectByPrimaryKey(id);
         //加载讲师信息
         UserDto userDto = userService.selectByUsername(course.getUsername());
         CourseDto courseDto = new CourseDto();
-        BeanUtils.copyProperties(course,courseDto);
+        BeanUtils.copyProperties(course, courseDto);
         courseDto.setUserDto(userDto);
         return ResponseObject.successStautsData(courseDto);
     }
@@ -68,5 +69,10 @@ public class CourseServiceImpl implements ICourseService {
     public Course selectByPrimaryKey(Integer id) {
         Course course = courseMapper.selectByPrimaryKey(id);
         return course;
+    }
+
+    @Override
+    public List<Course> selectByCourseIds(List<Integer> courseIdList) {
+        return courseMapper.selectByCourseIds(courseIdList);
     }
 }
