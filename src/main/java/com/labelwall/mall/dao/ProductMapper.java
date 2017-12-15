@@ -18,5 +18,11 @@ public interface ProductMapper {
 
     int updateByPrimaryKey(Product record);
 
+    /**
+     * 获取商品列表
+     *
+     * @param productDto
+     * @return
+     */
     List<ProductDto> getProductList(ProductDto productDto);
 }

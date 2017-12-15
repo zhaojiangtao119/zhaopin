@@ -19,6 +19,12 @@ public interface TopicPostReplyMapper {
 
     int updateByPrimaryKey(TopicPostReply record);
 
+    /**
+     * 获取某一个帖子的回复
+     *
+     * @param postId
+     * @return
+     */
     List<TopicPostReplyDto> getTopicReplyByPostId(Integer postId);
 
     int updatePostReplyLike(@Param("postReplyId") Integer postReplyId);

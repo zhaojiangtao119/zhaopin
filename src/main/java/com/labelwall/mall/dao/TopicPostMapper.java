@@ -19,11 +19,23 @@ public interface TopicPostMapper {
 
     int updateByPrimaryKey(TopicPost record);
 
+    /**
+     * 获取帖子列表（存在搜索条件）
+     *
+     * @param topicPostDto
+     * @return
+     */
     List<TopicPostDto> getTopicPost(TopicPostDto topicPostDto);
 
     int updatePostLike(@Param("topicPostId") Integer topicPostId);
 
     int updatePostDislike(@Param("topicPostId") Integer topicPostId);
 
+    /**
+     * 修改帖子回复数量
+     *
+     * @param topicPostId
+     * @return
+     */
     int updatePostRelpyNum(Integer topicPostId);
 }

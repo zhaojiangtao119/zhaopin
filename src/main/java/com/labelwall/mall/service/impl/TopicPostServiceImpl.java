@@ -138,7 +138,7 @@ public class TopicPostServiceImpl implements ITopicPostService {
     }
 
     @Override
-    public int updatePostRelpyNum(Integer topicPostId) {
+    public int updatePostReplyNum(Integer topicPostId) {
         return topicPostMapper.updatePostRelpyNum(topicPostId);
     }
 }

@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth/")
 public class AuthController {
-
+    /**
+     * 拦截器拦截用户未登录的后执行
+     *
+     * @return
+     */
     @RequestMapping("noLogin")
     public ResponseObject noLogin() {
         return ResponseObject.fail(UserResponseMessage.NOT_LOGIN.getCode(), UserResponseMessage.NOT_LOGIN.getValue());

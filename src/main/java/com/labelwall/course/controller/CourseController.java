@@ -25,12 +25,24 @@ public class CourseController {
     @Autowired
     private ICourseService courseService;
 
+    /**
+     * 获取课程的分类（一级分类和二级分类）
+     *
+     * @param code
+     * @return
+     */
     @RequestMapping(value = "get_category", method = RequestMethod.GET)
     public ResponseObject<List<CourseCategoryDto>>
     getCategory(@RequestParam(value = "code", required = false) String code) {
         return courseCategoryService.getCourseCategory(code);
     }
 
+    /**
+     * 递归获取分类的id(包括子id)
+     *
+     * @param code
+     * @return
+     */
     @RequestMapping(value = "get_category_id", method = RequestMethod.GET)
     public ResponseObject<List<Integer>>
     getCategoryId(@RequestParam(value = "code", defaultValue = "0") String code) {
@@ -50,6 +62,7 @@ public class CourseController {
 
     /**
      * 获取全部课程，默认使用最新排序
+     *
      * @param courseQueryDto 搜索条件
      * @param pageNum
      * @param pageSize
@@ -57,18 +70,19 @@ public class CourseController {
      */
     @RequestMapping(value = "get_course_list/{pageNum}/{pageSize}", method = RequestMethod.POST)
     public ResponseObject<PageInfo> getCourseList(CourseQueryDto courseQueryDto,
-                                              @PathVariable("pageNum") Integer pageNum,
-                                              @PathVariable("pageSize") Integer pageSize) {
+                                                  @PathVariable("pageNum") Integer pageNum,
+                                                  @PathVariable("pageSize") Integer pageSize) {
         return courseService.getCourseList(courseQueryDto, pageNum, pageSize);
     }
 
     /**
      * 课程详情（课程描述，讲师信息）
+     *
      * @param id
      * @return
      */
-    @RequestMapping(value = "get_course/{id}",method = RequestMethod.GET)
-    public ResponseObject<CourseDto> getCourse(@PathVariable("id")Integer id){
+    @RequestMapping(value = "get_course/{id}", method = RequestMethod.GET)
+    public ResponseObject<CourseDto> getCourse(@PathVariable("id") Integer id) {
         return courseService.getCourse(id);
     }
 }

@@ -38,6 +38,7 @@ public class ShopCartController {
 
     /**
      * 添加商品到购物车
+     *
      * @param session
      * @param shopCartDto
      * @return
@@ -51,6 +52,7 @@ public class ShopCartController {
 
     /**
      * 修改购物车中商品的数量
+     *
      * @param session
      * @param shopCartDto
      * @return
@@ -62,6 +64,13 @@ public class ShopCartController {
         return shopCartService.updateQuantity(shopCartDto);
     }
 
+    /**
+     * 批量删除购物车中选中的商品
+     *
+     * @param session
+     * @param productIds
+     * @return
+     */
     @RequestMapping(value = "remove_cart/{productIds}", method = RequestMethod.DELETE)
     public ResponseObject<CartVo> removeCart(HttpSession session,
                                              @PathVariable("productIds") String productIds) {
@@ -103,7 +112,7 @@ public class ShopCartController {
      */
     @RequestMapping(value = "select/{productId}", method = RequestMethod.GET)
     public ResponseObject<CartVo> select(HttpSession session,
-                                         @PathVariable("productId")Integer productId) {
+                                         @PathVariable("productId") Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.CHECKED);
     }

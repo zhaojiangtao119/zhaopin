@@ -69,7 +69,7 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
         } else {
             //收藏了该课程，点击取消收藏（删除记录）
             courseCollectionsMapper.deleteByPrimaryKey(courseCollectionsList.get(0).getId());
-            return ResponseObject.successStatusMessage("收藏成功");
+            return ResponseObject.successStatusMessage("取消收藏成功");
         }
     }
 

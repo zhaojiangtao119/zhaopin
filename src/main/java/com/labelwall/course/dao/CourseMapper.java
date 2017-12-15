@@ -28,6 +28,7 @@ public interface CourseMapper {
 
     /**
      * 获取课程（排序：sortFiel(最新：update_time,最热：study_count)，搜索条件：keyword，category(一级分类、二级分类)）
+     *
      * @param courseQueryDto
      * @return
      */
@@ -35,6 +36,7 @@ public interface CourseMapper {
 
     /**
      * 获取课程信息，通过主键集合ids
+     *
      * @param courseIdList
      * @return
      */

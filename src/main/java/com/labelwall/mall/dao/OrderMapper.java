@@ -20,14 +20,16 @@ public interface OrderMapper {
 
     /**
      * 根据userId,orderNo获取订单
+     *
      * @param userId
      * @param orderNo
      * @return
      */
-    Order selectByUserIdOrderNo(@Param("userId")Integer userId,@Param("orderNo")Long orderNo);
+    Order selectByUserIdOrderNo(@Param("userId") Integer userId, @Param("orderNo") Long orderNo);
 
     /**
      * 获取用户的订单列表
+     *
      * @param userId
      * @return
      */
@@ -35,6 +37,7 @@ public interface OrderMapper {
 
     /**
      * 通过订单号获取该订单
+     *
      * @param orderNo
      * @return
      */

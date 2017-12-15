@@ -115,7 +115,6 @@ public class OrderServiceImpl implements IOrderService {
         return ResponseObject.successStautsData(orderVo);
     }
 
-
     private ResponseObject<List<OrderItem>> getShopCartOrderItem(Integer userId, List<ShopCartDto> shopCartDtoList) {
         if (CollectionUtils.isEmpty(shopCartDtoList)) {
             return ResponseObject.failStatusMessage("购物车为空");

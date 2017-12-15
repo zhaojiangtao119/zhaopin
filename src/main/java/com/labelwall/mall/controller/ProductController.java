@@ -23,12 +23,24 @@ public class ProductController {
     @Autowired
     private IProductService productService;
 
+    /**
+     * 获取产品的分类（一级分类和二级分类）
+     *
+     * @param categoryId
+     * @return
+     */
     @RequestMapping(value = "get_category", method = RequestMethod.GET)
     public ResponseObject<List<ProductCategoryDto>>
     getCategory(@RequestParam(value = "categoryId", required = false) Integer categoryId) {
         return productCategoryService.getCategoryList(categoryId);
     }
 
+    /**
+     * 递归获取分类的id(包括其后代id)
+     *
+     * @param categoryId
+     * @return
+     */
     @RequestMapping(value = "get_category_id", method = RequestMethod.GET)
     public ResponseObject<List<Integer>>
     getCategoryByCategoryId(@RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {

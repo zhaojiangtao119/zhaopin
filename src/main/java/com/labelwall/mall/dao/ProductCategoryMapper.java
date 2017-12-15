@@ -18,7 +18,19 @@ public interface ProductCategoryMapper {
 
     int updateByPrimaryKey(ProductCategory record);
 
-    List<ProductCategory> getCategory(@Param("categoryId")Integer categoryId);
+    /**
+     * 获取分类(一级分类和二级分类)
+     *
+     * @param categoryId
+     * @return
+     */
+    List<ProductCategory> getCategory(@Param("categoryId") Integer categoryId);
 
+    /**
+     * 获取分类id(递归获取子分类)
+     *
+     * @param parentId
+     * @return
+     */
     List<ProductCategory> getCategoryChildrenByParentId(Integer parentId);
 }

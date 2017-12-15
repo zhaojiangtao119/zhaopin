@@ -144,7 +144,7 @@ public class TopicController {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         topicPostReplyDto.setUserId(userDto.getId());
-        return topicPostReplyService.pulishPostReply(topicPostReplyDto);
+        return topicPostReplyService.publishPostReply(topicPostReplyDto);
     }
 
     /**

@@ -18,6 +18,7 @@ public interface IShopCartService {
 
     /**
      * 添加商品到购物车
+     *
      * @param shopCartDto
      * @return
      */
@@ -25,6 +26,7 @@ public interface IShopCartService {
 
     /**
      * 修改购买商品的数量
+     *
      * @param shopCartDto
      * @return
      */
@@ -32,23 +34,26 @@ public interface IShopCartService {
 
     /**
      * 移除购物中的商品
+     *
      * @param userId
      * @param productIds
      * @return
      */
-    ResponseObject<CartVo> removeCart(Integer userId,String productIds);
+    ResponseObject<CartVo> removeCart(Integer userId, String productIds);
 
     /**
      * 单选，单反选，全选
+     *
      * @param userId
      * @param productId
      * @param checked
      * @return
      */
-    ResponseObject<CartVo> selectOrUnSelect(Integer userId,Integer productId,Integer checked);
+    ResponseObject<CartVo> selectOrUnSelect(Integer userId, Integer productId, Integer checked);
 
     /**
      * 获取购物车中商品的总数量
+     *
      * @param id
      * @return
      */

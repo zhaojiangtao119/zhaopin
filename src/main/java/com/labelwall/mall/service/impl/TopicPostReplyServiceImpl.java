@@ -65,8 +65,7 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
     }
 
     @Override
-    public ResponseObject<TopicPostReplyDto> pulishPostReply(TopicPostReplyDto topicPostReplyDto) {
-
+    public ResponseObject<TopicPostReplyDto> publishPostReply(TopicPostReplyDto topicPostReplyDto) {
         //是否上传了图片
         if (topicPostReplyDto.getMultipartFile() != null && topicPostReplyDto.getMultipartFile().getSize() > 0) {
             //上传回复的图片
@@ -84,7 +83,7 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
         int rowCount = topicPostReplyMapper.insertSelective(topicPostReply);
         if (rowCount > 0) {
             //回复成功，更改贴子的回复数量 TODO 是否需要判断回复数量修改成功与否
-            topicPostService.updatePostRelpyNum(topicPostReply.getTopicPostId());
+            topicPostService.updatePostReplyNum(topicPostReply.getTopicPostId());
 
             TopicPostReplyDto topicPostReplyDtoNew = topicPostReplyMapper.selectByPrimaryKey(topicPostReply.getId());
             /*topicPostReplyDtoNew.setCreateTimeStr(DateTimeUtil.dateToStr(topicPostReplyDtoNew.getCreateTime()));

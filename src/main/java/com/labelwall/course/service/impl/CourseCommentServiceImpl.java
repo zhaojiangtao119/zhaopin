@@ -1,5 +1,6 @@
 package com.labelwall.course.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.labelwall.common.CourseConst;
@@ -33,6 +34,7 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
 
     @Override
     public ResponseObject<PageInfo> getComment(CourseCommentDto courseCommentDto, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
         if (courseCommentDto.getType() == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }

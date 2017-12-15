@@ -11,6 +11,7 @@ import java.util.List;
 public interface IProductCategoryService {
     /**
      * 获取分类，一级分类与二级分类，
+     *
      * @param categoryId
      * @return
      */
@@ -18,6 +19,7 @@ public interface IProductCategoryService {
 
     /**
      * 递归获取该品类下的所有子类的id
+     *
      * @param categoryId
      * @return
      */

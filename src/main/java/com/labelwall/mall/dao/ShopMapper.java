@@ -18,5 +18,11 @@ public interface ShopMapper {
 
     int updateByPrimaryKey(Shop record);
 
+    /**
+     * 获取商铺列表
+     *
+     * @param shopDto
+     * @return
+     */
     List<ShopDto> getShopList(ShopDto shopDto);
 }

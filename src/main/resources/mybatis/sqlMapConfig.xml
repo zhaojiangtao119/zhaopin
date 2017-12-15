@@ -3,10 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+	</settings>
 	<!-- 配置别名 -->
  	<typeAliases>
  		<package name="com.labelwall.mall.entity"/>
  	</typeAliases>
+
 	<!-- 配置mapper
 	由于使用spring和mybatis的整合包进行mapper扫描，这里不需要配置了。
 	必须遵循：mapper.xml和mapper.java文件同名且在一个目录 ,当然另外配置也可以不在一个目录下

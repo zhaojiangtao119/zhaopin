@@ -10,15 +10,17 @@ import com.labelwall.mall.dto.TopicPostDto;
 public interface ITopicPostService {
     /**
      * 分页获取帖子
+     *
      * @param topicPostDto
      * @param pageNum
      * @param pageSize
      * @return
      */
-    ResponseObject<PageInfo> getTopicPostList(TopicPostDto topicPostDto,Integer pageNum,Integer pageSize);
+    ResponseObject<PageInfo> getTopicPostList(TopicPostDto topicPostDto, Integer pageNum, Integer pageSize);
 
     /**
      * 发帖
+     *
      * @param topicPostDto
      * @return
      */
@@ -26,13 +28,15 @@ public interface ITopicPostService {
 
     /**
      * 点赞
+     *
      * @param topicPostId
      * @return
      */
-    ResponseObject updatePostLikeDislike(Integer topicPostId,Integer type);
+    ResponseObject updatePostLikeDislike(Integer topicPostId, Integer type);
 
     /**
      * 根据主键查询
+     *
      * @param topicPostId
      * @return
      */
@@ -40,8 +44,9 @@ public interface ITopicPostService {
 
     /**
      * 修改帖子的回复数量
+     *
      * @param topicPostId
      * @return
      */
-    int updatePostRelpyNum(Integer topicPostId);
+    int updatePostReplyNum(Integer topicPostId);
 }

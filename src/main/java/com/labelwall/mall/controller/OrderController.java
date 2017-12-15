@@ -33,6 +33,13 @@ public class OrderController {
     @Autowired
     private IOrderService orderService;
 
+    /**
+     * 创建订单
+     *
+     * @param session
+     * @param shoppingId
+     * @return
+     */
     @RequestMapping(value = "create_order/{shoppingId}", method = RequestMethod.POST)
     public ResponseObject<OrderVo> createOrder(HttpSession session,
                                                @PathVariable("shoppingId") Integer shoppingId) {
@@ -40,6 +47,13 @@ public class OrderController {
         return orderService.createOrder(userDto.getId(), shoppingId);
     }
 
+    /**
+     * 取消订单
+     *
+     * @param session
+     * @param orderNo
+     * @return
+     */
     @RequestMapping(value = "cancel_order/{orderNo}", method = RequestMethod.PUT)
     public ResponseObject cancelOrder(HttpSession session,
                                       @PathVariable("orderNo") Long orderNo) {
@@ -47,6 +61,14 @@ public class OrderController {
         return orderService.cancelOrder(userDto.getId(), orderNo);
     }
 
+    /**
+     * 获取订单列表
+     *
+     * @param session
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @RequestMapping(value = "user_order_list/{pageNum}/{pageSize}", method = RequestMethod.GET)
     public ResponseObject<PageInfo> userOrderList(HttpSession session,
                                                   @PathVariable(value = "pageNum") Integer pageNum,
@@ -55,6 +77,13 @@ public class OrderController {
         return orderService.userOrderList(userDto.getId(), pageNum, pageSize);
     }
 
+    /**
+     * 获取订单详情
+     *
+     * @param session
+     * @param orderNo
+     * @return
+     */
     @RequestMapping(value = "get_order_detail/{orderNo}", method = RequestMethod.GET)
     public ResponseObject<OrderVo> getOrderDetail(HttpSession session,
                                                   @PathVariable("orderNo") Long orderNo) {
@@ -74,6 +103,14 @@ public class OrderController {
         return orderService.getOrderCartProduct(userDto.getId());
     }
 
+    /**
+     * 订单支付
+     *
+     * @param session
+     * @param request
+     * @param orderNo
+     * @return
+     */
     @RequestMapping(value = "order_pay")
     public ResponseObject orderPay(HttpSession session, HttpServletRequest request, Long orderNo) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);

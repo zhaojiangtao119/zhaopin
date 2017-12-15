@@ -10,13 +10,15 @@ import com.labelwall.mall.dto.ShopDto;
 public interface IShopService {
     /**
      * 批量获取商铺信息
+     *
      * @param shopDto
      * @return
      */
-    ResponseObject<PageInfo> getShopList(ShopDto shopDto,Integer pageNum,Integer PageSize);
+    ResponseObject<PageInfo> getShopList(ShopDto shopDto, Integer pageNum, Integer PageSize);
 
     /**
      * 获取商铺详情
+     *
      * @param shopId
      * @return
      */

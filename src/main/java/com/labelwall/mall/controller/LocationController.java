@@ -29,20 +29,37 @@ public class LocationController {
     @Autowired
     private ISchoolService schoolService;
 
+    /**
+     * 获取省份
+     *
+     * @return
+     */
     @RequestMapping(value = "get_province_list", method = RequestMethod.GET)
     public ResponseObject<List<Province>> getProvinceList() {
         ResponseObject<List<Province>> response = provinceService.getProvinceList();
         return response;
     }
 
+    /**
+     * 通过省份id（默认是1）获取城市
+     *
+     * @param provinceId
+     * @return
+     */
     @RequestMapping(value = "get_city_list_province_id", method = RequestMethod.GET)
-    public ResponseObject<List<City>> getCityListByProvinceId(@RequestParam(value = "provinceId",defaultValue = "1") Integer provinceId) {
+    public ResponseObject<List<City>> getCityListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
         ResponseObject<List<City>> response = cityService.getCityListByProvinceId(provinceId);
         return response;
     }
 
-    @RequestMapping(value="get_school_list_province_id",method = RequestMethod.GET)
-    public ResponseObject<List<School>> getSchoolListByProvinceId(@RequestParam(value = "provinceId",defaultValue = "1") Integer provinceId){
+    /**
+     * 通过省份id获取学校列表
+     *
+     * @param provinceId
+     * @return
+     */
+    @RequestMapping(value = "get_school_list_province_id", method = RequestMethod.GET)
+    public ResponseObject<List<School>> getSchoolListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
         ResponseObject<List<School>> response = schoolService.getSchoolByProvinceId(provinceId);
         return response;
     }
