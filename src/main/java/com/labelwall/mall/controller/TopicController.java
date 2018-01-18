@@ -78,7 +78,7 @@ public class TopicController {
      * @param topicPostDto
      * @return
      */
-    @RequestMapping(value = "pulish_post", method = RequestMethod.POST)
+    @RequestMapping(value = "publish_post", method = RequestMethod.POST)
     public ResponseObject<TopicPostDto> publishPost(HttpSession session, TopicPostDto topicPostDto) {
         //TODO 创建帖子的，用户登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
@@ -86,6 +86,19 @@ public class TopicController {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         topicPostDto.setUserId(userDto.getUserId());
+        return topicPostService.publishPost(topicPostDto);
+    }
+
+    /**
+     * APP发表帖子
+     *
+     * @param session
+     * @param topicPostDto
+     * @return
+     */
+    @RequestMapping(value = "app_publish_post", method = RequestMethod.POST)
+    public ResponseObject<TopicPostDto> appPublishPost(TopicPostDto topicPostDto) {
+        //TODO 创建帖子的，用户登录
         return topicPostService.publishPost(topicPostDto);
     }
 
@@ -136,14 +149,25 @@ public class TopicController {
      * @param topicPostReplyDto
      * @return
      */
-    @RequestMapping(value = "pulish_post_reply", method = RequestMethod.POST)
-    public ResponseObject<TopicPostReplyDto> pulishPostReply(HttpSession session, TopicPostReplyDto topicPostReplyDto) {
+    @RequestMapping(value = "publish_post_reply", method = RequestMethod.POST)
+    public ResponseObject<TopicPostReplyDto> publishPostReply(HttpSession session, TopicPostReplyDto topicPostReplyDto) {
         //TODO 帖子的回复 判断是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         if (StringUtils.isBlank(topicPostReplyDto.getImage()) && StringUtils.isBlank(topicPostReplyDto.getContent())) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         topicPostReplyDto.setUserId(userDto.getId());
+        return topicPostReplyService.publishPostReply(topicPostReplyDto);
+    }
+
+    /**
+     * APP发表帖子的回复
+     *
+     * @param topicPostReplyDto
+     * @return
+     */
+    @RequestMapping(value = "app_publish_post_reply", method = RequestMethod.POST)
+    public ResponseObject<TopicPostReplyDto> appPublishPostReply(TopicPostReplyDto topicPostReplyDto) {
         return topicPostReplyService.publishPostReply(topicPostReplyDto);
     }
 
@@ -160,4 +184,7 @@ public class TopicController {
         //TODO 回复的like/dislike 判断是否登录
         return topicPostReplyService.updatePostReplyLikeDislike(topicPostReplyId, type);
     }
+    //获取帖子的回复数量
+    //获取帖子的like数量
+
 }

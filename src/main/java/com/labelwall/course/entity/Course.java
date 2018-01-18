@@ -64,13 +64,21 @@ public class Course {
 
     private String courseUrl;
 
+    private Integer provinceId;
+    private Integer cityId;
+    private Integer countyId;
+
+    private Integer institutionId;
+    private Integer teacherId;
+
     public Course(Integer id, String name, String type, String classify,
                   String classifyName, String subClassify, String subClassifyName,
                   String direction, String username, Integer level, Integer free,
                   BigDecimal price, String time, Integer onsale, String picture,
                   String brief, Integer recommend, Integer weight, Integer studyCount,
                   Date createTime, String createUser, Date updateTime, String updateUser,
-                  Integer del, String courseUrl) {
+                  Integer del, String courseUrl, Integer provinceId, Integer cityId,
+                  Integer countyId,Integer institutionId,Integer teacherId) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -96,6 +104,11 @@ public class Course {
         this.updateUser = updateUser;
         this.del = del;
         this.courseUrl = courseUrl;
+        this.provinceId = provinceId;
+        this.cityId = cityId;
+        this.countyId = countyId;
+        this.institutionId = institutionId;
+        this.teacherId = teacherId;
     }
 
     public Course() {
@@ -300,5 +313,45 @@ public class Course {
 
     public void setCourseUrl(String courseUrl) {
         this.courseUrl = courseUrl == null ? null : courseUrl.trim();
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(Integer countyId) {
+        this.countyId = countyId;
+    }
+
+    public Integer getInstitutionId() {
+        return institutionId;
+    }
+
+    public void setInstitutionId(Integer institutionId) {
+        this.institutionId = institutionId;
+    }
+
+    public Integer getTeacherId() {
+        return teacherId;
+    }
+
+    public void setTeacherId(Integer teacherId) {
+        this.teacherId = teacherId;
     }
 }

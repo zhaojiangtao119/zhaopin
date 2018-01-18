@@ -38,12 +38,10 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
     public ResponseObject<PageInfo> getTopicReplyByPostId(Integer postId, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         if (postId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         List<TopicPostReplyDto> topicPostReplyDtoList = topicPostReplyMapper.getTopicReplyByPostId(postId);
-        if (CollectionUtils.isEmpty(topicPostReplyDtoList)) {
-            return ResponseObject.successStatusMessage("该帖子暂没有回复！");
-        }
         for (TopicPostReplyDto item : topicPostReplyDtoList) {
            /* item.setCreateTimeStr(DateTimeUtil.dateToStr(item.getCreateTime()));
             item.setUpdateTimeStr(DateTimeUtil.dateToStr(item.getUpdateTime()));
@@ -75,7 +73,8 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
                 topicPostReplyDto.setImage(replyImageKey);
             } catch (IOException e) {
                 logger.error("回复图片解析失败", e);
-                return ResponseObject.failStatusMessage("回复失败");
+                return ResponseObject.fail(ResponseStatus.FAIL.getCode(),
+                        ResponseStatus.FAIL.getValue());
             }
         }
         TopicPostReply topicPostReply = new TopicPostReply();
@@ -102,13 +101,14 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
             }
             return ResponseObject.successStautsData(topicPostReplyDtoNew);
         }
-        return ResponseObject.failStatusMessage("回复失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
     @Override
     public ResponseObject updatePostReplyLikeDislike(Integer topicPostReplyId, Integer type) {
         if (topicPostReplyId == null || type == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         int rowCount = 0;
         if (type == Const.PostClickType.LIKE_CLICK) {
@@ -116,11 +116,12 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
         } else if (type == Const.PostClickType.DISLIKE_CLICK) {
             rowCount = topicPostReplyMapper.updatePostReplyDislike(topicPostReplyId);
         } else {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         if (rowCount > 0) {
-            return ResponseObject.successStatusMessage("操作成功");
+            return ResponseObject.successStatus();
         }
-        return ResponseObject.failStatusMessage("操作失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 }

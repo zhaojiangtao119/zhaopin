@@ -14,13 +14,21 @@
             <arg column="school_name" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="location_province" javaType="java.lang.String" jdbcType="VARCHAR"/>
             <arg column="location_city" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="location_county" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="province_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="city_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="county_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="school_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
             <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
             <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+            <arg column="gender" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="birthday" javaType="java.lang.String" jdbcType="VARCHAR"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
-    id, username, password, head,email, phone, role, school_date,school_name, location_province, location_city,
-    create_time, update_time
+    id, username, password, head,email, phone, role, school_date,school_name,
+    location_province, location_city,location_county,province_id,city_id,county_id,school_id,
+    create_time, update_time,gender,birthday
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -32,15 +40,17 @@
     delete from wall_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.labelwall.mall.entity.User">
+    <insert id="insert" parameterType="com.labelwall.mall.entity.User" keyProperty="id" useGeneratedKeys="true">
     insert into wall_user (id, username, password, head,
-      email, phone, role, school_date
-      school_name, location_province, location_city, 
-      create_time, update_time)
+      email, phone, role, school_date,
+      school_name, location_province, location_city,
+      location_county,province_id,city_id,county_id,school_id,
+      create_time, update_time,gender,birthday)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{head,jdbcType=VARCHAR},
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{schoolDate,jdbcType=TIMESTAMP}
-      #{schoolName,jdbcType=VARCHAR}, #{locationProvince,jdbcType=VARCHAR}, #{locationCity,jdbcType=VARCHAR}, 
-      now(), now())
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{schoolDate,jdbcType=TIMESTAMP},
+      #{schoolName,jdbcType=VARCHAR}, #{locationProvince,jdbcType=VARCHAR}, #{locationCity,jdbcType=VARCHAR}, #{locationCounty,jdbcType=VARCHAR},
+      #{provinceId,jdbcType=INTEGER},#{cityId,jdbcType=INTEGER},#{countyId,jdbcType=INTEGER},#{schoolId,jdbcType=INTEGER},
+      now(), now(),#{gender,jdbcType=INTEGER},#{birthday,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.User">
         insert into wall_user
@@ -78,11 +88,32 @@
             <if test="locationCity != null">
                 location_city,
             </if>
+            <if test="locationCounty != null">
+                location_county,
+            </if>
+            <if test="provinceId != null">
+                province_id,
+            </if>
+            <if test="cityId != null">
+                city_id,
+            </if>
+            <if test="countyId != null">
+                county_id,
+            </if>
+            <if test="schoolId != null">
+                school_id,
+            </if>
             <if test="createTime != null">
                 create_time,
             </if>
             <if test="updateTime != null">
                 update_time,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="birthday != null">
+                birthday,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -119,11 +150,32 @@
             <if test="locationCity != null">
                 #{locationCity,jdbcType=VARCHAR},
             </if>
+            <if test="locationCounty != null">
+                #{locationCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceId != null">
+                #{provinceId,jdbcType=INTEGER},
+            </if>
+            <if test="cityId != null">
+                #{cityId,jdbcType=INTEGER},
+            </if>
+            <if test="countyId != null">
+                #{countyId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolId != null">
+                #{school_id,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null">
                 now(),
             </if>
             <if test="updateTime != null">
                 now(),
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=INTEGER},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=VARCAHR},
             </if>
         </trim>
     </insert>
@@ -160,10 +212,31 @@
             <if test="locationCity != null">
                 location_city = #{locationCity,jdbcType=VARCHAR},
             </if>
+            <if test="locationCounty != null">
+                location_county = #{locationCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceId != null">
+                province_id = #{provinceId,jdbcType=INTEGER},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId,jdbcType=INTEGER},
+            </if>
+            <if test="countyId != null">
+                county_id = #{countyId,jdbcType=INTEGER},
+            </if>
+            <if test="schoolId != null">
+                school_id = #{schoolId,jdbcType=INTEGER},
+            </if>
             <if test="createTime != null">
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             update_time = now(),
+            <if test="gender != null">
+                gender = #{gender,jdbcType=INTEGER},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -179,8 +252,15 @@
       school_name = #{schoolName,jdbcType=VARCHAR},
       location_province = #{locationProvince,jdbcType=VARCHAR},
       location_city = #{locationCity,jdbcType=VARCHAR},
+      location_county = #{locationCounty,jdbcType=VARCHAR},
+      province_id = #{provinceId,jdbcType=INTEGER},
+      city_id = #{cityId,jdbcType=INTEGER},
+      county_id = #{countyId,jdbcType=INTEGER},
+      school_id = #{schoolId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
+      gender = #{gender,jdbcType=INTEGER},
+      birthday = #{birthday,jdbcType=VARCHAR},
     where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="checkUsername" resultType="int" parameterType="string">
@@ -222,5 +302,32 @@
                 </foreach>
             </where>
         </if>
+    </select>
+    <select id="selectUser" parameterType="com.labelwall.mall.entity.User" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_user
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            AND role = 1
+            <if test="schoolId != null">
+                AND school_id = #{schoolId}
+            </if>
+            <if test="provinceId != null">
+                AND province_id = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                AND city_id = #{cityId}
+            </if>
+            <if test="countyId != null">
+                AND county_id = #{countyId}
+            </if>
+        </trim>
+        ORDER BY id
+    </select>
+    <select id="loginEmail" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_user
+        WHERE email = #{email} AND password = #{password}
     </select>
 </mapper>

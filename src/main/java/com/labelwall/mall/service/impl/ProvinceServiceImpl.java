@@ -1,6 +1,7 @@
 package com.labelwall.mall.service.impl;
 
 import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ProvinceMapper;
 import com.labelwall.mall.entity.Province;
 import com.labelwall.mall.service.IProvinceService;
@@ -21,10 +22,22 @@ public class ProvinceServiceImpl implements IProvinceService {
 
     @Override
     public ResponseObject<List<Province>> getProvinceList() {
-        List<Province> provinceList =  provinceMapper.getProvinceList();
-        if(CollectionUtils.isEmpty(provinceList)){
-            return ResponseObject.failStatusMessage("获取失败");
+        List<Province> provinceList = provinceMapper.getProvinceList();
+        if (CollectionUtils.isEmpty(provinceList)) {
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),
+                    ResponseStatus.FAIL.getValue());
         }
         return ResponseObject.successStautsData(provinceList);
     }
+
+    @Override
+    public Integer findIdByProvinceName(String name) {
+        Integer provinceId = null;
+        if (name != null) {
+            provinceId = provinceMapper.findIdByProvinceName(name);
+        }
+        return provinceId;
+    }
+
+
 }

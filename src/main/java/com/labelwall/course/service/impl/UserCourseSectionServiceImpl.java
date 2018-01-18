@@ -25,7 +25,8 @@ public class UserCourseSectionServiceImpl implements IUserCourseSectionService {
     @Override
     public ResponseObject<CourseSection> getCurrentRecord(Integer userId, Integer courseId) {
         if (userId == null || courseId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         UserCourseSection userCourseSection = new UserCourseSection();
         userCourseSection.setUserId(userId);
@@ -44,7 +45,8 @@ public class UserCourseSectionServiceImpl implements IUserCourseSectionService {
     @Override
     public ResponseObject createNewRecord(UserDto userDto, UserCourseSection userCourseSectionNew) {
         if (userCourseSectionNew.getCourseId() == null || userCourseSectionNew.getSectionId() == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         //首先查询是否存在这条学习记录，
         userCourseSectionNew.setUserId(userDto.getId());

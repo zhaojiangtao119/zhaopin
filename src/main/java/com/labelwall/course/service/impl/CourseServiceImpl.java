@@ -9,9 +9,13 @@ import com.labelwall.course.dao.CourseMapper;
 import com.labelwall.course.dto.CourseDto;
 import com.labelwall.course.dto.CourseQueryDto;
 import com.labelwall.course.entity.Course;
+import com.labelwall.course.entity.Institution;
+import com.labelwall.course.entity.InstitutionTeacher;
 import com.labelwall.course.service.ICourseService;
+import com.labelwall.course.service.IInstitutionTeacherService;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.service.IUserService;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.BeanUtils;
@@ -29,11 +33,14 @@ public class CourseServiceImpl implements ICourseService {
     @Autowired
     private CourseMapper courseMapper;
     @Autowired
-    private IUserService userService;
+    private IInstitutionTeacherService institutionTeacherService;
 
     @Override
     public ResponseObject<List<Course>> getCommendCourse(Integer free) {
         List<Course> courseList = courseMapper.getCommendCourse(free);
+        if (CollectionUtils.isEmpty(courseList)) {
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+        }
         return ResponseObject.successStautsData(courseList);
     }
 
@@ -43,7 +50,8 @@ public class CourseServiceImpl implements ICourseService {
         String sortField = courseQueryDto.getSortField();
         if (StringUtils.isNotBlank(sortField)) {
             if (!sortField.equals(CourseConst.STUDY_COUNT) && !sortField.equals(CourseConst.UPDATE_TIME)) {
-                return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+                return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                        ResponseStatus.ERROR_PARAM.getValue());
             }
         }
         List<Course> courseList = courseMapper.getCourseList(courseQueryDto);
@@ -54,14 +62,18 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public ResponseObject<CourseDto> getCourse(Integer id) {
         if (id == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Course course = courseMapper.selectByPrimaryKey(id);
         //加载讲师信息
-        UserDto userDto = userService.selectByUsername(course.getUsername());
-        CourseDto courseDto = new CourseDto();
-        BeanUtils.copyProperties(course, courseDto);
-        courseDto.setUserDto(userDto);
+        InstitutionTeacher institutionTeacher = institutionTeacherService.selectByPrimaryKey(course.getTeacherId());
+        CourseDto courseDto = null;
+        if(course != null){
+            courseDto = new CourseDto();
+            BeanUtils.copyProperties(course, courseDto);
+        }
+        courseDto.setInstitutionTeacher(institutionTeacher);
         return ResponseObject.successStautsData(courseDto);
     }
 
@@ -74,5 +86,26 @@ public class CourseServiceImpl implements ICourseService {
     @Override
     public List<Course> selectByCourseIds(List<Integer> courseIdList) {
         return courseMapper.selectByCourseIds(courseIdList);
+    }
+
+    @Override
+    public ResponseObject<List<Course>> getInstitutionCourse(CourseQueryDto courseQueryDto) {
+        List<Course> courseList = courseMapper.getInstitutionCourse(courseQueryDto);
+        if (CollectionUtils.isEmpty(courseList)) {
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+        }
+        return ResponseObject.successStautsData(courseList);
+    }
+
+    @Override
+    public ResponseObject<List<Course>> getCoursesByTeacherId(Integer teacherId) {
+        if(teacherId == null){
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),ResponseStatus.FAIL.getValue());
+        }
+        List<Course> courseList = courseMapper.getCourseByTeacherId(teacherId);
+        if(CollectionUtils.isEmpty(courseList)){
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+        }
+        return ResponseObject.successStautsData(courseList);
     }
 }

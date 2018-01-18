@@ -1,14 +1,14 @@
 package com.labelwall.mall.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.exception.CustomException;
 import com.labelwall.mall.dto.UserDto;
+import com.labelwall.mall.entity.User;
 import com.labelwall.mall.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,6 +18,11 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RequestMapping("/user/")
 public class UserController {
+
+    /*
+        返回json数据，在方法体内最好使用try catch快将方法体包裹起来，如果方法执行出现运行时异常，
+        通过捕获来返回为止错误的json数据。
+    */
 
     @Autowired
     private IUserService userService;
@@ -33,7 +38,7 @@ public class UserController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseObject<UserDto> login(@RequestParam(value = "username") String username,
                                          @RequestParam(value = "password") String password,
-                                         HttpSession session) {
+                                         HttpSession session) throws Exception {
         //用户登录
         ResponseObject<UserDto> response = userService.login(username, password);
         if (response.isSuccess()) {
@@ -56,7 +61,7 @@ public class UserController {
     }
 
     /**
-     * 获取用户信息
+     * 获取用户信息(用户登录后获取个人信息)
      *
      * @param session
      * @return
@@ -68,6 +73,11 @@ public class UserController {
         return ResponseObject.successStautsData(userDto);
     }
 
+    @RequestMapping(value = "get_user_info/{userId}", method = RequestMethod.GET)
+    public ResponseObject<UserDto> getUserInfo(@PathVariable("userId") Integer userId) {
+        return userService.selectByUserId(userId);
+    }
+
     /**
      * 注册
      *
@@ -75,7 +85,7 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public ResponseObject register(UserDto userDto) {
+    public ResponseObject<UserDto> register(UserDto userDto) {
         ResponseObject response = userService.register(userDto);
         return response;
     }
@@ -129,5 +139,20 @@ public class UserController {
         //TODO 修改密码判断用户是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         return userService.restPassword(userDto.getId(), passwordOld, passwordNew);
+    }
+
+    /**
+     * 用户搜索
+     *
+     * @param userDto  搜索条件，schoolId,provinceId,cityId,countyId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "search_user/{pageNum}/{pageSize}", method = RequestMethod.POST)
+    public ResponseObject<PageInfo> searchUser(UserDto userDto,
+                                               @PathVariable("pageNum") Integer pageNum,
+                                               @PathVariable("pageSize") Integer pageSize) {
+        return userService.searchUser(userDto, pageNum, pageSize);
     }
 }

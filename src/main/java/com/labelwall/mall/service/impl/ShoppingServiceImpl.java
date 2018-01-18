@@ -41,7 +41,8 @@ public class ShoppingServiceImpl implements IShoppingService {
     @Override
     public ResponseObject<ShoppingDto> addShopping(ShoppingDto shoppingDto) {
         if (StringUtils.isBlank(shoppingDto.getReceiverName()) || StringUtils.isBlank(shoppingDto.getReceiverMobile())) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Shopping shopping = new Shopping();
         BeanUtils.copyProperties(shoppingDto, shopping);
@@ -51,25 +52,27 @@ public class ShoppingServiceImpl implements IShoppingService {
             ShoppingDto shoppingDtoNew = shoppingMapper.selectByPrimaryKey(shopping.getUserId(), shopping.getId());
             return ResponseObject.successStautsData(shoppingDtoNew);
         }
-        return ResponseObject.failStatusMessage("添加失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 
     @Override
     public ResponseObject<ShoppingDto> getShoppingById(Integer userId, Integer shoppingId) {
         if (shoppingId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         ShoppingDto shoppingDto = shoppingMapper.selectByPrimaryKey(userId, shoppingId);
         if (shoppingDto != null) {
             return ResponseObject.successStautsData(shoppingDto);
         }
-        return ResponseObject.failStatusMessage("获取失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 
     @Override
     public ResponseObject<ShoppingDto> updateShopping(ShoppingDto shoppingDto) {
         if (StringUtils.isBlank(shoppingDto.getReceiverName()) || StringUtils.isBlank(shoppingDto.getReceiverMobile())) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Shopping shopping = new Shopping();
         BeanUtils.copyProperties(shoppingDto,shopping);
@@ -78,18 +81,19 @@ public class ShoppingServiceImpl implements IShoppingService {
             ShoppingDto shoppingDtoNew = shoppingMapper.selectByPrimaryKey(shopping.getUserId(), shopping.getId());
             return ResponseObject.successStautsData(shoppingDtoNew);
         }
-        return ResponseObject.failStatusMessage("修改失败,数据回显");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 
     @Override
     public ResponseObject removeShopping(Integer userId, Integer shoppingId) {
         if (shoppingId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         int rowCount = shoppingMapper.deleteByPrimaryKey(userId, shoppingId);
         if (rowCount > 0) {
-            return ResponseObject.successStatusMessage("删除成功");
+            return ResponseObject.successStatus();
         }
-        return ResponseObject.failStatusMessage("删除失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 }

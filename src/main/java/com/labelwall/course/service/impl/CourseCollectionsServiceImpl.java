@@ -34,7 +34,8 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
     @Override
     public ResponseObject<Boolean> isCollection(Integer userId, Integer courseId) {
         if (courseId == null || userId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         CourseCollections courseCollections = new CourseCollections();
         courseCollections.setUserId(userId);
@@ -53,7 +54,8 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
     public ResponseObject doCollection(UserDto userDto, Integer courseId) {
         Integer userId = userDto.getId();
         if (courseId == null || userId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         CourseCollections courseCollections = new CourseCollections();
         courseCollections.setUserId(userId);
@@ -65,11 +67,11 @@ public class CourseCollectionsServiceImpl implements ICourseCollectionsService {
             courseCollections.setCreateUser(userDto.getUsername());
             courseCollections.setUpdateUser(userDto.getUsername());
             courseCollectionsMapper.insertSelective(courseCollections);
-            return ResponseObject.successStatusMessage("收藏成功");
+            return ResponseObject.successStatus();
         } else {
             //收藏了该课程，点击取消收藏（删除记录）
             courseCollectionsMapper.deleteByPrimaryKey(courseCollectionsList.get(0).getId());
-            return ResponseObject.successStatusMessage("取消收藏成功");
+            return ResponseObject.successStatus();
         }
     }
 

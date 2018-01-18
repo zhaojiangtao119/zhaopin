@@ -97,7 +97,7 @@ public class QiniuWrapper {
     public static String getUrl(String key) {
         try {
             String encodedFileName = URLEncoder.encode(key, "utf-8");
-            String url = String.format("%s/%s", domain, encodedFileName);
+            String url = auth.privateDownloadUrl("http://"+domain+"/@"+key);
             return url;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -108,9 +108,9 @@ public class QiniuWrapper {
     public static String getUrl(String key, String model) {
         long expires = 3600l;
         if(StringUtils.isBlank(model)){
-            return auth.privateDownloadUrl("http://"+domain+"/@"+key,expires);
+            return auth.privateDownloadUrl("http://"+domain+"/@"+key);
         }else{
-            return auth.privateDownloadUrl("http://"+domain+"/@"+key+"?"+model,expires);
+            return auth.privateDownloadUrl("http://"+domain+"/@"+key+"?"+model);
         }
     }
 

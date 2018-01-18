@@ -16,7 +16,13 @@ public enum UserResponseMessage {
     REGISTER_FAIL(10009, "注册失败"),
     REGISTER_SUCCESS(10010, "注册成功"),
     MODIFY_SUCCESS(10011, "修改信息成功"),
-    MODIFY_FAIL(10012, "修改信息失败");
+    MODIFY_FAIL(10012, "修改信息失败"),
+    OLD_PASSWORD_ERROR(10013,"旧密码错误"),
+    PASSWORD_SAME(10014,"新旧密码不能相同"),
+    EMAIL_NULL(10015,"邮箱不存在"),
+    USER_HEAD_ERROR(10016,"解析头像失败"),
+    MODIFY_PASSWORD_FAIL(10017,"密码修改失败")
+    ;
 
     private int code;
     private String value;

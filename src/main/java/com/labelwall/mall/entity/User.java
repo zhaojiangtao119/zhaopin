@@ -25,11 +25,30 @@ public class User {
 
     private String locationCity;
 
+    private String locationCounty;
+
+    private Integer provinceId;
+
+    private Integer cityId;
+
+    private Integer countyId;
+
+    private Integer schoolId;
+
     private Date createTime;
 
     private Date updateTime;
 
-    public User(Integer id, String username, String password, String head, String email, String phone, Integer role, Date schoolDate, String schoolName, String locationProvince, String locationCity, Date createTime, Date updateTime) {
+    private Integer gender;
+
+    private String birthday;
+
+    public User(Integer id, String username, String password,
+                String head, String email, String phone, Integer role,
+                Date schoolDate, String schoolName, String locationProvince,
+                String locationCity, String locationCounty, Integer provinceId,
+                Integer cityId, Integer countyId, Integer schoolId, Date createTime, Date updateTime,
+                Integer gender, String birthday) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -41,8 +60,15 @@ public class User {
         this.schoolName = schoolName;
         this.locationProvince = locationProvince;
         this.locationCity = locationCity;
+        this.locationCounty = locationCounty;
+        this.provinceId = provinceId;
+        this.cityId = cityId;
+        this.countyId = countyId;
+        this.schoolId = schoolId;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.gender = gender;
+        this.birthday = birthday;
     }
 
     public User() {
@@ -137,6 +163,46 @@ public class User {
         this.locationCity = locationCity == null ? null : locationCity.trim();
     }
 
+    public String getLocationCounty() {
+        return locationCounty;
+    }
+
+    public void setLocationCounty(String locationCounty) {
+        this.locationCounty = locationCounty;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(Integer countyId) {
+        this.countyId = countyId;
+    }
+
+    public Integer getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -151,5 +217,21 @@ public class User {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }

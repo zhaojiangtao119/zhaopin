@@ -9,8 +9,10 @@ import com.labelwall.common.ResponseStatus;
 import com.labelwall.course.dao.CourseMapper;
 import com.labelwall.course.dao.TeacherFollowsMapper;
 import com.labelwall.course.entity.Course;
+import com.labelwall.course.entity.InstitutionTeacher;
 import com.labelwall.course.entity.TeacherFollows;
 import com.labelwall.course.service.ICourseService;
+import com.labelwall.course.service.IInstitutionTeacherService;
 import com.labelwall.course.service.ITeacherFollowsService;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.User;
@@ -34,20 +36,22 @@ public class TeacherFollowsServiceImpl implements ITeacherFollowsService {
     @Autowired
     private ICourseService courseService;
     @Autowired
-    private IUserService userService;
+    private IInstitutionTeacherService institutionTeacherService;
 
     @Override
     public ResponseObject<Boolean> isFollows(Integer currentUserId, Integer courseId) {
         if (courseId == null || currentUserId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Course course = courseService.selectByPrimaryKey(courseId);
         if (course == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         //获取教师用户对象
-        UserDto userDto = userService.selectByUsername(course.getUsername());
-        TeacherFollows teacherFollows = teacherFollowsMapper.isFollows(currentUserId, userDto.getId());
+        InstitutionTeacher institutionTeacher = institutionTeacherService.selectByPrimaryKey(course.getTeacherId());
+        TeacherFollows teacherFollows = teacherFollowsMapper.isFollows(currentUserId, institutionTeacher.getId().intValue());
         if (teacherFollows == null) {//未关注
             return ResponseObject.successStautsData(false);
         }
@@ -58,28 +62,30 @@ public class TeacherFollowsServiceImpl implements ITeacherFollowsService {
     public ResponseObject doFollows(UserDto currentUserDto, Integer courseId) {
         Integer currentUserId = currentUserDto.getId();
         if (courseId == null || currentUserId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Course course = courseService.selectByPrimaryKey(courseId);
         if (course == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         //获取教师用户对象
-        UserDto teacherUserDto = userService.selectByUsername(course.getUsername());
-        TeacherFollows teacherFollows = teacherFollowsMapper.isFollows(currentUserId, teacherUserDto.getId());
+        InstitutionTeacher institutionTeacher = institutionTeacherService.selectByPrimaryKey(course.getTeacherId());
+        TeacherFollows teacherFollows = teacherFollowsMapper.isFollows(currentUserId, institutionTeacher.getId().intValue());
         if (teacherFollows == null) {
             //未关注该教师，点击后关注（插入记录）
             teacherFollows = new TeacherFollows();
             teacherFollows.setUserId(currentUserId);
-            teacherFollows.setFollowId(teacherUserDto.getId());
+            teacherFollows.setFollowId(institutionTeacher.getId().intValue());
             teacherFollows.setCreateUser(currentUserDto.getUsername());
             teacherFollows.setUpdateUser(currentUserDto.getUsername());
             teacherFollowsMapper.insertSelective(teacherFollows);
-            return ResponseObject.successStatusMessage("关注成功");
+            return ResponseObject.successStatus();
         } else {
             //已经关注，点击后取消关注（删除记录）
             teacherFollowsMapper.deleteByPrimaryKey(teacherFollows.getId());
-            return ResponseObject.successStatusMessage("取消关注成功");
+            return ResponseObject.successStatus();
         }
     }
 
@@ -95,17 +101,17 @@ public class TeacherFollowsServiceImpl implements ITeacherFollowsService {
         for (TeacherFollows item : teacherFollowsList) {
             userIdList.add(item.getFollowId());
         }
-        //获取关注集合信息
-        List<User> userList = userService.selectByUserIds(userIdList);
+        //获取关注教师集合信息
+        List<InstitutionTeacher> institutionTeacherList = institutionTeacherService.selectByUserIds(userIdList);
         //加载用户头像
-        for (User user : userList) {
+        /*for (InstitutionTeacher item : institutionTeacherList) {
             if (StringUtils.isBlank(user.getHead())) {
                 user.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
             } else {
                 user.setHead(QiniuStorage.getUserHeadUrl(user.getHead()));
             }
-        }
-        PageInfo pageInfo = new PageInfo(userList);
+        }*/
+        PageInfo pageInfo = new PageInfo(institutionTeacherList);
         return ResponseObject.successStautsData(pageInfo);
     }
 

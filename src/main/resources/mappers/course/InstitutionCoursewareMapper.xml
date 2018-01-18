@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.labelwall.course.dao.InstitutionCoursewareMapper">
+
+    <resultMap id="BeanResultMap" type="com.labelwall.course.entity.InstitutionCourseware">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="institution_id" property="institutionId" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="classify" property="classify" jdbcType="VARCHAR"/>
+        <result column="classify_name" property="classifyName" jdbcType="VARCHAR"/>
+        <result column="sub_classify" property="subClassify" jdbcType="VARCHAR"/>
+        <result column="sub_classify_name" property="subClassifyName" jdbcType="VARCHAR"/>
+        <result column="download_url" property="downloadUrl" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="del" property="del" jdbcType="TINYINT"/>
+    </resultMap>
+
+
+    <sql id="All_Columns">
+        id,name,institution_id,description,classify,classify_name,sub_classify,
+        sub_classify_name,download_url,
+        create_time, create_user, update_time,update_user, del
+    </sql>
+    
+    <select id="getCoursewareByInstitutionId" resultMap="BeanResultMap" parameterType="int">
+        SELECT
+        <include refid="All_Columns"/>
+        FROM wall_institutions_courseware
+        WHERE institution_id = #{institutionId}
+    </select>
+</mapper>

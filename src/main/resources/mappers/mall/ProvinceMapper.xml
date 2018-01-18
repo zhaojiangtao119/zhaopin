@@ -63,4 +63,9 @@
     FROM wall_province
     ORDER BY id
   </select>
+  <select id="findIdByProvinceName" parameterType="string" resultType="integer">
+    SELECT id
+    FROM wall_province
+    WHERE name = #{name}
+  </select>
 </mapper>

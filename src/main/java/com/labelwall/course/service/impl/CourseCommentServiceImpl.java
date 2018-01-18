@@ -36,11 +36,13 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
     public ResponseObject<PageInfo> getComment(CourseCommentDto courseCommentDto, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum,pageSize);
         if (courseCommentDto.getType() == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Integer type = courseCommentDto.getType();
         if (type != CourseConst.CommentType.comment && type != CourseConst.CommentType.questions) {
-            ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         List<CourseComment> courseCommentList = courseCommentMapper.getComment(courseCommentDto);
         List<CourseCommentDto> courseCommentDtoList = Lists.newArrayList();
@@ -61,7 +63,8 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
     @Override
     public ResponseObject<CourseCommentDto> publishComment(UserDto userDto, CourseCommentDto courseCommentDto) {
         if (StringUtils.isBlank(courseCommentDto.getContent())) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         courseCommentDto.setUsername(userDto.getUsername());
         CourseComment courseComment = new CourseComment();
@@ -77,6 +80,6 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
             courseCommentDtoNew.setUserDto(userDto);
             return ResponseObject.successStautsData(courseCommentDtoNew);
         }
-        return ResponseObject.failStatusMessage("评论失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 }

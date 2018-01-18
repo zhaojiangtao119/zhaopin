@@ -1,5 +1,6 @@
 package com.labelwall.mall.service;
 
+import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.User;
@@ -25,7 +26,7 @@ public interface IUserService {
      * @param userDto
      * @return
      */
-    ResponseObject register(UserDto userDto);
+    ResponseObject<UserDto> register(UserDto userDto);
 
     /**
      * 校验用户名或邮箱的唯一性
@@ -69,4 +70,20 @@ public interface IUserService {
      * @return
      */
     List<User> selectByUserIds(List<Integer> userIdList);
+
+    /**
+     * 用户搜索
+     *
+     * @param userDto
+     * @return
+     */
+    ResponseObject<PageInfo> searchUser(UserDto userDto, Integer pageNum, Integer pageSize);
+
+    /**
+     * 根据主键获取用户信息
+     *
+     * @param userId
+     * @return
+     */
+    ResponseObject<UserDto> selectByUserId(Integer userId);
 }

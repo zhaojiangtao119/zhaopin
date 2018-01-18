@@ -21,6 +21,7 @@ import com.labelwall.mall.dao.*;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.dto.ShopCartDto;
 import com.labelwall.mall.entity.*;
+import com.labelwall.mall.message.OrderResponseMessage;
 import com.labelwall.mall.service.IOrderService;
 import com.labelwall.mall.vo.OrderItemVo;
 import com.labelwall.mall.vo.OrderProductVo;
@@ -92,13 +93,14 @@ public class OrderServiceImpl implements IOrderService {
         }
         List<OrderItem> orderItemList = (List<OrderItem>) response.getData();
         if (CollectionUtils.isEmpty(orderItemList)) {
-            return ResponseObject.failStatusMessage("购物车为空");
+            return ResponseObject.fail(OrderResponseMessage.SHOPCART_NULL.getCode(),
+                    OrderResponseMessage.SHOPCART_NULL.getValue());
         }
         //计算订单总额
         BigDecimal payment = this.getOrderTotalPrice(orderItemList);
         Order order = this.assembleOrder(userId, shoppingId, payment);
         if (order == null) {
-            return ResponseObject.failStatusMessage("订单生成失败");
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
         }
         //设置订单明细的订单号
         for (OrderItem item : orderItemList) {
@@ -117,7 +119,8 @@ public class OrderServiceImpl implements IOrderService {
 
     private ResponseObject<List<OrderItem>> getShopCartOrderItem(Integer userId, List<ShopCartDto> shopCartDtoList) {
         if (CollectionUtils.isEmpty(shopCartDtoList)) {
-            return ResponseObject.failStatusMessage("购物车为空");
+            return ResponseObject.fail(OrderResponseMessage.SHOPCART_NULL.getCode(),
+                    OrderResponseMessage.SHOPCART_NULL.getValue());
         }
         List<OrderItem> orderItemList = new ArrayList<>();
         //校验购物车中商品数据，商品的状态与数量
@@ -126,11 +129,13 @@ public class OrderServiceImpl implements IOrderService {
             ProductDto productDto = shopCartDtoItem.getProductDto();
             //商品状态
             if (productDto.getStatus() != Const.ProductStatusEnum.ON_SALE.getCode()) {
-                return ResponseObject.failStatusMessage("商品" + productDto.getName() + "不在售卖状态");
+                return ResponseObject.fail(OrderResponseMessage.PRODUCT_NOT_SALE.getCode(),
+                        productDto.getName() + OrderResponseMessage.PRODUCT_NOT_SALE.getValue());
             }
             //商品数量
             if (shopCartDtoItem.getQuantity() > productDto.getStock()) {
-                return ResponseObject.failStatusMessage("商品" + productDto.getName() + "库存不足");
+                return ResponseObject.fail(OrderResponseMessage.PRODUCT_NUM_NOT.getCode(),
+                        productDto.getName() + OrderResponseMessage.PRODUCT_NUM_NOT.getValue());
             }
             orderItem.setUserId(userId);
             orderItem.setProductId(productDto.getId());
@@ -171,6 +176,7 @@ public class OrderServiceImpl implements IOrderService {
         return null;
     }
 
+    //TODO 订单号的生成，
     private long generateOrderNo() {
         long currentTime = System.currentTimeMillis();
         return currentTime + new Random().nextInt(100);
@@ -262,19 +268,21 @@ public class OrderServiceImpl implements IOrderService {
         }
         Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
         if (order == null) {
-            return ResponseObject.failStatusMessage("该订单不存在");
+            return ResponseObject.fail(OrderResponseMessage.ORDER_ISNULL.getCode(),
+                    OrderResponseMessage.ORDER_ISNULL.getValue());
         }
         if (order.getStatus() != Const.OrderStatusEnum.NO_PAY.getCode()) {
-            return ResponseObject.failStatusMessage("无法取消，订单已支付");
+            return ResponseObject.fail(OrderResponseMessage.ORDER_PAY_NOT_CANCEL.getCode(),
+                    OrderResponseMessage.ORDER_PAY_NOT_CANCEL.getValue());
         }
         Order updateOrder = new Order();
         updateOrder.setId(order.getId());
         updateOrder.setStatus(Const.OrderStatusEnum.CANCELED.getCode());
         int rowCount = orderMapper.updateByPrimaryKeySelective(updateOrder);
         if (rowCount > 0) {
-            return ResponseObject.successStatusMessage("取消成功");
+            return ResponseObject.successStatus();
         }
-        return ResponseObject.failStatusMessage("取消失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
     @Override
@@ -300,11 +308,12 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public ResponseObject<OrderVo> getOrderDetail(Integer userId, Long orderNo) {
         if (orderNo == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
         if (order == null) {
-            return ResponseObject.failStatusMessage("");
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
         }
         List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(orderNo, userId);
         OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
@@ -338,7 +347,8 @@ public class OrderServiceImpl implements IOrderService {
         //获取订单
         Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
         if (order == null) {
-            return ResponseObject.failStatusMessage("订单不存在");
+            return ResponseObject.fail(OrderResponseMessage.ORDER_ISNULL.getCode(),
+                    OrderResponseMessage.ORDER_ISNULL.getValue());
         }
         resultMap.put("orderNo", String.valueOf(order.getOrderNo()));
 
@@ -400,6 +410,7 @@ public class OrderServiceImpl implements IOrderService {
                 .setGoodsDetailList(goodsDetailList);
 
         AlipayF2FPrecreateResult result = tradeService.tradePrecreate(builder);
+
         switch (result.getTradeStatus()) {
             case SUCCESS:
                 logger.info("支付宝预下单成功: )");
@@ -497,13 +508,15 @@ public class OrderServiceImpl implements IOrderService {
         if (orderNo == null) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
-        Order order = orderMapper.selectByUserIdOrderNo(userId,orderNo);
-        if(order == null){
-            return ResponseObject.failStatusMessage("订单不存在");
+        Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
+        if (order == null) {
+            return ResponseObject.fail(OrderResponseMessage.ORDER_ISNULL.getCode(),
+                    OrderResponseMessage.ORDER_ISNULL.getValue());
         }
-        if(order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()){
+        if (order.getStatus() >= Const.OrderStatusEnum.PAID.getCode()) {
             return ResponseObject.successStatus();
         }
-        return ResponseObject.failStatusMessage("订单未支付");
+        return ResponseObject.fail(OrderResponseMessage.ORDER_NOT_PAY.getCode(),
+                OrderResponseMessage.ORDER_NOT_PAY.getValue());
     }
 }

@@ -12,4 +12,11 @@ public interface ISchoolService {
 
     ResponseObject<List<School>> getSchoolByProvinceId(Integer provinceId);
 
+    /**
+     * 通过id获取学校的名称
+     *
+     * @param schoolId
+     * @return
+     */
+    String findNameBySchoolId(Integer schoolId);
 }

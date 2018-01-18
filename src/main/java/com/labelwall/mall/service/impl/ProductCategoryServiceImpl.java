@@ -3,6 +3,7 @@ package com.labelwall.mall.service.impl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ProductCategoryMapper;
 import com.labelwall.mall.dto.ProductCategoryDto;
 import com.labelwall.mall.entity.ProductCategory;
@@ -28,7 +29,7 @@ public class ProductCategoryServiceImpl implements IProductCategoryService {
     public ResponseObject<List<ProductCategoryDto>> getCategoryList(Integer categoryId) {
         List<ProductCategory> categoryList = categoryMapper.getCategory(categoryId);
         if (CollectionUtils.isEmpty(categoryList)) {
-            return ResponseObject.failStatusMessage("获取失败");
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
         }
         List<ProductCategoryDto> categoryDtoList = new ArrayList<>();
         Map<Integer, ProductCategoryDto> categoryMap = new HashMap<>();

@@ -46,12 +46,13 @@ public class ShopServiceImpl implements IShopService {
     @Override
     public ResponseObject<ShopDto> getShopDetail(Integer shopId) {
         if (shopId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         ShopDto shopDto = shopMapper.selectByPrimaryKey(shopId);
         if (shopDto != null) {
             return ResponseObject.successStautsData(shopDto);
         }
-        return ResponseObject.failStatusMessage("获取失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 }

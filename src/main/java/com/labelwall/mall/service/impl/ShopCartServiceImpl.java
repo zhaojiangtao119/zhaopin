@@ -45,7 +45,8 @@ public class ShopCartServiceImpl implements IShopCartService {
     @Override
     public ResponseObject<CartVo> addCart(ShopCartDto shopCartDto) {
         if (shopCartDto.getQuantity() == null || shopCartDto.getProductId() == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         //判断购物车中是否存在该商品
         ShopCart shopCart = shopCartMapper.selectCartByUserIdProductId(shopCartDto.getUserId(), shopCartDto.getProductId());
@@ -64,7 +65,8 @@ public class ShopCartServiceImpl implements IShopCartService {
     @Override
     public ResponseObject<CartVo> updateQuantity(ShopCartDto shopCartDto) {
         if (shopCartDto.getQuantity() == null || shopCartDto.getProductId() == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         ShopCart shopCart = shopCartMapper.selectCartByUserIdProductId(shopCartDto.getUserId(), shopCartDto.getProductId());
         if (shopCart != null) {
@@ -78,7 +80,8 @@ public class ShopCartServiceImpl implements IShopCartService {
     public ResponseObject<CartVo> removeCart(Integer userId, String productIds) {
         List<String> productIdList = Splitter.on(",").splitToList(productIds);
         if (CollectionUtils.isEmpty(productIdList)) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         shopCartMapper.deleteByUserIdProductIds(userId, productIdList);
         return this.getCartList(userId);

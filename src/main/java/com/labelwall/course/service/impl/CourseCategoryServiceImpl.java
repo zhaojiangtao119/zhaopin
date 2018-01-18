@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.course.dao.CourseCategoryMapper;
 import com.labelwall.course.dto.CourseCategoryDto;
 import com.labelwall.course.entity.CourseCategory;
@@ -32,7 +33,7 @@ public class CourseCategoryServiceImpl implements ICourseCategoryService {
         List<CourseCategoryDto> courseCategoryDtoList = Lists.newArrayList();
         List<CourseCategory> courseCategoryList = courseCategoryMapper.getCourseCategory(code);
         if (CollectionUtils.isEmpty(courseCategoryList)) {
-            return ResponseObject.failStatusMessage("获取分类失败");
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
         }
         for (CourseCategory courseCategory : courseCategoryList) {
             if (courseCategory.getParentCode().equals("0")) {

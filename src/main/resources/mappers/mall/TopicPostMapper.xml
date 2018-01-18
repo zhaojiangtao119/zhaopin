@@ -16,7 +16,7 @@
             <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         </constructor>-->
-        <id column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <id  column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="title" column="title" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="content" column="content" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="userId" column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
@@ -30,6 +30,9 @@
         <result property="updateTime" column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         <result property="createTimeStr" column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="updateTimeStr" column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        <result property="provinceId" column="province_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="cityId" column="city_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result property="countyId" column="county_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
             <result column="userId" property="id" jdbcType="INTEGER"/>
             <result column="username" property="username" jdbcType="VARCHAR"/>
@@ -42,7 +45,7 @@
 
     <sql id="Base_Column_List">
         id, title,content, user_id, school_id, topic_id, reply_num, image, like_num, dislike_num, create_time,
-        update_time
+        update_time,province_id,city_id,county_id
     </sql>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -60,12 +63,13 @@
     insert into wall_topic_post (id, title, user_id, 
       school_id, topic_id, reply_num, 
       image, like_num, dislike_num,
-      create_time, update_time, content
+      create_time, update_time, content,,province_id,city_id,county_id
       )
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
       #{schoolId,jdbcType=INTEGER}, #{topicId,jdbcType=INTEGER}, #{replyNum,jdbcType=INTEGER}, 
       #{image,jdbcType=VARCHAR}, #{likeNum,jdbcType=INTEGER}, #{dislikeNum,jdbcType=INTEGER},
-      now(), now(), #{content,jdbcType=VARCHAR}
+      now(), now(), #{content,jdbcType=VARCHAR},#{provinceId,jdbcType=INTEGER},
+      #{cityId,jdbcType=INTEGER},#{countyId,jdbcType=INTEGER}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.TopicPost" useGeneratedKeys="true"
@@ -104,6 +108,15 @@
             <if test="content != null">
                 content,
             </if>
+            <if test="provinceId != null">
+                province_id,
+            </if>
+            <if test="cityId != null">
+                city_id,
+            </if>
+            <if test="countyId != null">
+                county_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -137,6 +150,15 @@
             now(),
             <if test="content != null">
                 #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="provinceId != null">
+                #{provinceId,jdbcType=INTEGER},
+            </if>
+            <if test="cityId != null">
+                #{cityId,jdbcType=INTEGER},
+            </if>
+            <if test="countyId != null">
+                #{countyId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -174,6 +196,15 @@
             <if test="content != null">
                 content = #{content,jdbcType=VARCHAR},
             </if>
+            <if test="provinceId != null">
+                province_id = #{provinceId,jdbcType=INTEGER},
+            </if>
+            <if test="cityId != null">
+                city_id = #{cityId,jdbcType=INTEGER},
+            </if>
+            <if test="countyId != null">
+                county_id = #{countyId,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -190,13 +221,17 @@
           like_num = #{likeNum,jdbcType=INTEGER},
           dislike_num = #{dislikeNum,jdbcType=INTEGER},
           create_time = #{createTime,jdbcType=TIMESTAMP},
-          update_time = now()
+          update_time = now(),
+          province_id = #{provinceId,jdbcType=INTEGER},
+          city_id = #{cityId,jdbcType=INTEGER},
+          county_id = #{countyId,jdbcType=INTEGER}
         where id = #{id,jdbcType=INTEGER}
       </update>
     <select id="getTopicPost" resultMap="BaseResultMap" parameterType="com.labelwall.mall.dto.TopicPostDto">
         SELECT
         wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
-                DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+        DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d
+        %H:%I:%S') update_time_str,
         wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
         <where>
@@ -213,8 +248,17 @@
             <if test="userId != null">
                 AND wtp.user_id=#{userId}
             </if>
+            <if test="provinceId != null">
+                AND wtp.province_id = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                AND wtp.city_id = #{cityId}
+            </if>
+            <if test="countyId != null">
+                AND wtp.county_id = #{countyId}
+            </if>
         </where>
-        ORDER BY wtp.like_num DESC,wtp.create_time DESC
+        ORDER BY wtp.like_num DESC,wtp.create_time
     </select>
     <update id="updatePostLike" parameterType="int">
         UPDATE wall_topic_post

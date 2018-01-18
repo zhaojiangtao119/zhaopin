@@ -56,7 +56,7 @@ public class CourseController {
      * @return
      */
     @RequestMapping(value = "get_commend_course/{free}", method = RequestMethod.GET)
-    public ResponseObject<List<Course>> getCommendCourse(@PathVariable("free") Integer free) {
+    public ResponseObject<List<Course>> getCommendCourse(@PathVariable(value = "free") Integer free) {
         return courseService.getCommendCourse(free);
     }
 

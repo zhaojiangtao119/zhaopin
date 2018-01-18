@@ -2,17 +2,17 @@ package com.labelwall.mall.controller;
 
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.entity.City;
+import com.labelwall.mall.entity.County;
 import com.labelwall.mall.entity.Province;
 import com.labelwall.mall.entity.School;
 import com.labelwall.mall.service.ICityService;
+import com.labelwall.mall.service.ICountyService;
 import com.labelwall.mall.service.IProvinceService;
 import com.labelwall.mall.service.ISchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -27,17 +27,21 @@ public class LocationController {
     @Autowired
     private ICityService cityService;
     @Autowired
+    private ICountyService countyService;
+    @Autowired
     private ISchoolService schoolService;
 
     /**
      * 获取省份
      *
+     *
      * @return
      */
     @RequestMapping(value = "get_province_list", method = RequestMethod.GET)
-    public ResponseObject<List<Province>> getProvinceList() {
-        ResponseObject<List<Province>> response = provinceService.getProvinceList();
-        return response;
+    public ResponseObject<List<Province>> getProvinceList(HttpServletResponse response) {
+        //response.setHeader("Access-Control-Allow-Origin","*");
+        ResponseObject<List<Province>> responseObject = provinceService.getProvinceList();
+        return responseObject;
     }
 
     /**
@@ -49,6 +53,20 @@ public class LocationController {
     @RequestMapping(value = "get_city_list_province_id", method = RequestMethod.GET)
     public ResponseObject<List<City>> getCityListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
         ResponseObject<List<City>> response = cityService.getCityListByProvinceId(provinceId);
+        return response;
+    }
+
+    /**
+     * 获取区县，通过provinceId,cityId
+     *
+     * @param provinceId
+     * @param cityId
+     * @return
+     */
+    @RequestMapping(value = "get_county_list", method = RequestMethod.GET)
+    public ResponseObject<List<County>> getCountyByProvinceIdCityId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId,
+                                                                    @RequestParam(value = "cityId", required = false) Integer cityId) {
+        ResponseObject<List<County>> response = countyService.getCountyListByProvinceIdCityId(provinceId, cityId);
         return response;
     }
 

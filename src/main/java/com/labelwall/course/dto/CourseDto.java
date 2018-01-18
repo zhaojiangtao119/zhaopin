@@ -1,6 +1,7 @@
 package com.labelwall.course.dto;
 
 import com.labelwall.course.entity.Course;
+import com.labelwall.course.entity.InstitutionTeacher;
 import com.labelwall.mall.dto.UserDto;
 
 /**
@@ -8,13 +9,13 @@ import com.labelwall.mall.dto.UserDto;
  */
 public class CourseDto extends Course {
 
-    private UserDto userDto;
+    private InstitutionTeacher institutionTeacher;
 
-    public UserDto getUserDto() {
-        return userDto;
+    public InstitutionTeacher getInstitutionTeacher() {
+        return institutionTeacher;
     }
 
-    public void setUserDto(UserDto userDto) {
-        this.userDto = userDto;
+    public void setInstitutionTeacher(InstitutionTeacher institutionTeacher) {
+        this.institutionTeacher = institutionTeacher;
     }
 }

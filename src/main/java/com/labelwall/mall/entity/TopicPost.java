@@ -27,7 +27,14 @@ public class TopicPost {
 
     private String content;
 
-    public TopicPost(Integer id, String title, String content, Integer userId, Integer schoolId, Integer topicId, Integer replyNum, String image, Integer likeNum, Integer dislikeNum, Date createTime, Date updateTime) {
+    private Integer provinceId;
+    private Integer cityId;
+    private Integer countyId;
+
+    public TopicPost(Integer id, String title, String content, Integer userId,
+                     Integer schoolId, Integer topicId, Integer replyNum,
+                     String image, Integer likeNum, Integer dislikeNum,
+                     Date createTime, Date updateTime, Integer provinceId, Integer cityId, Integer countyId) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -40,6 +47,9 @@ public class TopicPost {
         this.dislikeNum = dislikeNum;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.provinceId = provinceId;
+        this.cityId = cityId;
+        this.countyId = countyId;
 
     }
 
@@ -141,5 +151,29 @@ public class TopicPost {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(Integer countyId) {
+        this.countyId = countyId;
     }
 }

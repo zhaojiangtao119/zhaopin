@@ -21,8 +21,8 @@ public class Const {
     }
 
     public interface PostClickType {
-        Integer LIKE_CLICK = 0;
-        Integer DISLIKE_CLICK = 1;
+        int LIKE_CLICK = 0;
+        int DISLIKE_CLICK = 1;
     }
 
     //购物车商品是否勾选

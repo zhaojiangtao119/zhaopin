@@ -35,7 +35,8 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
     public ResponseObject<List<CourseSectionDto>> getSection(Integer courseId) {
         Course course = courseService.selectByPrimaryKey(courseId);
         if (course == null) {
-            ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
 
         List<CourseSection> courseSectionList = courseSectionMapper.selectByCourseId(course.getId());
@@ -54,7 +55,7 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
                     courseSectionDtoMap.get(courseSection.getParentId()).getCourseSubSectionList().add(courseSection);
                 }
             }
-        } else if (course.getFree() == CourseConst.CourseType.charges) {
+        } else if (course.getFree() == CourseConst.CourseType.charges) {//收费
             for (CourseSection courseSection : courseSectionList) {
                 if (courseSection.getParentId() == 0) {
                     CourseSectionDto courseSectionDto = new CourseSectionDto();
@@ -63,7 +64,7 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
                 }
             }
         } else {
-            return ResponseObject.failStatusMessage("服务器出错");
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
         }
         for (Map.Entry<Integer, CourseSectionDto> entry : courseSectionDtoMap.entrySet()) {
             courseSectionDtoList.add(entry.getValue());
@@ -79,13 +80,14 @@ public class CourseSectionServiceImpl implements ICourseSectionService {
     @Override
     public ResponseObject<CourseSection> getSectionDetail(Integer sectionId) {
         if (sectionId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         CourseSection courseSection = courseSectionMapper.selectByPrimaryKey(sectionId);
         if (courseSection != null) {
             //TODO 处理课程视频的播放地址url
             return ResponseObject.successStautsData(courseSection);
         }
-        return ResponseObject.failStatusMessage("获取失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 }

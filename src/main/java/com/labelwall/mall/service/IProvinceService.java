@@ -10,4 +10,6 @@ import java.util.List;
  */
 public interface IProvinceService {
     ResponseObject<List<Province>> getProvinceList();
+
+    Integer findIdByProvinceName(String name);
 }

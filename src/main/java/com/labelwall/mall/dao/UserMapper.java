@@ -1,5 +1,6 @@
 package com.labelwall.mall.dao;
 
+import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -67,4 +68,19 @@ public interface UserMapper {
      * @return
      */
     List<User> selectByUserIds(@Param("userIdList") List<Integer> userIdList);
+
+    /**
+     * 搜索页面
+     *
+     * @return
+     */
+    List<User> selectUser(UserDto userDto);
+
+    /**
+     * 使用邮箱登录
+     * @param email
+     * @param md5Password
+     * @return
+     */
+    User loginEmail(@Param("email") String email, @Param("password") String md5Password);
 }

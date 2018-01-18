@@ -18,4 +18,12 @@ public interface SchoolMapper {
     int updateByPrimaryKey(School record);
 
     List<School> getSchoolListByProvinceId(Integer provinceId);
+
+    /**
+     * 通过主键学校的名称
+     *
+     * @param schoolId
+     * @return
+     */
+    String findNameBySchoolId(Integer schoolId);
 }

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  * Created by Administrator on 2017-12-14.
  */
 @RestController
-@RequestMapping("/follows/")
+@RequestMapping("/teacherfollows/")
 public class TeacherFollowsController {
 
     @Autowired

@@ -17,11 +17,19 @@ public class Shop {
 
     private Integer level;
 
+    private Integer provinceId;
+    private Integer cityId;
+    private Integer countyId;
+
     private Date createTime;
 
     private Date updateTime;
 
-    public Shop(Integer id, Integer userId, String name, String description, Integer productCategoryId, Integer status, Integer level, Date createTime, Date updateTime) {
+
+    public Shop(Integer id, Integer userId, String name, String description,
+                Integer productCategoryId, Integer status, Integer level,
+                Integer provinceId, Integer cityId, Integer countyId,
+                Date createTime, Date updateTime) {
         this.id = id;
         this.userId = userId;
         this.name = name;
@@ -29,6 +37,9 @@ public class Shop {
         this.productCategoryId = productCategoryId;
         this.status = status;
         this.level = level;
+        this.provinceId = provinceId;
+        this.cityId = cityId;
+        this.countyId = countyId;
         this.createTime = createTime;
         this.updateTime = updateTime;
     }
@@ -91,6 +102,30 @@ public class Shop {
 
     public void setLevel(Integer level) {
         this.level = level;
+    }
+
+    public Integer getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(Integer provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public Integer getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(Integer cityId) {
+        this.cityId = cityId;
+    }
+
+    public Integer getCountyId() {
+        return countyId;
+    }
+
+    public void setCountyId(Integer countyId) {
+        this.countyId = countyId;
     }
 
     public Date getCreateTime() {

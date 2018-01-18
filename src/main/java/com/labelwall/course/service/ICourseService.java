@@ -55,4 +55,20 @@ public interface ICourseService {
      * @return
      */
     List<Course> selectByCourseIds(List<Integer> courseIdList);
+
+    /**
+     * 获取机构的课程
+     *
+     * @param courseQueryDto
+     * @return
+     */
+    ResponseObject<List<Course>> getInstitutionCourse(CourseQueryDto courseQueryDto);
+
+    /**
+     * 获取某一个教师的课程
+     *
+     * @param teacherId
+     * @return
+     */
+    ResponseObject<List<Course>> getCoursesByTeacherId(Integer teacherId);
 }

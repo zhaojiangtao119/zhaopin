@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://10.20.91.130/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.labelwall.course.dao.InstitutionMapper">
+
+    <resultMap id="BeanResultMap" type="com.labelwall.course.entity.Institution">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="logo" property="logo" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="province_id" property="provinceId" jdbcType="INTEGER"/>
+        <result column="city_id" property="cityId" jdbcType="INTEGER"/>
+        <result column="province_name" property="provinceName" jdbcType="VARCHAR"/>
+        <result column="city_name" property="cityName" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="fax" property="fax" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+        <result column="create_user" property="createUser" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
+        <result column="del" property="del" jdbcType="TINYINT"/>
+        <result column="weight" property="weight" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <sql id="All_Columns">
+        id,name,logo,address,province_id,city_id,province_name,
+        city_name,description,email,mobile,fax,url,
+        create_time, create_user, update_time,update_user, del,weight
+    </sql>
+
+    <select id="getRecommed" resultMap="BeanResultMap">
+        SELECT
+        <include refid="All_Columns"/>
+        FROM wall_institutions
+        ORDER BY weight DESC
+        LIMIT 0,5
+    </select>
+    <select id="getInstitutions" resultMap="BeanResultMap" parameterType="com.labelwall.course.dto.InstitutionDto">
+        SELECT
+        <include refid="All_Columns"/>
+        FROM wall_institutions
+        <trim prefix="WHERE" prefixOverrides="AND|OR">
+            AND del = 0
+            <if test="keyword != null">
+                AND name LIKE CONCAT('%',#{keyword},'%')
+                OR description LIKE CONCAT('%',${keyword},'%')
+            </if>
+            <if test="provinceId != null">
+                AND province_id = #{provinceId}
+            </if>
+            <if test="cityId != null">
+                AND city_id = #{cityId}
+            </if>
+        </trim>
+        ORDER BY weight DESC
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BeanResultMap" parameterType="int">
+        SELECT
+        <include refid="All_Columns"/>
+        FROM wall_institutions
+        WHERE id = #{institutionId}
+    </select>
+</mapper>

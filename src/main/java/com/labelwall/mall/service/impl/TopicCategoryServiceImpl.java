@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.TopicCategoryMapper;
 import com.labelwall.mall.dto.TopicCategoryDto;
 import com.labelwall.mall.entity.TopicCategory;
@@ -31,7 +32,8 @@ public class TopicCategoryServiceImpl implements ITopicCategoryService {
     public ResponseObject<List<TopicCategoryDto>> getCategoryList(Integer categoryId) {
         List<TopicCategory> topicCategoryList = topicCategoryMapper.getCategory(categoryId);
         if (CollectionUtils.isEmpty(topicCategoryList)) {
-            return ResponseObject.failStatusMessage("获取失败");
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),
+                    ResponseStatus.FAIL.getValue());
         }
         List<TopicCategoryDto> topicCategoryDtoList = Lists.newArrayList();
         Map<Integer, TopicCategoryDto> topicCategoryDtoMap = Maps.newHashMap();

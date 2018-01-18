@@ -1,5 +1,6 @@
 package com.labelwall.course.dao;
 
+import com.labelwall.common.ResponseObject;
 import com.labelwall.course.dto.CourseQueryDto;
 import com.labelwall.course.entity.Course;
 import org.apache.ibatis.annotations.Param;
@@ -41,4 +42,20 @@ public interface CourseMapper {
      * @return
      */
     List<Course> selectByCourseIds(@Param("courseIdList") List<Integer> courseIdList);
+
+    /**
+     * 获取机构的课程
+     *
+     * @param courseQueryDto
+     * @return
+     */
+    List<Course> getInstitutionCourse(CourseQueryDto courseQueryDto);
+
+    /**
+     * 获取某一个教师的课程
+     *
+     * @param teacherId
+     * @return
+     */
+    List<Course> getCourseByTeacherId(Integer teacherId);
 }

@@ -7,6 +7,7 @@ import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ProductMapper;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,9 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ResponseObject<PageInfo> getProductList(ProductDto productDto, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
+        if (StringUtils.isBlank(productDto.getKeyword())) {
+            productDto.setKeyword(null);
+        }
         List<ProductDto> productDtoList = productMapper.getProductList(productDto);
         //TODO 商品图片的转化
 
@@ -34,12 +38,13 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public ResponseObject<ProductDto> getProductDetail(Integer productId) {
         if (productId == null) {
-            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
         }
         ProductDto productDto = productMapper.selectByPrimaryKey(productId);
         if (productDto != null) {
             return ResponseObject.successStautsData(productDto);
         }
-        return ResponseObject.failStatusMessage("获取失败");
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
     }
 }

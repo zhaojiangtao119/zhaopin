@@ -86,6 +86,10 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:spring/spring-mvc.xml</param-value>
         </init-param>
+        <init-param>
+            <param-name>dispatchOptionsRequest</param-name>
+            <param-value>true</param-value>
+        </init-param>
         <!--初始化servlet，加载web容器时就初始化-->
         <load-on-startup>1</load-on-startup>
     </servlet>
