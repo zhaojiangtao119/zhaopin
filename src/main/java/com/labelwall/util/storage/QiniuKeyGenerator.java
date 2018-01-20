@@ -16,24 +16,28 @@ public class QiniuKeyGenerator {
     //多图片可以按照：/表名/字段名/业务值/时间戳，进行处理
     private static final String key = "/{0}/{1}/{2}";
 
-    public static String generatorUserHeadKey(){
-        return MessageFormat.format(key,"user","head", CommonUtil.getUUID());
+    public static String generatorUserHeadKey() {
+        return MessageFormat.format(key, "user", "head", CommonUtil.getUUID());
     }
 
-    public static String generatorPostImageKey(){
-        return MessageFormat.format(key,"topicPost","image",CommonUtil.getUUID());
+    public static String generatorPostImageKey() {
+        return MessageFormat.format(key, "topicPost", "image", CommonUtil.getUUID());
     }
 
-    public static String generatorReplyImageKey(){
-        return MessageFormat.format(key,"topicPostReply","image",CommonUtil.getUUID());
+    public static String generatorReplyImageKey() {
+        return MessageFormat.format(key, "topicPostReply", "image", CommonUtil.getUUID());
     }
 
-    public static String generatorProductRichImageKey(){
-        return MessageFormat.format(key,"product","detail",CommonUtil.getUUID());
+    public static String generatorProductRichImageKey() {
+        return MessageFormat.format(key, "product", "detail", CommonUtil.getUUID());
     }
 
-    public static String generatorOrderPayImageKey(){
-        return MessageFormat.format(key,"order","online","pay");
+    public static String generatorOrderPayImageKey() {
+        return MessageFormat.format(key, "order", "online", "pay");
+    }
+
+    public static String generatorProductMianImgageKey() {
+        return MessageFormat.format(key, "product", "main", CommonUtil.getUUID());
     }
 
 }

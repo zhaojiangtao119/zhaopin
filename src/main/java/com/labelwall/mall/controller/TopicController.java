@@ -92,7 +92,6 @@ public class TopicController {
     /**
      * APP发表帖子
      *
-     * @param session
      * @param topicPostDto
      * @return
      */

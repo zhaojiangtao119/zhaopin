@@ -8,6 +8,7 @@ import com.labelwall.mall.dao.ProductMapper;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.service.IProductCategoryService;
 import com.labelwall.mall.service.IProductService;
+import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,6 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ResponseObject<PageInfo> getProductList(ProductDto productDto, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
         if (StringUtils.isBlank(productDto.getKeyword())) {
             productDto.setKeyword(null);
         }
@@ -36,9 +36,13 @@ public class ProductServiceImpl implements IProductService {
         if (productDto.getCategoryId() != null) {
             categoryIds = productCategoryService.getCategoryAndChildrenIdByCategoryId(productDto.getCategoryId());
         }
+        PageHelper.startPage(pageNum, pageSize);
         List<ProductDto> productDtoList = productMapper.getProductList(productDto, categoryIds);
-        //TODO 商品图片的转化
-
+        //TODO 商品图片的转化,只转化主图
+        productDtoList.stream().filter(item -> StringUtils.isNotBlank(item.getMainImage())).forEach(item -> {
+            String imgUrl = QiniuStorage.getUrl(item.getMainImage());
+            item.setMainImage(imgUrl);
+        });
         PageInfo pageInfo = new PageInfo(productDtoList);
         return ResponseObject.successStautsData(pageInfo);
     }

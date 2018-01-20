@@ -201,6 +201,7 @@
         FROM wall_product wp,wall_shop ws
         <where>
             wp.shop_id = ws.id
+            AND wp.status = 1
             <if test="productDto.keyword != null">
                 AND wp.name like CONCAT('%',#{productDto.keyword},'%')
                 OR wp.subtitle like CONCAT('%',#{productDto.keyword},'%')
@@ -216,9 +217,9 @@
                 AND wp.price &gt; #{productDto.maxPrice}
             </if>
             <if test="categoryIds != null">
-                AND
-                <foreach collection="categoryIds" open="(" close=")" item="item" index="index" separator="OR">
-                    wp.category_id = #{item}
+                AND wp.category_id IN
+                <foreach collection="categoryIds" open="(" close=")" item="item" index="index" separator=",">
+                     #{item}
                 </foreach>
             </if>
             <if test="productDto.shopId != null">
