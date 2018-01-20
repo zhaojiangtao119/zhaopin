@@ -1,5 +1,6 @@
 package com.labelwall.mall.dao;
 
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.entity.ProductCategory;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +34,6 @@ public interface ProductCategoryMapper {
      * @return
      */
     List<ProductCategory> getCategoryChildrenByParentId(Integer parentId);
+
+    List<ProductCategory> getAllCategory();
 }

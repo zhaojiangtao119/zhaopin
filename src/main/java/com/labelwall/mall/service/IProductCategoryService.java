@@ -2,6 +2,7 @@ package com.labelwall.mall.service;
 
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ProductCategoryDto;
+import com.labelwall.mall.entity.ProductCategory;
 
 import java.util.List;
 
@@ -25,4 +26,18 @@ public interface IProductCategoryService {
      */
     ResponseObject<List<Integer>> getCategoryAndChildrenByCategoryId(Integer categoryId);
 
+    /**
+     * 递归获取该品类下的所有子类的id
+     *
+     * @param categoryId
+     * @return
+     */
+    List<Integer> getCategoryAndChildrenIdByCategoryId(Integer categoryId);
+
+    /**
+     * 获取分类
+     *
+     * @return
+     */
+    ResponseObject<List<ProductCategory>> getAllCategory();
 }

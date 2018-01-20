@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.ProductCategoryDto;
 import com.labelwall.mall.dto.ProductDto;
+import com.labelwall.mall.entity.ProductCategory;
 import com.labelwall.mall.service.IProductCategoryService;
 import com.labelwall.mall.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,15 @@ public class ProductController {
     public ResponseObject<List<ProductCategoryDto>>
     getCategory(@RequestParam(value = "categoryId", required = false) Integer categoryId) {
         return productCategoryService.getCategoryList(categoryId);
+    }
+
+    /**
+     * 获取产品的分类
+     * @return
+     */
+    @RequestMapping(value = "get_category_all",method = RequestMethod.GET)
+    public ResponseObject<List<ProductCategory>> getCategory(){
+        return productCategoryService.getAllCategory();
     }
 
     /**

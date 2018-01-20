@@ -2,6 +2,7 @@ package com.labelwall.mall.dao;
 
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.entity.Product;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,5 +25,6 @@ public interface ProductMapper {
      * @param productDto
      * @return
      */
-    List<ProductDto> getProductList(ProductDto productDto);
+    List<ProductDto> getProductList(@Param("productDto") ProductDto productDto,
+                                    @Param("categoryIds") List<Integer> categoryIds);
 }

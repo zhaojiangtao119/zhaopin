@@ -120,4 +120,10 @@
         WHERE parent_id = #{parentId}
         ORDER BY id
     </select>
+
+    <select id="getAllCategory" resultType="com.labelwall.mall.entity.ProductCategory">
+        SELECT id,`name`
+        FROM wall_category_product
+        ORDER BY id
+    </select>
 </mapper>
