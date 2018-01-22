@@ -203,8 +203,8 @@
             wp.shop_id = ws.id
             AND wp.status = 1
             <if test="productDto.keyword != null">
-                AND wp.name like CONCAT('%',#{productDto.keyword},'%')
-                OR wp.subtitle like CONCAT('%',#{productDto.keyword},'%')
+                AND (wp.name like CONCAT('%',#{productDto.keyword},'%')
+                OR wp.subtitle like CONCAT('%',#{productDto.keyword},'%'))
             </if>
             <if test="productDto.minPrice != null and productDto.maxPrice != null">
                 AND wp.price &gt; #{productDto.minPrice}
@@ -219,7 +219,7 @@
             <if test="categoryIds != null">
                 AND wp.category_id IN
                 <foreach collection="categoryIds" open="(" close=")" item="item" index="index" separator=",">
-                     #{item}
+                    #{item}
                 </foreach>
             </if>
             <if test="productDto.shopId != null">
