@@ -1,5 +1,6 @@
 package com.labelwall.mall.service.impl;
 
+import com.github.pagehelper.StringUtil;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.labelwall.common.Const;
@@ -13,7 +14,9 @@ import com.labelwall.mall.service.IShopCartService;
 import com.labelwall.mall.vo.CartProductVo;
 import com.labelwall.mall.vo.CartVo;
 import com.labelwall.util.BigDecimalUtil;
+import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,7 +51,7 @@ public class ShopCartServiceImpl implements IShopCartService {
             return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
                     ResponseStatus.ERROR_PARAM.getValue());
         }
-        //判断购物车中是否存在该商品
+        //判断当前用户购物车中是否存在该商品
         ShopCart shopCart = shopCartMapper.selectCartByUserIdProductId(shopCartDto.getUserId(), shopCartDto.getProductId());
         if (shopCart == null) {
             //添加一条新纪录
@@ -56,6 +59,7 @@ public class ShopCartServiceImpl implements IShopCartService {
             BeanUtils.copyProperties(shopCartDto, shopCartNew);
             shopCartMapper.insertSelective(shopCartNew);
         } else {
+            //修改已存在的记录数量
             shopCart.setQuantity(shopCart.getQuantity() + shopCartDto.getQuantity());
             shopCartMapper.updateByPrimaryKeySelective(shopCart);
         }
@@ -115,6 +119,10 @@ public class ShopCartServiceImpl implements IShopCartService {
                 cartProductVo.setProductId(shopCartDtoItem.getProductId());
                 ProductDto productDto = shopCartDtoItem.getProductDto();
                 if (productDto != null) {
+                    //加载图片的url
+                    if (StringUtils.isNotBlank(productDto.getMainImage())) {
+                        productDto.setMainImage(QiniuStorage.getUrl(productDto.getMainImage()));
+                    }
                     cartProductVo.setProductMainImage(productDto.getMainImage());
                     cartProductVo.setProductName(productDto.getName());
                     cartProductVo.setProductSubtitle(productDto.getSubtitle());

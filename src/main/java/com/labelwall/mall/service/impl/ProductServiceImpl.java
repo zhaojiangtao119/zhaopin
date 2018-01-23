@@ -55,6 +55,10 @@ public class ProductServiceImpl implements IProductService {
         }
         ProductDto productDto = productMapper.selectByPrimaryKey(productId);
         if (productDto != null) {
+            if (StringUtils.isNotBlank(productDto.getMainImage())) {
+                String imgUrl = QiniuStorage.getUrl(productDto.getMainImage());
+                productDto.setMainImage(imgUrl);
+            }
             return ResponseObject.successStautsData(productDto);
         }
         return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());

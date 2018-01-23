@@ -37,6 +37,16 @@ public class ShopCartController {
     }
 
     /**
+     * 获取购物车信息（商品列表，每种商品的总价，数量，购物车的总价，商品的是否选中）
+     *
+     * @return
+     */
+    @RequestMapping(value = "app_get_cart_list/{userId}", method = RequestMethod.GET)
+    public ResponseObject<CartVo> appGetCartList(@PathVariable("userId") Integer userId) {
+        return shopCartService.getCartList(userId);
+    }
+
+    /**
      * 添加商品到购物车
      *
      * @param session
@@ -47,6 +57,17 @@ public class ShopCartController {
     public ResponseObject<CartVo> addCart(HttpSession session, ShopCartDto shopCartDto) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         shopCartDto.setUserId(userDto.getId());
+        return shopCartService.addCart(shopCartDto);
+    }
+
+    /**
+     * 添加商品到购物车
+     *
+     * @param shopCartDto
+     * @return
+     */
+    @RequestMapping(value = "app_add_cart", method = RequestMethod.POST)
+    public ResponseObject<CartVo> appAddCart(ShopCartDto shopCartDto) {
         return shopCartService.addCart(shopCartDto);
     }
 

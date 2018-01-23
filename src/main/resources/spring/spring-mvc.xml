@@ -69,6 +69,11 @@
             <mvc:exclude-mapping path="/shop/**"/>
             <!--商品-->
             <mvc:exclude-mapping path="/product/**"/>
+
+            <!--app购物车添加商品-->
+            <mvc:exclude-mapping path="/shopcart/app_add_cart"/>
+            <mvc:exclude-mapping path="/shopcart/app_get_cart_list/*"/>
+
             <!--course-->
             <mvc:exclude-mapping path="/course/**"/>
             <!--section-->
