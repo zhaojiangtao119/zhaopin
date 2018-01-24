@@ -21,4 +21,5 @@ public interface CityMapper {
     List<City> getCityListByProvinceId(Integer provinceId);
 
     Integer findIdByCityName(@Param("provinceId") Integer provinceId, @Param("name") String name);
+
 }
