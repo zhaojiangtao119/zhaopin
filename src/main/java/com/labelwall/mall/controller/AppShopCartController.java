@@ -94,5 +94,15 @@ public class AppShopCartController {
         return shopCartService.selectOrUnSelect(userId, productId, Const.Cart.UN_CHECKED);
     }
 
-
+    /**
+     * 批量删除购物中选中的商品item
+     *
+     * @param userId
+     * @param productIds
+     * @return
+     */
+    @RequestMapping(value = "remove", method = RequestMethod.DELETE)
+    public ResponseObject<CartVo> removeProduct(Integer userId, String productIds) {
+        return shopCartService.removeCart(userId, productIds);
+    }
 }

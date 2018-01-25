@@ -145,6 +145,9 @@ public class OrderServiceImpl implements IOrderService {
             orderItem.setUserId(userId);
             orderItem.setProductId(productDto.getId());
             orderItem.setProductName(productDto.getName());
+            if (StringUtils.isNotBlank(productDto.getMainImage())) {
+                productDto.setMainImage(QiniuStorage.getUrl(productDto.getMainImage()));
+            }
             orderItem.setProductImage(productDto.getMainImage());
             orderItem.setCurrentUnitPrice(productDto.getPrice());
             orderItem.setQuantity(shopCartDtoItem.getQuantity());
@@ -526,7 +529,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     //-------------------------APP------------------------------------------------------------
-    
+
     @Override
     public String appOrderSign(Long orderNo, Integer userId) {
         String signOrder = createSignOrder(orderNo, userId);

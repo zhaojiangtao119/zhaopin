@@ -88,10 +88,13 @@ public class ShopCartServiceImpl implements IShopCartService {
 
     @Override
     public ResponseObject<CartVo> removeCart(Integer userId, String productIds) {
-        List<String> productIdList = Splitter.on(",").splitToList(productIds);
-        if (CollectionUtils.isEmpty(productIdList)) {
-            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
-                    ResponseStatus.ERROR_PARAM.getValue());
+        List<String> productIdList = null;
+        if (StringUtils.isNotBlank(productIds)) {
+            productIdList = Splitter.on(",").splitToList(productIds);
+            if (CollectionUtils.isEmpty(productIdList)) {
+                return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                        ResponseStatus.ERROR_PARAM.getValue());
+            }
         }
         shopCartMapper.deleteByUserIdProductIds(userId, productIdList);
         return this.getCartList(userId);

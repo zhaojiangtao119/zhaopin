@@ -32,13 +32,9 @@ public class AppOrderController {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseObject<Long> createOrder(Integer userId) {
+    public ResponseObject<OrderVo> createOrder(Integer userId) {
         ResponseObject<OrderVo> orderVoInfo = orderService.createOrder(userId, 3);
-        OrderVo orderVo = orderVoInfo.getData();
-        if (orderVo != null) {
-            return ResponseObject.successStautsData(orderVo.getOrderNo());
-        }
-        return ResponseObject.successStautsData(null);
+        return orderVoInfo;
     }
 
     /**
