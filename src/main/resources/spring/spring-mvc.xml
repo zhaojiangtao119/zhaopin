@@ -72,6 +72,9 @@
 
             <!--app购物车-->
             <mvc:exclude-mapping path="/app/shopcart/**"/>
+            <!--app订单-->
+            <mvc:exclude-mapping path="/app/order/**"/>
+
             <!--course-->
             <mvc:exclude-mapping path="/course/**"/>
             <!--section-->

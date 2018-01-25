@@ -1,6 +1,10 @@
 package com.labelwall.mall.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayResponse;
+import com.alipay.api.domain.Data;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.ExtendParams;
@@ -14,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.labelwall.common.AlipayConfig;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.common.ResponseStatus;
@@ -35,17 +40,17 @@ import com.labelwall.util.storage.QiniuKeyGenerator;
 import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.net.URLEncoder;
+import java.util.*;
 
 /**
  * Created by Administrator on 2017-12-08.
@@ -518,5 +523,55 @@ public class OrderServiceImpl implements IOrderService {
         }
         return ResponseObject.fail(OrderResponseMessage.ORDER_NOT_PAY.getCode(),
                 OrderResponseMessage.ORDER_NOT_PAY.getValue());
+    }
+
+    //-------------------------APP------------------------------------------------------------
+    
+    @Override
+    public String appOrderSign(Long orderNo, Integer userId) {
+        String signOrder = createSignOrder(orderNo, userId);
+        return signOrder;
+    }
+
+    private String createSignOrder(Long orderNo, Integer userId) {
+        //TODO 通过userId，orderNo获取该条订单信息，拿到订单的付款金额，订单的Item详情，
+        // 订单的title等信息都可以设置到orderSign中
+        ResponseObject<OrderVo> orderVo = getOrderDetail(userId, orderNo);
+
+
+        Map<String, String> params = new HashMap<>();
+        params.put("app_id", AlipayConfig.app_id);
+        Map<String, String> biz_content = new HashMap<>();
+        biz_content.put("out_trade_no", String.valueOf(orderNo));
+        biz_content.put("total_amount", ".0.01");
+        biz_content.put("product_code", "QUICK_MSECURITY_PAY");
+        params.put("biz_content", JSON.toJSONString(biz_content));
+        params.put("charset", "utf-8");
+        params.put("method", "alipay.trade.app.pay");
+        params.put("notify_url", AlipayConfig.service);
+        params.put("sign_type", "RSA");
+        params.put("timestamp", DateTimeUtil.dateToStr(new Date()));
+        params.put("version", "1.0");
+        try {
+            String sign = AlipaySignature.rsaSign(params, AlipayConfig.private_key, AlipayConfig.input_charset);
+            List<String> list = new ArrayList<>();
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                list.add(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), "utf-8") + "&");
+            }
+            int size = list.size();
+            String[] arrayToSort = list.toArray(new String[size]);
+            Arrays.sort(arrayToSort, String.CASE_INSENSITIVE_ORDER);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < size; i++) {
+                sb.append(arrayToSort[i]);
+            }
+            sb.append("sign=" + URLEncoder.encode(sign, "utf-8"));
+            return sb.toString();
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

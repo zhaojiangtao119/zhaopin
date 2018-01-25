@@ -43,5 +43,4 @@ public class CourseSectionController {
     public ResponseObject<CourseSection> getSectionDetail(@PathVariable("id") Integer sectionId) {
         return courseSectionService.getSectionDetail(sectionId);
     }
-
 }

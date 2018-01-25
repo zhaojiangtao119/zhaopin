@@ -58,4 +58,5 @@ public interface IShopCartService {
      * @return
      */
     ResponseObject<Integer> getCartProductCount(Integer id);
+
 }

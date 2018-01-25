@@ -132,7 +132,11 @@
         </dependency>
 
         <!--fastjson-->
-
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.44</version>
+        </dependency>
 
         <dependency>
             <groupId>commons-dbcp</groupId>

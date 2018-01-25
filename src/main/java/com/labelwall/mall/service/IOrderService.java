@@ -82,4 +82,13 @@ public interface IOrderService {
      * @return
      */
     ResponseObject queryOrderPayStatus(Integer id, Long orderNo);
+
+    /**
+     * 通过订单号获获取支付宝的订单签名
+     *
+     * @param orderNo
+     * @param userId
+     * @return
+     */
+    String appOrderSign(Long orderNo, Integer userId);
 }
