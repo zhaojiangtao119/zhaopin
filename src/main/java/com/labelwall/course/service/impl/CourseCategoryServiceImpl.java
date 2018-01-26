@@ -31,9 +31,16 @@ public class CourseCategoryServiceImpl implements ICourseCategoryService {
     public ResponseObject<List<CourseCategoryDto>> getCourseCategory(String code) {
         Map<String, CourseCategoryDto> courseCategoryDtoMap = Maps.newHashMap();
         List<CourseCategoryDto> courseCategoryDtoList = Lists.newArrayList();
-        List<CourseCategory> courseCategoryList = courseCategoryMapper.getCourseCategory(code);
+        CourseCategory currentCourseCategory = courseCategoryMapper.selectByCode(code);
+        String parentCode = null;
+        if (currentCourseCategory != null) {
+            parentCode = currentCourseCategory.getParentCode();
+        }
+        ResponseObject<List<Integer>> courseCategoryAllIds = getCourseCategoryId(code);
+        final List<Integer> categoryAllIds = courseCategoryAllIds.getData();
+        List<CourseCategory> courseCategoryList = courseCategoryMapper.getCourseCategory(categoryAllIds, parentCode);
         if (CollectionUtils.isEmpty(courseCategoryList)) {
-            return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
         }
         for (CourseCategory courseCategory : courseCategoryList) {
             if (courseCategory.getParentCode().equals("0")) {
@@ -44,7 +51,7 @@ public class CourseCategoryServiceImpl implements ICourseCategoryService {
                 courseCategoryDtoMap.get(courseCategory.getParentCode()).getSubCourseCategory().add(courseCategory);
             }
         }
-        for(Map.Entry<String,CourseCategoryDto> entry : courseCategoryDtoMap.entrySet()){
+        for (Map.Entry<String, CourseCategoryDto> entry : courseCategoryDtoMap.entrySet()) {
             courseCategoryDtoList.add(entry.getValue());
         }
         return ResponseObject.successStautsData(courseCategoryDtoList);
@@ -53,22 +60,23 @@ public class CourseCategoryServiceImpl implements ICourseCategoryService {
     @Override
     public ResponseObject<List<Integer>> getCourseCategoryId(String code) {
         Set<CourseCategory> courseCategorySet = Sets.newHashSet();
-        findChildrenCategoryList(courseCategorySet,code);
+        findChildrenCategoryList(courseCategorySet, code);
         List<Integer> resultList = Lists.newArrayList();
-        for(CourseCategory item : courseCategorySet){
+        for (CourseCategory item : courseCategorySet) {
             resultList.add(item.getId());
         }
         return ResponseObject.successStautsData(resultList);
     }
+
     //递归查询分类的id(可以使所有的分类也可以是某一个分类下的所有分类的id)
     private Set<CourseCategory> findChildrenCategoryList(Set<CourseCategory> courseCategorySet, String code) {
         CourseCategory courseCategory = courseCategoryMapper.selectByCode(code);
-        if(courseCategory != null){
+        if (courseCategory != null) {
             courseCategorySet.add(courseCategory);
         }
         List<CourseCategory> courseCategoryList = courseCategoryMapper.selectByParentCode(code);
-        for(CourseCategory item : courseCategoryList){
-            findChildrenCategoryList(courseCategorySet,item.getCode());
+        for (CourseCategory item : courseCategoryList) {
+            findChildrenCategoryList(courseCategorySet, item.getCode());
         }
         return courseCategorySet;
     }

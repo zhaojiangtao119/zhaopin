@@ -402,13 +402,13 @@
             <if test="free != null">
                 AND free = #{free}
             </if>
-            <if test="classify != null">
+            <if test="classify != null and classify != ''">
                 AND classify = #{classify}
             </if>
-            <if test="subClassify != null">
+            <if test="subClassify != null and subClassify != ''">
                 AND sub_classify = #{subClassify}
             </if>
-            <if test="keyword != null">
+            <if test="keyword != null and keyword != ''">
                 AND `name` like CONCAT('%',#{keyword},'%')
                 OR `classify_name` like CONCAT('%',#{keyword},'%')
                 OR `sub_classify_name` like CONCAT('%',#{keyword},'%')

@@ -1,8 +1,9 @@
 package com.labelwall.course.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class CourseCategory {
+public class CourseCategory implements Serializable{
     private Integer id;
 
     private String name;

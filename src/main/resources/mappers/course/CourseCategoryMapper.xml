@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.labelwall.course.dao.CourseCategoryMapper">
+
+    <!--开启mybatis的二级缓存-->
+    <cache/>
+
     <resultMap id="BaseResultMap" type="com.labelwall.course.entity.CourseCategory">
         <constructor>
             <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
@@ -151,12 +155,21 @@
       del = #{del,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="getCourseCategory" parameterType="string" resultMap="BaseResultMap">
+    <select id="getCourseCategory" parameterType="map" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM wall_category_course
-        <if test="code != null">
-            WHERE code = #{code} OR parent_code = #{code}
+        <if test="categoryAllIds != null">
+            <where>
+                id IN
+                <foreach collection="categoryAllIds" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
+                OR parent_code = '0'
+                <if test="parentCode != null and parentCode!= ''">
+                    OR parent_code = #{parentCode}
+                </if>
+            </where>
         </if>
         ORDER BY parent_code,sort
     </select>

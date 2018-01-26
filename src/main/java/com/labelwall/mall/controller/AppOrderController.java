@@ -2,7 +2,10 @@ package com.labelwall.mall.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageInfo;
+import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.OrderItem;
 import com.labelwall.mall.service.IOrderService;
 import com.labelwall.mall.vo.OrderVo;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -78,5 +82,30 @@ public class AppOrderController {
 
         }
         return "SUCCESS";
+    }
+
+    /**
+     * APP取消订单
+     *
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping(value = "cancel", method = RequestMethod.PUT)
+    public ResponseObject cancelOrder(Integer userId, Long orderNo) {
+        return orderService.cancelOrder(userId, orderNo);
+    }
+
+    /**
+     * APP获取用户的所有订单
+     *
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "user_order_list/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    public ResponseObject<PageInfo> userOrderList(Integer userId,
+                                                  @PathVariable(value = "pageNum") Integer pageNum,
+                                                  @PathVariable(value = "pageSize") Integer pageSize) {
+        return orderService.userOrderList(userId, pageNum, pageSize);
     }
 }

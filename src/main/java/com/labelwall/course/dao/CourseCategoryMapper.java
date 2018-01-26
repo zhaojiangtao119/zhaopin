@@ -21,10 +21,11 @@ public interface CourseCategoryMapper {
     /**
      * 获取课程分类
      *
-     * @param code
+     * @param categoryAllIds
      * @return
      */
-    List<CourseCategory> getCourseCategory(@Param("code") String code);
+    List<CourseCategory> getCourseCategory(@Param("categoryAllIds") List<Integer> categoryAllIds,
+                                           @Param("parentCode") String parentCode);
 
     /**
      * 根据code获取课程分类对象
