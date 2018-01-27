@@ -34,7 +34,7 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
 
     @Override
     public ResponseObject<PageInfo> getComment(CourseCommentDto courseCommentDto, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum,pageSize);
+        PageHelper.startPage(pageNum, pageSize);
         if (courseCommentDto.getType() == null) {
             return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
                     ResponseStatus.ERROR_PARAM.getValue());
@@ -56,7 +56,8 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
                 courseCommentDtoList.add(courseCommentDtoNew);
             }
         }
-        PageInfo pageInfo = new PageInfo(courseCommentDtoList);
+        PageInfo pageInfo = new PageInfo(courseCommentList);
+        pageInfo.setList(courseCommentDtoList);
         return ResponseObject.successStautsData(pageInfo);
     }
 
@@ -80,6 +81,6 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
             courseCommentDtoNew.setUserDto(userDto);
             return ResponseObject.successStautsData(courseCommentDtoNew);
         }
-        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 }
