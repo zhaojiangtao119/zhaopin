@@ -108,4 +108,7 @@ public class AppOrderController {
                                                   @PathVariable(value = "pageSize") Integer pageSize) {
         return orderService.userOrderList(userId, pageNum, pageSize);
     }
+
+    //获取用户的收货地址
+    
 }

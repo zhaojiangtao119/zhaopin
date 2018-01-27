@@ -27,7 +27,13 @@ public class Shopping {
 
     private Date updateTime;
 
-    public Shopping(Integer id, Integer userId, String receiverName, String receiverPhone, String receiverMobile, String receiverProvince, String receiverCity, String receiverCounty, String receiverAddress, String receiverZip, Date createTime, Date updateTime) {
+    private Integer selected;
+
+    public Shopping(Integer id, Integer userId, String receiverName,
+                    String receiverPhone, String receiverMobile,
+                    String receiverProvince, String receiverCity,
+                    String receiverCounty, String receiverAddress,
+                    String receiverZip, Date createTime, Date updateTime, Integer selected) {
         this.id = id;
         this.userId = userId;
         this.receiverName = receiverName;
@@ -40,6 +46,7 @@ public class Shopping {
         this.receiverZip = receiverZip;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.selected = selected;
     }
 
     public Shopping() {
@@ -140,5 +147,13 @@ public class Shopping {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public Integer getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Integer selected) {
+        this.selected = selected;
     }
 }

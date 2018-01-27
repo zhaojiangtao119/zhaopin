@@ -17,11 +17,12 @@
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="selected" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
     id, user_id, receiver_name, receiver_phone, receiver_mobile, receiver_province, receiver_city, 
-    receiver_county, receiver_address, receiver_zip, create_time, update_time
+    receiver_county, receiver_address, receiver_zip, create_time, update_time,selected
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map">
         select
@@ -39,12 +40,12 @@
     insert into wall_shopping (id, user_id, receiver_name, 
       receiver_phone, receiver_mobile, receiver_province, 
       receiver_city, receiver_county, receiver_address, 
-      receiver_zip, create_time, update_time
+      receiver_zip, create_time, update_time,selected
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{receiverName,jdbcType=VARCHAR}, 
       #{receiverPhone,jdbcType=VARCHAR}, #{receiverMobile,jdbcType=VARCHAR}, #{receiverProvince,jdbcType=VARCHAR}, 
       #{receiverCity,jdbcType=VARCHAR}, #{receiverCounty,jdbcType=VARCHAR}, #{receiverAddress,jdbcType=VARCHAR}, 
-      #{receiverZip,jdbcType=VARCHAR}, now(), now()
+      #{receiverZip,jdbcType=VARCHAR}, now(), now(),#{selected,jdbcType=INTEGER}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Shopping" useGeneratedKeys="true"
@@ -83,6 +84,9 @@
             </if>
             create_time,
             update_time,
+            <if test="selected != null">
+                selected,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -117,6 +121,9 @@
             </if>
             now(),
             now(),
+            <if test="selected != null">
+                #{selected,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Shopping">
@@ -150,6 +157,9 @@
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             update_time = now(),
+            <if test="selected != null">
+                selected = #{selected,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=INTEGER}
     </update>
@@ -165,6 +175,7 @@
       receiver_address = #{receiverAddress,jdbcType=VARCHAR},
       receiver_zip = #{receiverZip,jdbcType=VARCHAR},
       update_time = now()
+      selected = #{selected,jdbcType=INTEGER},
     where id = #{id,jdbcType=INTEGER}
   </update>
     <select id="getShoppingByUserId" resultMap="BaseResultMap" parameterType="int">
