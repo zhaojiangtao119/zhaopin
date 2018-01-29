@@ -27,4 +27,20 @@ public interface ShoppingMapper {
      * @return
      */
     List<Shopping> getShoppingByUserId(Integer userId);
+
+    /**
+     * 修改默认的配送地址
+     *
+     * @param userId
+     * @return
+     */
+    int updateSelected(Integer userId);
+
+    /**
+     * @param userId
+     * @param shoppingId
+     * @return
+     */
+    int updateSelectedById(@Param("userId") Integer userId,
+                           @Param("shoppingId") Integer shoppingId);
 }

@@ -50,4 +50,13 @@ public interface IShoppingService {
      * @return
      */
     ResponseObject removeShopping(Integer id, Integer shoppingId);
+
+    /**
+     * 修改默认的收货地址
+     *
+     * @param userId
+     * @param shoppingId
+     * @return
+     */
+    ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId);
 }

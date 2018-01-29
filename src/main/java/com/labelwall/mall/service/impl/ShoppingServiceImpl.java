@@ -52,7 +52,7 @@ public class ShoppingServiceImpl implements IShoppingService {
             ShoppingDto shoppingDtoNew = shoppingMapper.selectByPrimaryKey(shopping.getUserId(), shopping.getId());
             return ResponseObject.successStautsData(shoppingDtoNew);
         }
-        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class ShoppingServiceImpl implements IShoppingService {
         if (shoppingDto != null) {
             return ResponseObject.successStautsData(shoppingDto);
         }
-        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
     @Override
@@ -75,13 +75,13 @@ public class ShoppingServiceImpl implements IShoppingService {
                     ResponseStatus.ERROR_PARAM.getValue());
         }
         Shopping shopping = new Shopping();
-        BeanUtils.copyProperties(shoppingDto,shopping);
+        BeanUtils.copyProperties(shoppingDto, shopping);
         int rowCount = shoppingMapper.updateByPrimaryKeySelective(shopping);
         if (rowCount > 0) {
             ShoppingDto shoppingDtoNew = shoppingMapper.selectByPrimaryKey(shopping.getUserId(), shopping.getId());
             return ResponseObject.successStautsData(shoppingDtoNew);
         }
-        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
     @Override
@@ -94,6 +94,27 @@ public class ShoppingServiceImpl implements IShoppingService {
         if (rowCount > 0) {
             return ResponseObject.successStatus();
         }
-        return ResponseObject.fail(ResponseStatus.FAIL.getCode(),ResponseStatus.FAIL.getValue());
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+    }
+
+    //添加事务
+    @Override
+    public ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId) {
+        if (userId == null || shoppingId == null) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //1.先修改该用户的所有收货地址为全部不选中
+        int rowCount = shoppingMapper.updateSelected(userId);
+        if (rowCount > 0) {
+            int i = 1 / 0;
+            //2.修改选中的地址selected为1
+            int rowCountTwo = shoppingMapper.updateSelectedById(userId, shoppingId);
+            if (rowCountTwo > 0) {
+                //修改成功
+                return ResponseObject.successStatus();
+            }
+        }
+        return ResponseObject.failStatusMessage("修改失败");
     }
 }

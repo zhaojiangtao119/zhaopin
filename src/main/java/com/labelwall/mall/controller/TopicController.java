@@ -89,17 +89,6 @@ public class TopicController {
         return topicPostService.publishPost(topicPostDto);
     }
 
-    /**
-     * APP发表帖子
-     *
-     * @param topicPostDto
-     * @return
-     */
-    @RequestMapping(value = "app_publish_post", method = RequestMethod.POST)
-    public ResponseObject<TopicPostDto> appPublishPost(TopicPostDto topicPostDto) {
-        //TODO 创建帖子的，用户登录
-        return topicPostService.publishPost(topicPostDto);
-    }
 
     /**
      * 修改帖子的like OR dislike
@@ -159,16 +148,6 @@ public class TopicController {
         return topicPostReplyService.publishPostReply(topicPostReplyDto);
     }
 
-    /**
-     * APP发表帖子的回复
-     *
-     * @param topicPostReplyDto
-     * @return
-     */
-    @RequestMapping(value = "app_publish_post_reply", method = RequestMethod.POST)
-    public ResponseObject<TopicPostReplyDto> appPublishPostReply(TopicPostReplyDto topicPostReplyDto) {
-        return topicPostReplyService.publishPostReply(topicPostReplyDto);
-    }
 
     /**
      * 修改回复的like OR dislike

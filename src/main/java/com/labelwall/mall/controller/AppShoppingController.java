@@ -36,4 +36,10 @@ public class AppShoppingController {
     public ResponseObject removeShopping(Integer userId, Integer shoppingId) {
         return shoppingService.removeShopping(userId, shoppingId);
     }
+
+    //修改选择的收货地址
+    @RequestMapping(value = "default", method = RequestMethod.PUT)
+    public ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId) {
+        return shoppingService.selectDefaultShopping(userId,shoppingId);
+    }
 }

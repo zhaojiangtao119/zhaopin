@@ -9,7 +9,11 @@
 	http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <!--扫描bean，主要是controller-->
-    <context:component-scan base-package="com.labelwall" annotation-config="true"/>
+    <context:component-scan base-package="com.labelwall" annotation-config="true">
+        <!--springMVC，不扫描service层，扫描controller-->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
 
     <!--注解驱动-->
     <mvc:annotation-driven>
@@ -62,9 +66,6 @@
             <mvc:exclude-mapping path="/topic/get_topic_post_by_id/**"/>
             <mvc:exclude-mapping path="/topic/get_topic_reply_by_post_id/**"/>
 
-            <mvc:exclude-mapping path="/topic/app_publish_post"/>
-            <mvc:exclude-mapping path="/topic/app_publish_post_reply"/>
-
             <!--商铺-->
             <mvc:exclude-mapping path="/shop/**"/>
             <!--商品-->
@@ -76,6 +77,8 @@
             <mvc:exclude-mapping path="/app/order/**"/>
             <!--app收货地址-->
             <mvc:exclude-mapping path="/app/shopping/**"/>
+            <!--app帖子与回复-->
+            <mvc:exclude-mapping path="/app/topic/**"/>
 
             <!--course-->
             <mvc:exclude-mapping path="/course/**"/>

@@ -187,4 +187,14 @@
         WHERE user_id = #{userId}
         ORDER BY selected DESC
     </select>
+    <update id="updateSelected" parameterType="integer">
+        UPDATE wall_shopping
+        SET selected = 0
+        WHERE user_id = #{userId}
+    </update>
+    <update id="updateSelectedById" parameterType="map">
+        UPDATE  wall_shopping
+        SET selected = 1
+        WHERE user_id = #{userId} AND shopping_id = #{shoppingId}
+    </update>
 </mapper>

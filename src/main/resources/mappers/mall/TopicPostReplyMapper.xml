@@ -145,7 +145,7 @@
               wu.id userId,wu.username,wu.school_name,wu.head,wu.location_province,wu.location_city
         FROM wall_topic_post_reply wtpr,wall_user wu
         WHERE wtpr.user_id = wu.id AND wtpr.topic_post_id = #{postId}
-        ORDER BY wtpr.like_num DESC,wtpr.create_time DESC
+        ORDER BY wtpr.create_time DESC,wtpr.like_num DESC
     </select>
     <update id="updatePostReplyLike" parameterType="int">
         UPDATE wall_topic_post_reply
