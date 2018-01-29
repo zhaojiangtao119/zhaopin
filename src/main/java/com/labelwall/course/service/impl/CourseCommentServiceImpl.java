@@ -56,6 +56,7 @@ public class CourseCommentServiceImpl implements ICourseCommentService {
                 courseCommentDtoList.add(courseCommentDtoNew);
             }
         }
+        //TODO 修改评论查询分页的bug
         PageInfo pageInfo = new PageInfo(courseCommentList);
         pageInfo.setList(courseCommentDtoList);
         return ResponseObject.successStautsData(pageInfo);

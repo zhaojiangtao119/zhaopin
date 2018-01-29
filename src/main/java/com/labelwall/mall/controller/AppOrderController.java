@@ -109,6 +109,15 @@ public class AppOrderController {
         return orderService.userOrderList(userId, pageNum, pageSize);
     }
 
-    //获取用户的收货地址
-    
+    /**
+     * 获取订单详情
+     *
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping(value = "detail", method = RequestMethod.GET)
+    public ResponseObject<OrderVo> getOrderDetail(Integer userId, Long orderNo) {
+        return orderService.getOrderDetail(userId, orderNo);
+    }
 }

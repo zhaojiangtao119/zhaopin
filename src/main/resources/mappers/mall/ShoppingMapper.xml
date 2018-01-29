@@ -185,5 +185,6 @@
         DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
         FROM wall_shopping
         WHERE user_id = #{userId}
+        ORDER BY selected DESC
     </select>
 </mapper>

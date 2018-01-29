@@ -24,4 +24,16 @@ public class AppShoppingController {
     public ResponseObject<List<ShoppingDto>> getShoppingListByUserId(Integer userId) {
         return shoppingService.getShoppingByUserId(userId);
     }
+
+    /**
+     * 删除收货地址
+     *
+     * @param userId
+     * @param shoppingId
+     * @return
+     */
+    @RequestMapping(value = "remove", method = RequestMethod.DELETE)
+    public ResponseObject removeShopping(Integer userId, Integer shoppingId) {
+        return shoppingService.removeShopping(userId, shoppingId);
+    }
 }
