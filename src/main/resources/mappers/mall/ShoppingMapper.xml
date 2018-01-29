@@ -195,6 +195,6 @@
     <update id="updateSelectedById" parameterType="map">
         UPDATE  wall_shopping
         SET selected = 1
-        WHERE user_id = #{userId} AND shopping_id = #{shoppingId}
+        WHERE user_id = #{userId} AND id = #{shoppingId}
     </update>
 </mapper>

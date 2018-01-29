@@ -10,7 +10,7 @@
 
     <!--扫描bean，主要是controller-->
     <context:component-scan base-package="com.labelwall" annotation-config="true">
-        <!--springMVC，不扫描service层，扫描controller-->
+        <!--springMVC，不扫描service层，扫描controller，去除掉service以保存事务的实现-->
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>

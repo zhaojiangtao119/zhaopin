@@ -6,6 +6,7 @@ import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.ShoppingMapper;
 import com.labelwall.mall.dto.ShoppingDto;
 import com.labelwall.mall.entity.Shopping;
+import com.labelwall.mall.service.IOrderService;
 import com.labelwall.mall.service.IShoppingService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,8 @@ public class ShoppingServiceImpl implements IShoppingService {
 
     @Autowired
     private ShoppingMapper shoppingMapper;
+    @Autowired
+    private IOrderService orderService;
 
     @Override
     public ResponseObject<List<ShoppingDto>> getShoppingByUserId(Integer userId) {
@@ -97,9 +100,9 @@ public class ShoppingServiceImpl implements IShoppingService {
         return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
-    //添加事务
+
     @Override
-    public ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId) {
+    public ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId, Long orderNo) {
         if (userId == null || shoppingId == null) {
             return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
                     ResponseStatus.ERROR_PARAM.getValue());
@@ -107,10 +110,13 @@ public class ShoppingServiceImpl implements IShoppingService {
         //1.先修改该用户的所有收货地址为全部不选中
         int rowCount = shoppingMapper.updateSelected(userId);
         if (rowCount > 0) {
-            int i = 1 / 0;
             //2.修改选中的地址selected为1
             int rowCountTwo = shoppingMapper.updateSelectedById(userId, shoppingId);
             if (rowCountTwo > 0) {
+                //3.修改指定单的配送地址
+                if (orderNo != null) {
+                    orderService.updateOrderShopping(orderNo, userId, shoppingId);
+                }
                 //修改成功
                 return ResponseObject.successStatus();
             }

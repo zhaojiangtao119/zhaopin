@@ -42,4 +42,8 @@ public interface OrderMapper {
      * @return
      */
     Order selectByOrderNo(Long orderNo);
+
+    int updateOrderShopping(@Param("orderNo") Long orderNo,
+                            @Param("userId") Integer userId,
+                            @Param("shoppingId") Integer shoppingId);
 }

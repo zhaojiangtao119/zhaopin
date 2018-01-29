@@ -207,4 +207,9 @@
         FROM wall_order
         WHERE order_no = #{orderNo}
     </select>
+    <update id="updateOrderShopping" parameterType="map">
+      UPDATE wall_order
+      SET shopping_id = #{shoppingId}
+      WHERE user_id = #{userId} AND order_no = #{orderNo}
+    </update>
 </mapper>

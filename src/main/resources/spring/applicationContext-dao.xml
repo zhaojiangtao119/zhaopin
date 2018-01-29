@@ -94,22 +94,15 @@
     <!--<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>-->
     <!--事务管理器：TransactionManager-->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <!--数据源-->
         <property name="dataSource" ref="dataSource"/>
-        <!--提交失败回滚-->
-        <!--<property name="rollbackOnCommitFailure" value="true"/>-->
     </bean>
-    <!--事务的增强-->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="selectDefaultShopping" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
-    <!--配置切面-->
     <aop:config>
-        <!--配置切入点-->
-        <aop:pointcut id="pointcut1" expression="execution(* com.labelwall.mall.service.IShoppingService.*(..))"/>
-        <!--配置切面-->
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut1"/>
+        <aop:pointcut id="pointcut" expression="execution(* com.labelwall.mall.service.IShoppingService.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointcut"/>
     </aop:config>
 </beans>

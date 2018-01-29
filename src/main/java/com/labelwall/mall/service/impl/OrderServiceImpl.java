@@ -25,9 +25,11 @@ import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dao.*;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.dto.ShopCartDto;
+import com.labelwall.mall.dto.ShoppingDto;
 import com.labelwall.mall.entity.*;
 import com.labelwall.mall.message.OrderResponseMessage;
 import com.labelwall.mall.service.IOrderService;
+import com.labelwall.mall.service.IShoppingService;
 import com.labelwall.mall.vo.OrderItemVo;
 import com.labelwall.mall.vo.OrderProductVo;
 import com.labelwall.mall.vo.OrderVo;
@@ -72,8 +74,11 @@ public class OrderServiceImpl implements IOrderService {
     private ShoppingMapper shoppingMapper;
     @Autowired
     private PayInfoMapper payInfoMapper;
+    @Autowired
+    private IShoppingService shoppingService;
 
     private static AlipayTradeService tradeService;
+
 
     static {
         /** 一定要在创建AlipayTradeService之前调用Configs.init()设置默认参数
@@ -576,5 +581,22 @@ public class OrderServiceImpl implements IOrderService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public int updateOrderShopping(Long orderNo, Integer userId, Integer shoppingId) {
+        return orderMapper.updateOrderShopping(orderNo, userId, shoppingId);
+    }
+
+    @Override
+    public ResponseObject<OrderVo> createAppOrder(Integer userId) {
+        //获取当前用户的默认配送地址
+        ResponseObject<List<ShoppingDto>> shopList = shoppingService.getShoppingByUserId(userId);
+        List<ShoppingDto> shoppingList = shopList.getData();
+        if (CollectionUtils.isNotEmpty(shoppingList)) {
+            int shoppingId = shoppingList.get(0).getId();
+            return createOrder(userId, shoppingId);
+        }
+        return ResponseObject.failStatusMessage("Shopping Error");
     }
 }

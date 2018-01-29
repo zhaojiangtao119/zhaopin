@@ -91,4 +91,21 @@ public interface IOrderService {
      * @return
      */
     String appOrderSign(Long orderNo, Integer userId);
+
+    /**
+     * 修改订单的配送信息
+     *
+     * @param orderNo
+     * @param userId
+     * @return
+     */
+    int updateOrderShopping(Long orderNo, Integer userId, Integer shoppingId);
+
+    /**
+     * app创建订单
+     *
+     * @param userId
+     * @return
+     */
+    ResponseObject<OrderVo> createAppOrder(Integer userId);
 }
