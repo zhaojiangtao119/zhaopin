@@ -88,7 +88,7 @@ public class ShopCartController {
     @RequestMapping(value = "select_all", method = RequestMethod.GET)
     public ResponseObject<CartVo> selectAll(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return shopCartService.selectOrUnSelect(userDto.getId(), null, Const.Cart.CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userDto.getId(), null, Const.Cart.CHECKED);
     }
 
 
@@ -102,7 +102,7 @@ public class ShopCartController {
     @RequestMapping(value = "un_select_all", method = RequestMethod.GET)
     public ResponseObject<CartVo> unSelectAll(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return shopCartService.selectOrUnSelect(userDto.getId(), null, Const.Cart.UN_CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userDto.getId(), null, Const.Cart.UN_CHECKED);
     }
 
 
@@ -117,7 +117,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> select(HttpSession session,
                                          @PathVariable("productId") Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userDto.getId(), productId, Const.Cart.CHECKED);
     }
 
 
@@ -132,7 +132,7 @@ public class ShopCartController {
     public ResponseObject<CartVo> unSelect(HttpSession session,
                                            @PathVariable("productId") Integer productId) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return shopCartService.selectOrUnSelect(userDto.getId(), productId, Const.Cart.UN_CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userDto.getId(), productId, Const.Cart.UN_CHECKED);
     }
 
 

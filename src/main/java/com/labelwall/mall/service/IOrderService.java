@@ -37,7 +37,7 @@ public interface IOrderService {
      * @param pageSize
      * @return
      */
-    ResponseObject<PageInfo> userOrderList(Integer id, Integer pageNum, Integer pageSize);
+    ResponseObject<PageInfo> getUserOrderList(Integer id, Integer pageNum, Integer pageSize);
 
     /**
      * 获取订单详情

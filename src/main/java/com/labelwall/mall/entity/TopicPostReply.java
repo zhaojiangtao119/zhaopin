@@ -1,8 +1,9 @@
 package com.labelwall.mall.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class TopicPostReply {
+public class TopicPostReply implements Serializable {
     private Integer id;
 
     private Integer userId;

@@ -24,7 +24,7 @@ public interface ITopicPostService {
      * @param topicPostDto
      * @return
      */
-    ResponseObject<TopicPostDto> publishPost(TopicPostDto topicPostDto);
+    ResponseObject<TopicPostDto> addPublishPost(TopicPostDto topicPostDto);
 
     /**
      * 点赞

@@ -1,6 +1,8 @@
 package com.labelwall.mall.entity;
 
-public class County {
+import java.io.Serializable;
+
+public class County implements Serializable{
     private Integer id;
 
     private Integer cityId;

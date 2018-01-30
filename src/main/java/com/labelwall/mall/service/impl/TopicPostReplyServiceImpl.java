@@ -63,7 +63,7 @@ public class TopicPostReplyServiceImpl implements ITopicPostReplyService {
     }
 
     @Override
-    public ResponseObject<TopicPostReplyDto> publishPostReply(TopicPostReplyDto topicPostReplyDto) {
+    public ResponseObject<TopicPostReplyDto> addPublishPostReply(TopicPostReplyDto topicPostReplyDto) {
         //是否上传了图片
         if (topicPostReplyDto.getMultipartFile() != null && topicPostReplyDto.getMultipartFile().getSize() > 0) {
             //上传回复的图片

@@ -58,5 +58,5 @@ public interface IShoppingService {
      * @param shoppingId
      * @return
      */
-    ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId, Long orderNo);
+    ResponseObject updateDefaultShopping(Integer userId, Integer shoppingId, Long orderNo);
 }

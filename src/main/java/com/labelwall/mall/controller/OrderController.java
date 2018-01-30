@@ -74,7 +74,7 @@ public class OrderController {
                                                   @PathVariable(value = "pageNum") Integer pageNum,
                                                   @PathVariable(value = "pageSize") Integer pageSize) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return orderService.userOrderList(userDto.getId(), pageNum, pageSize);
+        return orderService.getUserOrderList(userDto.getId(), pageNum, pageSize);
     }
 
     /**

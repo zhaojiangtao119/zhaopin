@@ -31,7 +31,7 @@ public class AppTopicController {
     @RequestMapping(value = "publish_post", method = RequestMethod.POST)
     public ResponseObject<TopicPostDto> appPublishPost(TopicPostDto topicPostDto) {
         //TODO 创建帖子的，用户登录
-        return topicPostService.publishPost(topicPostDto);
+        return topicPostService.addPublishPost(topicPostDto);
     }
 
     /**
@@ -42,6 +42,6 @@ public class AppTopicController {
      */
     @RequestMapping(value = "publish_post_reply", method = RequestMethod.POST)
     public ResponseObject<TopicPostReplyDto> appPublishPostReply(TopicPostReplyDto topicPostReplyDto) {
-        return topicPostReplyService.publishPostReply(topicPostReplyDto);
+        return topicPostReplyService.addPublishPostReply(topicPostReplyDto);
     }
 }

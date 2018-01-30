@@ -49,7 +49,7 @@ public interface IShopCartService {
      * @param checked
      * @return
      */
-    ResponseObject<CartVo> selectOrUnSelect(Integer userId, Integer productId, Integer checked);
+    ResponseObject<CartVo> updateSelectOrUnSelect(Integer userId, Integer productId, Integer checked);
 
     /**
      * 获取购物车中商品的总数量

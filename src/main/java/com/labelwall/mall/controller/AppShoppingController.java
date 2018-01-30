@@ -48,8 +48,8 @@ public class AppShoppingController {
      * @return
      */
     @RequestMapping(value = "default", method = RequestMethod.PUT)
-    public ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId, Long orderNo) {
-        return shoppingService.selectDefaultShopping(userId, shoppingId, orderNo);
+    public ResponseObject updateDefaultShopping(Integer userId, Integer shoppingId, Long orderNo) {
+        return shoppingService.updateDefaultShopping(userId, shoppingId, orderNo);
     }
 
     /**

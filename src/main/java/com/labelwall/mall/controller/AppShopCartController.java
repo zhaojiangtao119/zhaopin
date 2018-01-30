@@ -59,7 +59,7 @@ public class AppShopCartController {
      */
     @RequestMapping(value = "app_select_all", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appSelectAll(Integer userId) {
-        return shopCartService.selectOrUnSelect(userId, null, Const.Cart.CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userId, null, Const.Cart.CHECKED);
     }
 
     /**
@@ -69,7 +69,7 @@ public class AppShopCartController {
      */
     @RequestMapping(value = "app_un_select_all", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appUnSelectAll(Integer userId) {
-        return shopCartService.selectOrUnSelect(userId, null, Const.Cart.UN_CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userId, null, Const.Cart.UN_CHECKED);
     }
 
     /**
@@ -80,7 +80,7 @@ public class AppShopCartController {
      */
     @RequestMapping(value = "app_select", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appSelect(Integer userId, Integer productId) {
-        return shopCartService.selectOrUnSelect(userId, productId, Const.Cart.CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userId, productId, Const.Cart.CHECKED);
     }
 
     /**
@@ -91,7 +91,7 @@ public class AppShopCartController {
      */
     @RequestMapping(value = "app_un_select", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appUnSelect(Integer userId, Integer productId) {
-        return shopCartService.selectOrUnSelect(userId, productId, Const.Cart.UN_CHECKED);
+        return shopCartService.updateSelectOrUnSelect(userId, productId, Const.Cart.UN_CHECKED);
     }
 
     /**

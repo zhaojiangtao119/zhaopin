@@ -86,7 +86,7 @@ public class TopicController {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         topicPostDto.setUserId(userDto.getUserId());
-        return topicPostService.publishPost(topicPostDto);
+        return topicPostService.addPublishPost(topicPostDto);
     }
 
 
@@ -145,7 +145,7 @@ public class TopicController {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         topicPostReplyDto.setUserId(userDto.getId());
-        return topicPostReplyService.publishPostReply(topicPostReplyDto);
+        return topicPostReplyService.addPublishPostReply(topicPostReplyDto);
     }
 
 

@@ -138,7 +138,7 @@ public class UserController {
                                         HttpSession session) {
         //TODO 修改密码判断用户是否登录
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return userService.restPassword(userDto.getId(), passwordOld, passwordNew);
+        return userService.modifyPassword(userDto.getId(), passwordOld, passwordNew);
     }
 
     /**

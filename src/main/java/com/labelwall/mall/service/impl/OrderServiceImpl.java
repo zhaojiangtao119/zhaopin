@@ -299,7 +299,7 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public ResponseObject<PageInfo> userOrderList(Integer userId, Integer pageNum, Integer pageSize) {
+    public ResponseObject<PageInfo> getUserOrderList(Integer userId, Integer pageNum, Integer pageSize) {
         List<Order> orderList = orderMapper.userOrderList(userId);
         PageHelper.startPage(pageNum, pageSize);
         List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, userId);
@@ -545,7 +545,6 @@ public class OrderServiceImpl implements IOrderService {
         //TODO 通过userId，orderNo获取该条订单信息，拿到订单的付款金额，订单的Item详情，
         // 订单的title等信息都可以设置到orderSign中
         ResponseObject<OrderVo> orderVo = getOrderDetail(userId, orderNo);
-
 
         Map<String, String> params = new HashMap<>();
         params.put("app_id", AlipayConfig.app_id);

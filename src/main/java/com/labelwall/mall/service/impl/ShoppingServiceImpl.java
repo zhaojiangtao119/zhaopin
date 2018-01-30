@@ -102,7 +102,7 @@ public class ShoppingServiceImpl implements IShoppingService {
 
 
     @Override
-    public ResponseObject selectDefaultShopping(Integer userId, Integer shoppingId, Long orderNo) {
+    public ResponseObject updateDefaultShopping(Integer userId, Integer shoppingId, Long orderNo) {
         if (userId == null || shoppingId == null) {
             return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
                     ResponseStatus.ERROR_PARAM.getValue());

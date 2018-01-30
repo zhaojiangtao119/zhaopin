@@ -22,7 +22,7 @@ public interface ITopicPostReplyService {
      * @param topicPostReplyDto
      * @return
      */
-    ResponseObject<TopicPostReplyDto> publishPostReply(TopicPostReplyDto topicPostReplyDto);
+    ResponseObject<TopicPostReplyDto> addPublishPostReply(TopicPostReplyDto topicPostReplyDto);
 
     /**
      * 修改帖子的like dislike

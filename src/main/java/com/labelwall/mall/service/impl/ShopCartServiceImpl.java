@@ -101,7 +101,7 @@ public class ShopCartServiceImpl implements IShopCartService {
     }
 
     @Override
-    public ResponseObject<CartVo> selectOrUnSelect(Integer userId, Integer productId, Integer checked) {
+    public ResponseObject<CartVo> updateSelectOrUnSelect(Integer userId, Integer productId, Integer checked) {
         shopCartMapper.checkedOrUncheckedProduct(userId, productId, checked);
         return this.getCartList(userId);
     }

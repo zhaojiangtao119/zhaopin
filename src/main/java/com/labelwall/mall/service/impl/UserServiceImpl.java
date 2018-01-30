@@ -227,7 +227,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public ResponseObject restPassword(Integer id, String passwordOld, String passwordNew) {
+    public ResponseObject modifyPassword(Integer id, String passwordOld, String passwordNew) {
         if (id == null || StringUtils.isBlank(passwordOld) || StringUtils.isBlank(passwordNew)) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }

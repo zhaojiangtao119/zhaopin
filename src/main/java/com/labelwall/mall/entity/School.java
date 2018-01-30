@@ -1,6 +1,8 @@
 package com.labelwall.mall.entity;
 
-public class School {
+import java.io.Serializable;
+
+public class School implements Serializable {
     private Integer id;
 
     private Integer provinceId;

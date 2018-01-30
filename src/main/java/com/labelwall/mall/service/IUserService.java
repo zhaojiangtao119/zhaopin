@@ -53,7 +53,7 @@ public interface IUserService {
      * @param passwordNew
      * @return
      */
-    ResponseObject restPassword(Integer id, String passwordOld, String passwordNew);
+    ResponseObject modifyPassword(Integer id, String passwordOld, String passwordNew);
 
     /**
      * 根据用户名获取用户对象
