@@ -16,7 +16,7 @@
             <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         </constructor>-->
-        <id  column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="title" column="title" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="content" column="content" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="userId" column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
@@ -258,7 +258,7 @@
                 AND wtp.county_id = #{countyId}
             </if>
         </where>
-        ORDER BY wtp.like_num DESC,wtp.create_time
+        ORDER BY wtp.like_num DESC,wtp.create_time DESC
     </select>
     <update id="updatePostLike" parameterType="int">
         UPDATE wall_topic_post

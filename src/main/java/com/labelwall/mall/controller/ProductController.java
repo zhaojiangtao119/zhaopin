@@ -45,17 +45,17 @@ public class ProductController {
         return productCategoryService.getAllCategory();
     }
 
-    /**
+   /* *//**
      * 递归获取分类的id(包括其后代id)
      *
      * @param categoryId
      * @return
-     */
+     *//*
     @RequestMapping(value = "get_category_id", method = RequestMethod.GET)
     public ResponseObject<List<Integer>>
     getCategoryByCategoryId(@RequestParam(value = "categoryId", defaultValue = "0") Integer categoryId) {
         return productCategoryService.getCategoryAndChildrenByCategoryId(categoryId);
-    }
+    }*/
 
     /**
      * 获取商品列表，查询条件（category_id,shop_id,keyword,price）
