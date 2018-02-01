@@ -5,7 +5,9 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.AlipayConfig;
 import com.labelwall.common.AlipayTradeStatus;
+import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.service.IOrderService;
 import com.labelwall.mall.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,6 +43,18 @@ public class AppOrderController {
     public ResponseObject<OrderVo> createOrder(Integer userId) {
         ResponseObject<OrderVo> orderVoInfo = orderService.createAppOrder(userId);
         return orderVoInfo;
+    }
+
+    /**
+     * 立即购买某一个商品
+     *
+     * @param productId
+     * @param quantity
+     * @return
+     */
+    @RequestMapping(value = "buy", method = RequestMethod.POST)
+    public ResponseObject<OrderVo> buyProduct(Integer userId, Integer productId, Integer quantity) {
+        return orderService.buyProduct(userId, productId, quantity);
     }
 
     /**

@@ -15,10 +15,9 @@ public interface IOrderService {
      * 创建一个订单
      *
      * @param id
-     * @param shoppingId
      * @return
      */
-    ResponseObject createOrder(Integer id, Integer shoppingId);
+    ResponseObject createOrder(Integer id);
 
     /**
      * 取消订单，取消未支付的订单
@@ -118,4 +117,14 @@ public interface IOrderService {
      * @return
      */
     ResponseObject<OrderVo> createAppOrder(Integer userId);
+
+    /**
+     * 立即购买该商品
+     *
+     * @param id
+     * @param productId
+     * @param quantity
+     * @return
+     */
+    ResponseObject<OrderVo> buyProduct(Integer id, Integer productId, Integer quantity);
 }

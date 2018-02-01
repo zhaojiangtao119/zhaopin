@@ -31,6 +31,7 @@ import com.labelwall.mall.dto.ShoppingDto;
 import com.labelwall.mall.entity.*;
 import com.labelwall.mall.message.OrderResponseMessage;
 import com.labelwall.mall.service.IOrderService;
+import com.labelwall.mall.service.IProductService;
 import com.labelwall.mall.service.IShoppingService;
 import com.labelwall.mall.vo.OrderItemVo;
 import com.labelwall.mall.vo.OrderProductVo;
@@ -96,7 +97,12 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public ResponseObject<OrderVo> createOrder(Integer userId, Integer shoppingId) {
+    public ResponseObject<OrderVo> createOrder(Integer userId) {
+        List<Shopping> shoppingList = shoppingMapper.getShoppingByUserIdSelected(userId, 1);
+        Integer shoppingId = null;
+        if (CollectionUtils.isNotEmpty(shoppingList)) {
+            shoppingId = shoppingList.get(0).getId();
+        }
         //获取购物车中被选中的商品
         List<ShopCartDto> shopCartDtoList = shopCartMapper.selectCheckedCartByUserId(userId);
         //组装订单明细OrderItem
@@ -126,6 +132,56 @@ public class OrderServiceImpl implements IOrderService {
         //清除购物车
         this.cleanCart(shopCartDtoList);
         //组装返回的展示的数据
+        OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
+        return ResponseObject.successStautsData(orderVo);
+    }
+
+    @Override
+    public ResponseObject<OrderVo> buyProduct(Integer userId, Integer productId, Integer quantity) {
+        if (productId == null || quantity == null) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        Product product = productMapper.selectByPrimaryKey(productId);
+        if (product == null) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        } else if (product.getStock() < quantity) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //生成订单，
+        //1.根据商品信息生成订单明细
+        OrderItem orderItem = new OrderItem();
+        orderItem.setUserId(userId);
+        orderItem.setProductId(product.getId());
+        orderItem.setProductName(product.getName());
+        if (StringUtils.isNotBlank(product.getMainImage())) {
+            product.setMainImage(QiniuStorage.getUrl(product.getMainImage()));
+        }
+        orderItem.setProductImage(product.getMainImage());
+        orderItem.setQuantity(quantity);
+        orderItem.setCurrentUnitPrice(product.getPrice());
+        orderItem.setTotalPrice(BigDecimalUtil.multiply(product.getPrice().doubleValue(), quantity.doubleValue()));
+        List<OrderItem> orderItemList = Lists.newArrayList();
+        orderItemList.add(orderItem);
+        //2.计算订单总额
+        BigDecimal payment = orderItem.getTotalPrice();
+        //3.生成订单
+        //查询用户默认选择的收货地址
+        List<Shopping> shoppingList = shoppingMapper.getShoppingByUserIdSelected(userId, 1);
+        Integer shoppingId = null;
+        if (CollectionUtils.isNotEmpty(shoppingList)) {
+            shoppingId = shoppingList.get(0).getId();
+        }
+        Order order = this.assembleOrder(userId, shoppingId, payment);
+        if (order == null) {
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+        }
+        //4.为订单明细设置订单号
+        orderItem.setOrderNo(order.getOrderNo());
+        //5.将订单明插入数据库
+        orderItemMapper.insertSelective(orderItem);
+        //6.修改商品表中商品的数量
+        this.reduceProductStock(orderItemList);
+        //7.组装返回的展示的数据
         OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
         return ResponseObject.successStautsData(orderVo);
     }
@@ -160,7 +216,6 @@ public class OrderServiceImpl implements IOrderService {
             orderItem.setCurrentUnitPrice(productDto.getPrice());
             orderItem.setQuantity(shopCartDtoItem.getQuantity());
             orderItem.setTotalPrice(BigDecimalUtil.multiply(productDto.getPrice().doubleValue(), shopCartDtoItem.getQuantity().doubleValue()));
-
             orderItemList.add(orderItem);
         }
         return ResponseObject.successStautsData(orderItemList);
@@ -536,8 +591,7 @@ public class OrderServiceImpl implements IOrderService {
                 OrderResponseMessage.ORDER_NOT_PAY.getValue());
     }
 
-    //-------------------------APP------------------------------------------------------------
-
+    //-----------------------------APP---------------------------------------------------------
     @Override
     public String appOrderSign(Long orderNo, Integer userId) {
         String signOrder = createSignOrder(orderNo, userId);
@@ -599,7 +653,6 @@ public class OrderServiceImpl implements IOrderService {
             //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
             params.put(name, valueStr);
         }
-        System.err.println(params.toString());
         try {
             //验证支付宝公钥
             boolean flag = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
@@ -615,7 +668,6 @@ public class OrderServiceImpl implements IOrderService {
                     String appId = params.get("app_id");
                     //附加参数
                     //String passbackParams = URLDecoder.decode(params.get("passback_params"));
-                    System.err.println(outTradeNo + "--" + amount + "--" + appId + "--" + tradeNo);
                     validateFlag = validateOrderParam(outTradeNo, amount, appId, tradeNo);
                 }
             }
@@ -635,7 +687,6 @@ public class OrderServiceImpl implements IOrderService {
             if (order == null) {
                 return validateFlag;//不是该商城的订单
             }
-            System.err.println(order.getOrderNo());
             List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(order.getOrderNo(), order.getUserId());
             OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
             //TODO 测试金额为0.01
@@ -661,7 +712,6 @@ public class OrderServiceImpl implements IOrderService {
         order.setPayPlatform(Const.PayPlatformEnum.ALIPAY.getCode());
         order.setPlatformOrderNo(tradeNo);
         int rowCount = orderMapper.updateByPrimaryKeySelective(order);
-        System.err.println(rowCount);
     }
 
     @Override
@@ -671,13 +721,6 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public ResponseObject<OrderVo> createAppOrder(Integer userId) {
-        //获取当前用户的默认配送地址
-        ResponseObject<List<ShoppingDto>> shopList = shoppingService.getShoppingByUserId(userId);
-        List<ShoppingDto> shoppingList = shopList.getData();
-        if (CollectionUtils.isNotEmpty(shoppingList)) {
-            int shoppingId = shoppingList.get(0).getId();
-            return createOrder(userId, shoppingId);
-        }
-        return ResponseObject.failStatusMessage("Shopping Error");
+        return createOrder(userId);
     }
 }

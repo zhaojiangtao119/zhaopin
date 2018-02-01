@@ -37,14 +37,26 @@ public class OrderController {
      * 创建订单
      *
      * @param session
-     * @param shoppingId
      * @return
      */
-    @RequestMapping(value = "create_order/{shoppingId}", method = RequestMethod.POST)
-    public ResponseObject<OrderVo> createOrder(HttpSession session,
-                                               @PathVariable("shoppingId") Integer shoppingId) {
+    @RequestMapping(value = "create_order", method = RequestMethod.POST)
+    public ResponseObject<OrderVo> createOrder(HttpSession session) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return orderService.createOrder(userDto.getId(), shoppingId);
+        return orderService.createOrder(userDto.getId());
+    }
+
+    /**
+     * 立即购买某一个商品
+     *
+     * @param session
+     * @param productId
+     * @param quantity
+     * @return
+     */
+    @RequestMapping(value = "buy", method = RequestMethod.POST)
+    public ResponseObject<OrderVo> buyProduct(HttpSession session, Integer productId, Integer quantity) {
+        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+        return orderService.buyProduct(userDto.getId(), productId, quantity);
     }
 
     /**
@@ -107,12 +119,11 @@ public class OrderController {
      * 订单支付
      *
      * @param session
-     * @param request
      * @param orderNo
      * @return
      */
     @RequestMapping(value = "order_pay")
-    public ResponseObject orderPay(HttpSession session, HttpServletRequest request, Long orderNo) {
+    public ResponseObject orderPay(HttpSession session, Long orderNo) {
         UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
         String path = session.getServletContext().getRealPath("upload");
         return orderService.orderPay(orderNo, userDto.getId(), path);

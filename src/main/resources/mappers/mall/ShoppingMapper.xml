@@ -197,4 +197,10 @@
         SET selected = 1
         WHERE user_id = #{userId} AND id = #{shoppingId}
     </update>
+    <select id="getShoppingByUserIdSelected" parameterType="map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_shopping
+        WHERE user_id = #{userId} AND selected = #{selected}
+    </select>
 </mapper>

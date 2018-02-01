@@ -7,6 +7,7 @@ import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.entity.ProductCategory;
 import com.labelwall.mall.service.IProductCategoryService;
 import com.labelwall.mall.service.IProductService;
+import com.labelwall.mall.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

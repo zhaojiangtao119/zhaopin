@@ -43,4 +43,14 @@ public interface ShoppingMapper {
      */
     int updateSelectedById(@Param("userId") Integer userId,
                            @Param("shoppingId") Integer shoppingId);
+
+    /**
+     * 获取用户默认选择的收货地址
+     *
+     * @param userId
+     * @param selected
+     * @return
+     */
+    List<Shopping> getShoppingByUserIdSelected(@Param("userId") Integer userId,
+                                         @Param("selected") int selected);
 }
