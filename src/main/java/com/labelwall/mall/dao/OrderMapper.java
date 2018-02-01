@@ -46,4 +46,6 @@ public interface OrderMapper {
     int updateOrderShopping(@Param("orderNo") Long orderNo,
                             @Param("userId") Integer userId,
                             @Param("shoppingId") Integer shoppingId);
+
+    Order validateOrderParam(Long orderNo);
 }

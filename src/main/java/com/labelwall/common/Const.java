@@ -122,7 +122,8 @@ public class Const {
 
     //支付平台
     public enum PayPlatformEnum {
-        ALIPAY(1, "支付宝");
+        ALIPAY(1, "支付宝"),
+        WEICHAT(2, "微信");
 
         private int code;
         private String value;

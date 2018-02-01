@@ -33,7 +33,14 @@ public class Order implements Serializable {
 
     private Date updateTime;
 
-    public Order(Integer id, Long orderNo, Integer userId, Integer shoppingId, BigDecimal payment, Integer paymentType, Integer postage, Integer status, Date paymentTime, Date sendTime, Date endTime, Date closeTime, Date createTime, Date updateTime) {
+    private String platformOrderNo;
+
+    private Integer payPlatform;
+
+    public Order(Integer id, Long orderNo, Integer userId, Integer shoppingId,
+                 BigDecimal payment, Integer paymentType, Integer postage, Integer status,
+                 Date paymentTime, Date sendTime, Date endTime, Date closeTime,
+                 Date createTime, Date updateTime, String platformOrderNo, Integer payPlatform) {
         this.id = id;
         this.orderNo = orderNo;
         this.userId = userId;
@@ -48,6 +55,8 @@ public class Order implements Serializable {
         this.closeTime = closeTime;
         this.createTime = createTime;
         this.updateTime = updateTime;
+        this.platformOrderNo = platformOrderNo;
+        this.payPlatform = payPlatform;
     }
 
     public Order() {
@@ -164,5 +173,21 @@ public class Order implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPlatformOrderNo() {
+        return platformOrderNo;
+    }
+
+    public void setPlatformOrderNo(String platformOrderNo) {
+        this.platformOrderNo = platformOrderNo;
+    }
+
+    public Integer getPayPlatform() {
+        return payPlatform;
+    }
+
+    public void setPayPlatform(Integer payPlatform) {
+        this.payPlatform = payPlatform;
     }
 }

@@ -17,11 +17,13 @@
             <arg column="close_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="platform_order_no" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="pay_platform" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
     id, order_no, user_id, shopping_id, payment, payment_type, postage, status, payment_time, 
-    send_time, end_time, close_time, create_time, update_time
+    send_time, end_time, close_time, create_time, update_time,platform_order_no,pay_platform
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -38,12 +40,12 @@
       shopping_id, payment, payment_type, 
       postage, status, payment_time, 
       send_time, end_time, close_time, 
-      create_time, update_time)
+      create_time, update_time,platform_order_no,pay_platform)
     values (#{id,jdbcType=INTEGER}, #{orderNo,jdbcType=BIGINT}, #{userId,jdbcType=INTEGER}, 
       #{shoppingId,jdbcType=INTEGER}, #{payment,jdbcType=DECIMAL}, #{paymentType,jdbcType=INTEGER}, 
       #{postage,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{paymentTime,jdbcType=TIMESTAMP}, 
       #{sendTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{closeTime,jdbcType=TIMESTAMP}, 
-      now(), now())
+      now(), now(),#{platformOrderNo,jdbcType=VARCHAR},#{payPlatform,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Order" useGeneratedKeys="true"
             keyProperty="id">
@@ -87,6 +89,13 @@
             </if>
             create_time,
             update_time,
+
+            <if test="platformOrderNo != null">
+                plat_order_no,
+            </if>
+            <if test="payPlatform != null">
+                pay_platform,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -126,7 +135,13 @@
                 #{closeTime,jdbcType=TIMESTAMP},
             </if>
             now(),
-            now()
+            now(),
+            <if test="platformOrderNo != null">
+                #{platformOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="payPlatform != null">
+                #{payPlatform,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Order">
@@ -169,6 +184,12 @@
                 create_time = #{createTime,jdbcType=TIMESTAMP},
             </if>
             update_time = now(),
+            <if test="platformOrderNo != null">
+                platform_order_no = #{platformOrderNo,jdbcType=VARCHAR},
+            </if>
+            <if test="payPlatform != null">
+                pay_platform = #{payPlatform,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -212,4 +233,10 @@
       SET shopping_id = #{shoppingId}
       WHERE user_id = #{userId} AND order_no = #{orderNo}
     </update>
+    <select id="validateOrderParam" parameterType="long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_order
+        WHERE order_no = #{orderNo}
+    </select>
 </mapper>

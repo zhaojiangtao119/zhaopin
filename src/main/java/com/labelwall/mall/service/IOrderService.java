@@ -85,12 +85,22 @@ public interface IOrderService {
 
     /**
      * 通过订单号获获取支付宝的订单签名
+     * 加签过程
      *
      * @param orderNo
      * @param userId
      * @return
      */
     String appOrderSign(Long orderNo, Integer userId);
+
+    /**
+     * 支付宝的异步回调
+     * 验签过程
+     *
+     * @param parameterMap
+     * @return
+     */
+    String alipayCallback(Map parameterMap);
 
     /**
      * 修改订单的配送信息

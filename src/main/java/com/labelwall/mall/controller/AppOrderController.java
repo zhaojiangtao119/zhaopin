@@ -36,7 +36,7 @@ public class AppOrderController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = "add", method = RequestMethod.POST)
     public ResponseObject<OrderVo> createOrder(Integer userId) {
         ResponseObject<OrderVo> orderVoInfo = orderService.createAppOrder(userId);
         return orderVoInfo;
@@ -48,7 +48,7 @@ public class AppOrderController {
      * @param orderNo
      * @return
      */
-    @RequestMapping(value = "/sign", method = RequestMethod.POST)
+    @RequestMapping(value = "sign", method = RequestMethod.POST)
     public ResponseObject<String> appCreateOrder(Long orderNo, Integer userId) {
         String signOrder = orderService.appOrderSign(orderNo, userId);
         return ResponseObject.successStautsData(signOrder);
@@ -56,67 +56,16 @@ public class AppOrderController {
 
     /**
      * 支付宝支付完成后的回调接口  POST请求
-     * 支付宝支付结果的通知，一个Map
+     * 支付宝支付结果的通知，一个Map,异步的通知参数
      * 验签的过程
      *
      * @param request
      * @return
      */
-    @RequestMapping(value = "/callbacks", method = RequestMethod.POST)
+    @RequestMapping(value = "callbacks", method = RequestMethod.POST)
     public String callbacks(HttpServletRequest request) {
-       /* //接受支付宝返回的请求参数
-        Map<String, String[]> params = request.getParameterMap();
-        JSONObject jsonParams = JSON.parseObject(JSON.toJSONString(params));
+        return orderService.alipayCallback(request.getParameterMap());
 
-        //支付状态
-        String trade_status = jsonParams.getString("trade_status")
-                .substring(2, jsonParams.getString("trade_status").length() - 2);
-        //订单号
-        String out_trade_no = jsonParams.getString("out_trade_no")
-                .substring(2, jsonParams.getString("out_trade_no").length() - 2);
-        String notify_id = jsonParams.getString("notify_id")
-                .substring(2, jsonParams.getString("notify_id").length() - 2);
-
-        if (trade_status.equals("TRADE_SUCCESS")) {
-            // 支付成功后的逻辑实现，改变订单状态
-
-        } else {
-            // 支付失败，???
-
-        }*/
-
-        Map<String, String> params = new HashMap<>();
-        for (Iterator iterator = request.getParameterMap().keySet().iterator(); iterator.hasNext(); ) {
-            String name = (String) iterator.next();
-            String[] values = (String[]) request.getParameterMap().get(name);
-            String valueStr = "";
-            int size = values.length;
-            for (int i = 0; i < size; i++) {
-                valueStr =
-                        (i == size - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
-            }
-            //解决乱码
-            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
-            params.put(name, valueStr);
-            try {
-                boolean flag = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
-                if (flag) {
-                   if(AlipayTradeStatus.TRADE_SUCCESS.equals("trade_status")){
-                        //付款金额
-                       String amount = params.get("buyer_pay_amount");
-                       //商户订单号
-                       String outTradeNo = params.get("out_trade_no");
-                       //支付宝交易号
-                       String tradeNo = params.get("trade_no");
-                       //附加参数
-                       String passbackParams = URLDecoder.decode(params.get("passback_params"));
-                   }
-                }
-            } catch (AlipayApiException e) {
-                e.printStackTrace();
-            }
-        }
-        return "SUCCESS";
     }
 
     /**

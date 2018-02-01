@@ -23,10 +23,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.labelwall.common.AlipayConfig;
-import com.labelwall.common.Const;
-import com.labelwall.common.ResponseObject;
-import com.labelwall.common.ResponseStatus;
+import com.labelwall.common.*;
 import com.labelwall.mall.dao.*;
 import com.labelwall.mall.dto.ProductDto;
 import com.labelwall.mall.dto.ShopCartDto;
@@ -56,6 +53,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -305,8 +303,8 @@ public class OrderServiceImpl implements IOrderService {
 
     @Override
     public ResponseObject<PageInfo> getUserOrderList(Integer userId, Integer pageNum, Integer pageSize) {
-        List<Order> orderList = orderMapper.userOrderList(userId);
         PageHelper.startPage(pageNum, pageSize);
+        List<Order> orderList = orderMapper.userOrderList(userId);
         List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, userId);
         PageInfo pageInfo = new PageInfo(orderList);
         pageInfo.setList(orderVoList);
@@ -547,43 +545,12 @@ public class OrderServiceImpl implements IOrderService {
     }
 
     private String createSignOrder(Long orderNo, Integer userId) {
-        //TODO 通过userId，orderNo获取该条订单信息，拿到订单的付款金额，订单的Item详情，
-        // 订单的title等信息都可以设置到orderSign中
-        ResponseObject<OrderVo> orderVo = getOrderDetail(userId, orderNo);
+        //TODO 通过userId，orderNo获取该条订单信息，订单的付款金额，订单的Item详情，
+        ResponseObject<OrderVo> responseOrder = getOrderDetail(userId, orderNo);
+        //需要支付的订单信息，将订单信息必要参数设置到AlipayTradeAppPayModel中，形成签名信息
+        OrderVo orderVo = responseOrder.getData();
+
         AlipayTradeAppPayResponse response = null;
-        /*Map<String, String> params = new HashMap<>();
-        params.put("app_id", AlipayConfig.app_id);
-        Map<String, String> biz_content = new HashMap<>();
-        biz_content.put("out_trade_no", String.valueOf(orderNo));
-        biz_content.put("total_amount", ".0.01");
-        biz_content.put("product_code", "QUICK_MSECURITY_PAY");
-        params.put("biz_content", JSON.toJSONString(biz_content));
-        params.put("charset", "utf-8");
-        params.put("method", "alipay.trade.app.pay");
-        params.put("notify_url", AlipayConfig.service);
-        params.put("sign_type", "RSA");
-        params.put("timestamp", DateTimeUtil.dateToStr(new Date()));
-        params.put("version", "1.0");
-        try {
-            String sign = AlipaySignature.rsaSign(params, AlipayConfig.private_key, AlipayConfig.input_charset);
-            List<String> list = new ArrayList<>();
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                list.add(entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), "utf-8") + "&");
-            }
-            int size = list.size();
-            String[] arrayToSort = list.toArray(new String[size]);
-            Arrays.sort(arrayToSort, String.CASE_INSENSITIVE_ORDER);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < size; i++) {
-                sb.append(arrayToSort[i]);
-            }
-            sb.append("sign=" + URLEncoder.encode(sign, "utf-8"));
-            return sb.toString();
-        } catch (AlipayApiException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }*/
         AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.GATE,
                 AlipayConfig.APPID,
                 AlipayConfig.APP_PRIVATE_KEY,
@@ -591,21 +558,19 @@ public class OrderServiceImpl implements IOrderService {
                 AlipayConfig.CHARSET,
                 AlipayConfig.ALIPAY_PUBLIC_KEY,
                 "RSA2");
-
         //实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.trade.app.pay
         AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
         //SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
         AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
-
         model.setBody("我是测试数据");//支付的内容
         model.setSubject("App支付测试Java");//支付的title
         model.setOutTradeNo(String.valueOf(orderNo));//订单号
         model.setTimeoutExpress("30m");//过期时间
         model.setTotalAmount("0.01");//支付金额
-        model.setProductCode("QUICK_MSECURITY_PAY");
+        model.setProductCode("QUICK_MSECU11RITY_PAY");
         request.setBizModel(model);
-        //支付宝请求回调的地址
-        request.setNotifyUrl("商户外网可以访问的异步地址");
+        //支付宝请求回调的服务端地址
+        request.setNotifyUrl("http://4hfax4.natappfree.cc/zhaopin/app/order/callbacks");
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute
             response = alipayClient.sdkExecute(request);
@@ -615,6 +580,88 @@ public class OrderServiceImpl implements IOrderService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public String alipayCallback(Map parameterMap) {
+        boolean validateFlag = true;
+        Map<String, String> params = new HashMap<>();
+        for (Iterator iterator = parameterMap.keySet().iterator(); iterator.hasNext(); ) {
+            String name = (String) iterator.next();
+            String[] values = (String[]) parameterMap.get(name);
+            String valueStr = "";
+            int size = values.length;
+            for (int i = 0; i < size; i++) {
+                valueStr =
+                        (i == size - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+            }
+            //解决乱码
+            //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "utf-8");
+            params.put(name, valueStr);
+        }
+        System.err.println(params.toString());
+        try {
+            //验证支付宝公钥
+            boolean flag = AlipaySignature.rsaCheckV1(params, AlipayConfig.ALIPAY_PUBLIC_KEY, AlipayConfig.CHARSET, "RSA2");
+            if (flag) {
+                if (AlipayTradeStatus.TRADE_SUCCESS.equals(params.get("trade_status"))) {
+                    //付款金额
+                    String amount = params.get("buyer_pay_amount");
+                    //商户订单号
+                    String outTradeNo = params.get("out_trade_no");
+                    //支付宝交易号
+                    String tradeNo = params.get("trade_no");
+                    //商户的AppId
+                    String appId = params.get("app_id");
+                    //附加参数
+                    //String passbackParams = URLDecoder.decode(params.get("passback_params"));
+                    System.err.println(outTradeNo + "--" + amount + "--" + appId + "--" + tradeNo);
+                    validateFlag = validateOrderParam(outTradeNo, amount, appId, tradeNo);
+                }
+            }
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+
+        }
+        return "SUCCESS";
+    }
+
+    private boolean validateOrderParam(String outTradeNo, String amount, String appId, String tradeNo) {
+        boolean validateFlag = false;
+        if (StringUtils.isNotBlank(outTradeNo) && StringUtils.isNotBlank(tradeNo) &&
+                StringUtils.isNotBlank(amount) && StringUtils.isNotBlank(appId)) {
+            //通过支付宝返回的orderNo去查询该订单
+            Order order = orderMapper.validateOrderParam(Long.valueOf(outTradeNo));
+            if (order == null) {
+                return validateFlag;//不是该商城的订单
+            }
+            System.err.println(order.getOrderNo());
+            List<OrderItem> orderItemList = orderItemMapper.getByOrderNoUserId(order.getOrderNo(), order.getUserId());
+            OrderVo orderVo = this.assembleOrderVo(order, orderItemList);
+            //TODO 测试金额为0.01
+            orderVo.setPayment(new BigDecimal("0.01"));
+            //验证
+            if (!amount.equals(String.valueOf(orderVo.getPayment()))) {
+                return validateFlag;//支付金额错误
+            } else if (!AlipayConfig.APPID.equals(appId)) {
+                return validateFlag;//商户appid错误
+            }
+            //验证成功后修改修改订单信息（订单状态，支付时间，支付宝交易号），
+            updateOrderInfo(order, tradeNo);
+            validateFlag = true;
+            return validateFlag;
+        }
+        return validateFlag;
+    }
+
+    private void updateOrderInfo(Order order, String tradeNo) {
+        //支付结果验签成功后修改订单信息
+        order.setStatus(Const.OrderStatusEnum.PAID.getCode());//订单状态
+        order.setPaymentTime(new Date());//支付时间
+        order.setPayPlatform(Const.PayPlatformEnum.ALIPAY.getCode());
+        order.setPlatformOrderNo(tradeNo);
+        int rowCount = orderMapper.updateByPrimaryKeySelective(order);
+        System.err.println(rowCount);
     }
 
     @Override
