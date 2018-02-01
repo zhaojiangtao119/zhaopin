@@ -86,4 +86,30 @@ public interface IUserService {
      * @return
      */
     ResponseObject<UserDto> selectByUserId(Integer userId);
+
+    /**
+     * 获取用户信息
+     *
+     * @param userId
+     * @return
+     */
+    ResponseObject<UserDto> getUserInfo(Integer userId);
+
+    /**
+     * 验证旧密码是否正确
+     *
+     * @param password
+     * @return
+     */
+    ResponseObject validateOldPassword(String password, Integer userId);
+
+    /**
+     * 登录后修改密码
+     *
+     * @param userId
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    ResponseObject restPassword(Integer userId, String oldPassword, String newPassword);
 }

@@ -79,6 +79,8 @@
             <mvc:exclude-mapping path="/app/shopping/**"/>
             <!--app帖子与回复-->
             <mvc:exclude-mapping path="/app/topic/**"/>
+            <!--app用户信息-->
+            <mvc:exclude-mapping path="/app/user/**"/>
 
             <!--course-->
             <mvc:exclude-mapping path="/course/**"/>

@@ -290,6 +290,7 @@ public class UserServiceImpl implements IUserService {
             User user = new User();
             BeanUtils.copyProperties(userDto, user);
             List<User> userList = userMapper.selectUser(userDto);
+            @SuppressWarnings("unchecked")
             PageInfo pageInfo = new PageInfo(userList);
             return ResponseObject.successStautsData(pageInfo);
         }
@@ -322,5 +323,56 @@ public class UserServiceImpl implements IUserService {
         userDto.setCreateTimeStr(DateTimeUtil.dateToStr(user.getCreateTime()));
         userDto.setUpdateTimeStr(DateTimeUtil.dateToStr(user.getUpdateTime()));
         return ResponseObject.successStautsData(userDto);
+    }
+
+    @Override
+    public ResponseObject<UserDto> getUserInfo(Integer userId) {
+        if (userId == null) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        User user = userMapper.selectByPrimaryKey(userId);
+        if (user == null) {
+            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+        }
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user, userDto);
+        return ResponseObject.successStautsData(userDto);
+    }
+
+    @Override
+    public ResponseObject validateOldPassword(String password, Integer userId) {
+        if (userId == null || StringUtils.isBlank(password)) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        User user = userMapper.selectByPrimaryKey(userId);
+        //对旧密码加密
+        String md5PasswordOld = MD5Util.MD5EncodeUtf8(password);
+        if (user.getPassword().equals(md5PasswordOld)) {
+            return ResponseObject.successStatus();
+        }
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+    }
+
+    @Override
+    public ResponseObject restPassword(Integer userId, String oldPassword, String newPassword) {
+        //再验证一遍旧密码
+        ResponseObject responseObject = this.validateOldPassword(oldPassword, userId);
+        if (!responseObject.isSuccess()) {
+            return responseObject;
+        }
+        //判断新旧密码是否一致
+        if (oldPassword.equals(newPassword)) {
+            return ResponseObject.failStatusMessage("新旧密码不能相同");
+        }
+        //新密码加密后修改
+        String md5NewPassword = MD5Util.MD5EncodeUtf8(newPassword);
+        User user = new User();
+        user.setId(userId);
+        user.setPassword(md5NewPassword);
+        int rowCount = userMapper.updateByPrimaryKeySelective(user);
+        if (rowCount == 1) {
+            return ResponseObject.successStatus();
+        }
+        return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 }
