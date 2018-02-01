@@ -9,6 +9,7 @@ import com.labelwall.mall.dao.TopicPostMapper;
 import com.labelwall.mall.dto.TopicPostDto;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.TopicPost;
+import com.labelwall.mall.message.TopicResponseMessage;
 import com.labelwall.mall.service.ITopicPostService;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.storage.QiniuStorage;
@@ -71,8 +72,16 @@ public class TopicPostServiceImpl implements ITopicPostService {
 
     @Override
     public ResponseObject<TopicPostDto> addPublishPost(TopicPostDto topicPostDto) {
-        //发表帖子
-        //判断是否上传了图片
+        //1.首先判断用户是否存在指定的发布学校
+        if (topicPostDto.getSchoolId() == null) {
+            ResponseObject<UserDto> response = userService.selectByUserId(topicPostDto.getUserId());
+            UserDto userDto = response.getData();
+            if (userDto.getSchoolId() == null) {
+                return ResponseObject.fail(TopicResponseMessage.SCHOOL_IS_NULL.getCode(),
+                        TopicResponseMessage.SCHOOL_IS_NULL.getValue());
+            }
+        }
+        //2.判断是否上传了图片
         if (topicPostDto.getMultipartFile() != null && topicPostDto.getMultipartFile().getSize() > 0) {
             try {
                 byte[] postImage = topicPostDto.getMultipartFile().getBytes();
@@ -80,10 +89,13 @@ public class TopicPostServiceImpl implements ITopicPostService {
                 topicPostDto.setImage(imageKey);
             } catch (IOException e) {
                 logger.error("帖子图片解析失败", e);
-                return ResponseObject.failStatusMessage("发表失败");
+                return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
             }
         }
-
+        //3.验证必须信息
+        if (topicPostDto.getUserId() == null || StringUtils.isBlank(topicPostDto.getContent())) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
         TopicPost topicPost = new TopicPost();
         BeanUtils.copyProperties(topicPostDto, topicPost);
         topicPost = assembleTopicPost(topicPost);
@@ -117,6 +129,9 @@ public class TopicPostServiceImpl implements ITopicPostService {
         ResponseObject<UserDto> response = userService.selectByUserId(topicPost.getUserId());
         if (response.isSuccess()) {
             userDto = response.getData();
+        }
+        if (topicPost.getTopicId() == null) {
+            topicPost.setTopicId(100044);//默认的类型是吐槽
         }
         if (topicPost.getSchoolId() == null) {
             if (userDto.getSchoolId() != null) {
