@@ -25,7 +25,7 @@ public class AppShopCartController {
      *
      * @return
      */
-    @RequestMapping(value = "app_get_cart_list/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "get_cart_list/{userId}", method = RequestMethod.GET)
     public ResponseObject<CartVo> appGetCartList(@PathVariable("userId") Integer userId) {
         return shopCartService.getCartList(userId);
     }
@@ -36,7 +36,7 @@ public class AppShopCartController {
      * @param shopCartDto
      * @return
      */
-    @RequestMapping(value = "app_add_cart", method = RequestMethod.POST)
+    @RequestMapping(value = "add_cart", method = RequestMethod.POST)
     public ResponseObject<CartVo> appAddCart(ShopCartDto shopCartDto) {
         return shopCartService.addCart(shopCartDto);
     }
@@ -47,7 +47,7 @@ public class AppShopCartController {
      * @param shopCartDto
      * @return
      */
-    @RequestMapping(value = "app_update_quantity", method = RequestMethod.PUT)
+    @RequestMapping(value = "update_quantity", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appUpdateQuantity(ShopCartDto shopCartDto) {
         return shopCartService.updateQuantity(shopCartDto);
     }
@@ -57,7 +57,7 @@ public class AppShopCartController {
      *
      * @return
      */
-    @RequestMapping(value = "app_select_all", method = RequestMethod.PUT)
+    @RequestMapping(value = "select_all", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appSelectAll(Integer userId) {
         return shopCartService.updateSelectOrUnSelect(userId, null, Const.Cart.CHECKED);
     }
@@ -67,7 +67,7 @@ public class AppShopCartController {
      *
      * @return
      */
-    @RequestMapping(value = "app_un_select_all", method = RequestMethod.PUT)
+    @RequestMapping(value = "un_select_all", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appUnSelectAll(Integer userId) {
         return shopCartService.updateSelectOrUnSelect(userId, null, Const.Cart.UN_CHECKED);
     }
@@ -78,7 +78,7 @@ public class AppShopCartController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "app_select", method = RequestMethod.PUT)
+    @RequestMapping(value = "select", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appSelect(Integer userId, Integer productId) {
         return shopCartService.updateSelectOrUnSelect(userId, productId, Const.Cart.CHECKED);
     }
@@ -89,7 +89,7 @@ public class AppShopCartController {
      * @param productId
      * @return
      */
-    @RequestMapping(value = "app_un_select", method = RequestMethod.PUT)
+    @RequestMapping(value = "un_select", method = RequestMethod.PUT)
     public ResponseObject<CartVo> appUnSelect(Integer userId, Integer productId) {
         return shopCartService.updateSelectOrUnSelect(userId, productId, Const.Cart.UN_CHECKED);
     }

@@ -2,9 +2,14 @@ package com.labelwall.mall.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
 import com.alipay.api.AlipayResponse;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.domain.Data;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.alipay.api.response.AlipayTradePrecreateResponse;
 import com.alipay.demo.trade.config.Configs;
 import com.alipay.demo.trade.model.ExtendParams;
@@ -545,8 +550,8 @@ public class OrderServiceImpl implements IOrderService {
         //TODO 通过userId，orderNo获取该条订单信息，拿到订单的付款金额，订单的Item详情，
         // 订单的title等信息都可以设置到orderSign中
         ResponseObject<OrderVo> orderVo = getOrderDetail(userId, orderNo);
-
-        Map<String, String> params = new HashMap<>();
+        AlipayTradeAppPayResponse response = null;
+        /*Map<String, String> params = new HashMap<>();
         params.put("app_id", AlipayConfig.app_id);
         Map<String, String> biz_content = new HashMap<>();
         biz_content.put("out_trade_no", String.valueOf(orderNo));
@@ -577,6 +582,36 @@ public class OrderServiceImpl implements IOrderService {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }*/
+        AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.GATE,
+                AlipayConfig.APPID,
+                AlipayConfig.APP_PRIVATE_KEY,
+                "json",
+                AlipayConfig.CHARSET,
+                AlipayConfig.ALIPAY_PUBLIC_KEY,
+                "RSA2");
+
+        //实例化具体API对应的request类,类名称和接口名称对应,当前调用接口名称：alipay.trade.app.pay
+        AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
+        //SDK已经封装掉了公共参数，这里只需要传入业务参数。以下方法为sdk的model入参方式(model和biz_content同时存在的情况下取biz_content)。
+        AlipayTradeAppPayModel model = new AlipayTradeAppPayModel();
+
+        model.setBody("我是测试数据");//支付的内容
+        model.setSubject("App支付测试Java");//支付的title
+        model.setOutTradeNo(String.valueOf(orderNo));//订单号
+        model.setTimeoutExpress("30m");//过期时间
+        model.setTotalAmount("0.01");//支付金额
+        model.setProductCode("QUICK_MSECURITY_PAY");
+        request.setBizModel(model);
+        //支付宝请求回调的地址
+        request.setNotifyUrl("商户外网可以访问的异步地址");
+        try {
+            //这里和普通的接口调用不同，使用的是sdkExecute
+            response = alipayClient.sdkExecute(request);
+            System.err.println(response.getBody());//就是orderString 可以直接给客户端请求，无需再做处理。
+            return response.getBody();
+        } catch (AlipayApiException e) {
             e.printStackTrace();
         }
         return null;
