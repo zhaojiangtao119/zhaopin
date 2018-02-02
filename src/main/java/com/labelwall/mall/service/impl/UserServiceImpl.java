@@ -334,6 +334,12 @@ public class UserServiceImpl implements IUserService {
         if (user == null) {
             return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
         }
+        if (StringUtils.isBlank(user.getHead())) {
+            //如果用户头像为null设置一个默认的头像给用户getUserHeadUrl
+            user.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
+        } else {
+            user.setHead(QiniuStorage.getUserHeadUrl(user.getHead()));
+        }
         UserDto userDto = new UserDto();
         BeanUtils.copyProperties(user, userDto);
         return ResponseObject.successStautsData(userDto);

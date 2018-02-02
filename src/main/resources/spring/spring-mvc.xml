@@ -66,6 +66,8 @@
             <mvc:exclude-mapping path="/topic/get_topic_post_by_id/**"/>
             <mvc:exclude-mapping path="/topic/get_topic_reply_by_post_id/**"/>
 
+            <mvc:exclude-mapping path="/order/alipay_callback"/>
+
             <!--商铺-->
             <mvc:exclude-mapping path="/shop/**"/>
             <!--商品-->

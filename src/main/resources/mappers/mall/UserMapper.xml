@@ -23,12 +23,13 @@
             <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
             <arg column="gender" javaType="java.lang.Integer" jdbcType="INTEGER"/>
             <arg column="birthday" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="nickname" javaType="java.lang.String" jdbcType="VARCHAR"/>
         </constructor>
     </resultMap>
     <sql id="Base_Column_List">
     id, username, password, head,email, phone, role, school_date,school_name,
     location_province, location_city,location_county,province_id,city_id,county_id,school_id,
-    create_time, update_time,gender,birthday
+    create_time, update_time,gender,birthday,nickname
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -45,12 +46,12 @@
       email, phone, role, school_date,
       school_name, location_province, location_city,
       location_county,province_id,city_id,county_id,school_id,
-      create_time, update_time,gender,birthday)
+      create_time, update_time,gender,birthday,nickname)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{head,jdbcType=VARCHAR},
       #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{schoolDate,jdbcType=TIMESTAMP},
       #{schoolName,jdbcType=VARCHAR}, #{locationProvince,jdbcType=VARCHAR}, #{locationCity,jdbcType=VARCHAR}, #{locationCounty,jdbcType=VARCHAR},
       #{provinceId,jdbcType=INTEGER},#{cityId,jdbcType=INTEGER},#{countyId,jdbcType=INTEGER},#{schoolId,jdbcType=INTEGER},
-      now(), now(),#{gender,jdbcType=INTEGER},#{birthday,jdbcType=VARCHAR})
+      now(), now(),#{gender,jdbcType=INTEGER},#{birthday,jdbcType=VARCHAR},#{nickname,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.User">
         insert into wall_user
@@ -115,6 +116,9 @@
             <if test="birthday != null">
                 birthday,
             </if>
+            <if test="nickname != null">
+                nickname,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -177,6 +181,9 @@
             <if test="birthday != null">
                 #{birthday,jdbcType=VARCAHR},
             </if>
+            <if test="nickname != null">
+                #{nickname,jdbcType=VARCAHR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.User">
@@ -237,6 +244,9 @@
             <if test="birthday != null">
                 birthday = #{birthday,jdbcType=VARCHAR},
             </if>
+            <if test="nickname != null">
+                nickname = #{nickname,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -258,9 +268,10 @@
       county_id = #{countyId,jdbcType=INTEGER},
       school_id = #{schoolId,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = now()
+      update_time = now(),
       gender = #{gender,jdbcType=INTEGER},
       birthday = #{birthday,jdbcType=VARCHAR},
+      nickname = #{nickname,jdbcType=VARCHAR},
     where id = #{id,jdbcType=INTEGER}
     </update>
     <select id="checkUsername" resultType="int" parameterType="string">

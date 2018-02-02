@@ -135,7 +135,7 @@ public class OrderController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "alipay_callback")
+    @RequestMapping(value = "alipay_callback",method = RequestMethod.POST)
     @ResponseBody
     public Object alipayCallback(HttpServletRequest request) {
         Map<String, String> params = Maps.newHashMap();
@@ -190,5 +190,4 @@ public class OrderController {
         }
         return responseObject;
     }
-
 }

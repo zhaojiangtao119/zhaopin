@@ -2,7 +2,9 @@ package com.labelwall.mall.controller;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.demo.trade.config.Configs;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Maps;
 import com.labelwall.common.AlipayConfig;
 import com.labelwall.common.AlipayTradeStatus;
 import com.labelwall.common.Const;
@@ -11,10 +13,7 @@ import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.service.IOrderService;
 import com.labelwall.mall.vo.OrderVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -118,5 +117,61 @@ public class AppOrderController {
     @RequestMapping(value = "detail", method = RequestMethod.GET)
     public ResponseObject<OrderVo> getOrderDetail(Integer userId, Long orderNo) {
         return orderService.getOrderDetail(userId, orderNo);
+    }
+
+    /**
+     * 网页支付
+     *
+     * @param session
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping(value = "pay", method = RequestMethod.POST)
+    public ResponseObject pay(HttpSession session, Integer userId, Long orderNo) {
+        String path = session.getServletContext().getRealPath("upload");
+        return orderService.orderPay(orderNo, userId, path);
+    }
+
+    /**
+     * 支付宝的回调，扫码付款成功后由支付宝调用，验证回调参数是否正确
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "alipay_callback")
+    @ResponseBody
+    public Object alipayCallback(HttpServletRequest request) {
+        Map<String, String> params = Maps.newHashMap();
+        //支付宝返回的值都在request中
+        Map requestParams = request.getParameterMap();
+        for (Iterator iterator = requestParams.keySet().iterator(); iterator.hasNext(); ) {
+            String name = (String) iterator.next();
+            String[] values = (String[]) requestParams.get(name);
+            String valueStr = "";
+            int size = values.length;
+            for (int i = 0; i < size; i++) {
+                valueStr = (i == size - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
+            }
+            params.put(name, valueStr);
+        }
+
+        //验证回调的正确性，是不是支付宝发的，并且避免重复通知
+        params.remove("sign_type");
+        try {
+            boolean alipayRSACheckedV2 = AlipaySignature.rsaCheckV2(params, Configs.getAlipayPublicKey(), "utf-8", Configs.getSignType());
+            if (!alipayRSACheckedV2) {
+                return ResponseObject.failStatusMessage("非法请求，回调验证不通过！");
+            }
+        } catch (AlipayApiException e) {
+
+        }
+        //TODO 验证回调的参数是否正确
+
+        ResponseObject responseObject = orderService.aliCallback(params);
+        if (responseObject.isSuccess()) {
+            return Const.AlipayCallback.RESPONSE_SUCCESS;
+        }
+        return Const.AlipayCallback.RESPONSE_FAILED;
     }
 }

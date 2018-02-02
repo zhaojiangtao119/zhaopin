@@ -199,7 +199,9 @@
     </update>
     <select id="getShoppingByUserIdSelected" parameterType="map" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List"/>,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
         FROM wall_shopping
         WHERE user_id = #{userId} AND selected = #{selected}
     </select>

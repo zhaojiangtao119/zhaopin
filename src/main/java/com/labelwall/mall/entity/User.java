@@ -44,12 +44,14 @@ public class User implements Serializable {
 
     private String birthday;
 
+    private String nickname;
+
     public User(Integer id, String username, String password,
                 String head, String email, String phone, Integer role,
                 Date schoolDate, String schoolName, String locationProvince,
                 String locationCity, String locationCounty, Integer provinceId,
                 Integer cityId, Integer countyId, Integer schoolId, Date createTime, Date updateTime,
-                Integer gender, String birthday) {
+                Integer gender, String birthday, String nackname) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -70,6 +72,7 @@ public class User implements Serializable {
         this.updateTime = updateTime;
         this.gender = gender;
         this.birthday = birthday;
+        this.nickname = nickname;
     }
 
     public User() {
@@ -234,5 +237,13 @@ public class User implements Serializable {
 
     public void setBirthday(String birthday) {
         this.birthday = birthday;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
