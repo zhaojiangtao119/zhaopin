@@ -62,7 +62,8 @@ public class Const {
         PAID(20, "已付款"),
         SHIPPED(40, "已发货"),
         ORDER_SUCCESS(50, "订单完成"),
-        ORDER_CLOSE(60, "订单关闭");
+        ORDER_CLOSE(60, "订单关闭"),
+        ORDER_FAILURE(70, "订单过期");
 
         private String value;
         private int code;
@@ -149,6 +150,12 @@ public class Const {
 
         String RESPONSE_SUCCESS = "success";
         String RESPONSE_FAILED = "failed";
+    }
+
+    //订单过期限制
+    public interface OrderFailureDate {
+        long ORDER_NO_QR = 1440;
+        long ORDER_QR = 120;
     }
 
 }

@@ -2,6 +2,7 @@ package com.labelwall.util;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -39,5 +40,14 @@ public class DateTimeUtil {
         }
         DateTime dateTime = new DateTime(date);
         return dateTime.toString(STANDARD_FORMAT);
+    }
+
+    //计算两个日期的分钟差
+    public static long dateInterval(Date beginDateStr, Date endDateStr) {
+        DateTime beginDate = new DateTime(beginDateStr);
+        DateTime endDate = new DateTime(endDateStr);
+        Duration duration = new Duration(beginDate, endDate);
+        long millis = duration.getStandardMinutes();
+        return millis;
     }
 }

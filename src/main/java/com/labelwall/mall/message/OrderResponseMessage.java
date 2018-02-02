@@ -9,7 +9,8 @@ public enum OrderResponseMessage {
     PRODUCT_NUM_NOT(20003,"商品库存不足"),
     ORDER_ISNULL(20004,"订单不存在"),
     ORDER_PAY_NOT_CANCEL(20005,"订单已支付无法取消"),
-    ORDER_NOT_PAY(20006,"订单未支付")
+    ORDER_NOT_PAY(20006,"订单未支付"),
+    ORDER_FAILURE(20007,"订单已过期")
     ;
 
     private Integer code;

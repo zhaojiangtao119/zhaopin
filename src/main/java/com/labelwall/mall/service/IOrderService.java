@@ -2,9 +2,11 @@ package com.labelwall.mall.service;
 
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
+import com.labelwall.mall.entity.Order;
 import com.labelwall.mall.vo.OrderProductVo;
 import com.labelwall.mall.vo.OrderVo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,4 +129,12 @@ public interface IOrderService {
      * @return
      */
     ResponseObject<OrderVo> buyProduct(Integer id, Integer productId, Integer quantity);
+
+    /**
+     * 用户获取订单列表时修改订单状态
+     *
+     * @param orderList
+     * @return
+     */
+    List<Order> modifyOrderStatus(List<Order> orderList);
 }

@@ -356,14 +356,57 @@ public class OrderServiceImpl implements IOrderService {
         return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
 
+    /**
+     * 获当前用户的订单列表
+     * 判断订单时间，设置订单的过期标志
+     *
+     * @param userId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @Override
     public ResponseObject<PageInfo> getUserOrderList(Integer userId, Integer pageNum, Integer pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<Order> orderList = orderMapper.userOrderList(userId);
+        //修改订单状态
+        orderList = this.modifyOrderStatus(orderList);
         List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, userId);
         PageInfo pageInfo = new PageInfo(orderList);
         pageInfo.setList(orderVoList);
         return ResponseObject.successStautsData(pageInfo);
+    }
+
+    @Override
+    public List<Order> modifyOrderStatus(List<Order> orderList) {
+        Order orderModify = new Order();
+        //判断订单的状态，
+        for (Order order : orderList) {
+            if (order.getStatus() == Const.OrderStatusEnum.NO_PAY.getCode()) {
+                //未付款
+                if (StringUtils.isNotBlank(order.getQrCode())) {
+                    //二维码已经生成，俩个小时订单过期
+                    //获取订单最最后一次修改的时间
+                    long dateMinute = DateTimeUtil.dateInterval(order.getUpdateTime(), new Date());
+                    if (dateMinute >= Const.OrderFailureDate.ORDER_QR) {
+                        //订单失效
+                        orderModify.setOrderNo(order.getOrderNo());
+                        orderModify.setStatus(Const.OrderStatusEnum.ORDER_FAILURE.getCode());
+                        orderMapper.updateByPrimaryKeySelective(orderModify);
+                    }
+                } else {
+                    long dateMinute = DateTimeUtil.dateInterval(order.getCreateTime(), new Date());
+                    if (dateMinute >= Const.OrderFailureDate.ORDER_NO_QR) {
+                        //订单失效
+                        orderModify.setOrderNo(order.getOrderNo());
+                        orderModify.setStatus(Const.OrderStatusEnum.ORDER_FAILURE.getCode());
+                        orderMapper.updateByPrimaryKeySelective(orderModify);
+                    }
+                }
+            }
+        }
+        //TODO 重新获取用户的订单信息
+        return orderList;
     }
 
     private List<OrderVo> assembleOrderVoList(List<Order> orderList, Integer userId) {
@@ -417,6 +460,17 @@ public class OrderServiceImpl implements IOrderService {
         Map<String, String> resultMap = Maps.newHashMap();
         //获取订单
         Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
+        //判断订单是否已经过期，订单是否已经生成过二维码
+        if (order.getStatus() == Const.OrderStatusEnum.ORDER_FAILURE.getCode()) {
+            //订单已过期
+            return ResponseObject.fail(OrderResponseMessage.ORDER_FAILURE.getCode(),
+                    OrderResponseMessage.ORDER_FAILURE.getValue());
+        }
+        if (StringUtils.isNotBlank(order.getQrCode())) {
+            resultMap.put("orderNo", String.valueOf(order.getOrderNo()));
+            resultMap.put("qrUrl", order.getQrCode());
+            return ResponseObject.successStautsData(resultMap);
+        }
         if (order == null) {
             return ResponseObject.fail(OrderResponseMessage.ORDER_ISNULL.getCode(),
                     OrderResponseMessage.ORDER_ISNULL.getValue());
@@ -504,7 +558,7 @@ public class OrderServiceImpl implements IOrderService {
                 //获取图片名称，当做是存储空间中的key
                 String key = qrFileName.substring(0, qrFileName.lastIndexOf("."));
                 //将二维码存储到七牛上，判断图片是否存在，如果用户生成了支付二维码并没有支付，之后再进行支付会生成一个相同内容的二维码
-                if (!QiniuStorage.fileIsExist(qrFileName)) {
+                /*if (!QiniuStorage.fileIsExist(qrFileName)) {
                     String qrKey = QiniuStorage.updateOrderPayImage(CommonUtil.getFileByte(targetFile), key);
                     String url = QiniuStorage.getUrl(qrKey);
                     //将二维码的访问路径返回出去
@@ -512,7 +566,13 @@ public class OrderServiceImpl implements IOrderService {
                 } else {
                     String url = QiniuStorage.getUrl(qrFileName);
                     resultMap.put("qrUrl", url);
-                }
+                }*/
+                String qrKey = QiniuStorage.updateOrderPayImage(CommonUtil.getFileByte(targetFile), key);
+                String url = QiniuStorage.getUrl(qrKey);
+                //将二维码url设置到order表中
+                Order orderQrCode = new Order();
+                orderQrCode.setQrCode(url);
+                orderMapper.updateByPrimaryKeySelective(orderQrCode);
                 //删除临时文件夹upload
                 folder.delete();
                 return ResponseObject.successStautsData(resultMap);

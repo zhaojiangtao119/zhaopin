@@ -37,10 +37,12 @@ public class Order implements Serializable {
 
     private Integer payPlatform;
 
+    private String qrCode;
+
     public Order(Integer id, Long orderNo, Integer userId, Integer shoppingId,
                  BigDecimal payment, Integer paymentType, Integer postage, Integer status,
                  Date paymentTime, Date sendTime, Date endTime, Date closeTime,
-                 Date createTime, Date updateTime, String platformOrderNo, Integer payPlatform) {
+                 Date createTime, Date updateTime, String platformOrderNo, Integer payPlatform, String qrCode) {
         this.id = id;
         this.orderNo = orderNo;
         this.userId = userId;
@@ -57,6 +59,7 @@ public class Order implements Serializable {
         this.updateTime = updateTime;
         this.platformOrderNo = platformOrderNo;
         this.payPlatform = payPlatform;
+        this.qrCode = qrCode;
     }
 
     public Order() {
@@ -189,5 +192,13 @@ public class Order implements Serializable {
 
     public void setPayPlatform(Integer payPlatform) {
         this.payPlatform = payPlatform;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 }
