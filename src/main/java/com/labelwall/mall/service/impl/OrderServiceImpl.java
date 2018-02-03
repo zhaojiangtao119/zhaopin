@@ -366,19 +366,21 @@ public class OrderServiceImpl implements IOrderService {
      * @return
      */
     @Override
-    public ResponseObject<PageInfo> getUserOrderList(Integer userId, Integer pageNum, Integer pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
+    public ResponseObject<PageInfo> userOrderList(Integer userId, Integer pageNum, Integer pageSize) {
         List<Order> orderList = orderMapper.userOrderList(userId);
         //修改订单状态
-        orderList = this.modifyOrderStatus(orderList);
-        List<OrderVo> orderVoList = this.assembleOrderVoList(orderList, userId);
-        PageInfo pageInfo = new PageInfo(orderList);
+        this.modifyOrderStatus(orderList, userId);
+        //重新获取订单信息
+        PageHelper.startPage(pageNum, pageSize);
+        List<Order> orderListNew = orderMapper.userOrderList(userId);
+        List<OrderVo> orderVoList = this.assembleOrderVoList(orderListNew, userId);
+        PageInfo pageInfo = new PageInfo(orderListNew);
         pageInfo.setList(orderVoList);
         return ResponseObject.successStautsData(pageInfo);
     }
 
     @Override
-    public List<Order> modifyOrderStatus(List<Order> orderList) {
+    public List<Order> modifyOrderStatus(List<Order> orderList, Integer userId) {
         Order orderModify = new Order();
         //判断订单的状态，
         for (Order order : orderList) {
@@ -390,6 +392,7 @@ public class OrderServiceImpl implements IOrderService {
                     long dateMinute = DateTimeUtil.dateInterval(order.getUpdateTime(), new Date());
                     if (dateMinute >= Const.OrderFailureDate.ORDER_QR) {
                         //订单失效
+                        orderModify.setId(order.getId());
                         orderModify.setOrderNo(order.getOrderNo());
                         orderModify.setStatus(Const.OrderStatusEnum.ORDER_FAILURE.getCode());
                         orderMapper.updateByPrimaryKeySelective(orderModify);
@@ -398,6 +401,7 @@ public class OrderServiceImpl implements IOrderService {
                     long dateMinute = DateTimeUtil.dateInterval(order.getCreateTime(), new Date());
                     if (dateMinute >= Const.OrderFailureDate.ORDER_NO_QR) {
                         //订单失效
+                        orderModify.setId(order.getId());
                         orderModify.setOrderNo(order.getOrderNo());
                         orderModify.setStatus(Const.OrderStatusEnum.ORDER_FAILURE.getCode());
                         orderMapper.updateByPrimaryKeySelective(orderModify);
@@ -405,7 +409,7 @@ public class OrderServiceImpl implements IOrderService {
                 }
             }
         }
-        //TODO 重新获取用户的订单信息
+        //重新获取用户的订单信息
         return orderList;
     }
 
@@ -460,6 +464,7 @@ public class OrderServiceImpl implements IOrderService {
         Map<String, String> resultMap = Maps.newHashMap();
         //获取订单
         Order order = orderMapper.selectByUserIdOrderNo(userId, orderNo);
+        resultMap.put("orderNo", String.valueOf(order.getOrderNo()));
         //判断订单是否已经过期，订单是否已经生成过二维码
         if (order.getStatus() == Const.OrderStatusEnum.ORDER_FAILURE.getCode()) {
             //订单已过期
@@ -467,7 +472,6 @@ public class OrderServiceImpl implements IOrderService {
                     OrderResponseMessage.ORDER_FAILURE.getValue());
         }
         if (StringUtils.isNotBlank(order.getQrCode())) {
-            resultMap.put("orderNo", String.valueOf(order.getOrderNo()));
             resultMap.put("qrUrl", order.getQrCode());
             return ResponseObject.successStautsData(resultMap);
         }
@@ -475,8 +479,6 @@ public class OrderServiceImpl implements IOrderService {
             return ResponseObject.fail(OrderResponseMessage.ORDER_ISNULL.getCode(),
                     OrderResponseMessage.ORDER_ISNULL.getValue());
         }
-        resultMap.put("orderNo", String.valueOf(order.getOrderNo()));
-
         // 点单号(必填) 商户网站订单系统中唯一订单号，64个字符以内，只能包含字母、数字、下划线，
         // 需保证商户系统端不能重复，建议通过数据库sequence生成，
         String outTradeNo = order.getOrderNo().toString();

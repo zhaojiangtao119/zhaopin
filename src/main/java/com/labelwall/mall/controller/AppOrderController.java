@@ -104,7 +104,7 @@ public class AppOrderController {
     public ResponseObject<PageInfo> userOrderList(Integer userId,
                                                   @PathVariable(value = "pageNum") Integer pageNum,
                                                   @PathVariable(value = "pageSize") Integer pageSize) {
-        return orderService.getUserOrderList(userId, pageNum, pageSize);
+        return orderService.userOrderList(userId, pageNum, pageSize);
     }
 
     /**

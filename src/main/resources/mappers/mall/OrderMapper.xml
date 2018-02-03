@@ -154,9 +154,6 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.labelwall.mall.entity.Order">
         update wall_order
         <set>
-            <if test="orderNo != null">
-                order_no = #{orderNo,jdbcType=BIGINT},
-            </if>
             <if test="userId != null">
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
