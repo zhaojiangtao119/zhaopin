@@ -111,10 +111,9 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM wall_category_topic
+        WHERE parent_id <![CDATA[<>]]> 1
         <if test="categoryId != null">
-            <where>
-                parent_id = #{categoryId,jdbcType=INTEGER} OR id = #{categoryId,jdbcType=INTEGER}
-            </where>
+            AND (parent_id = #{categoryId,jdbcType=INTEGER} OR id = #{categoryId,jdbcType=INTEGER})
         </if>
         ORDER BY parent_id
     </select>
@@ -124,5 +123,10 @@
         FROM wall_category_topic
         WHERE parent_id = #{categoryId}
         ORDER BY id
+    </select>
+    <select id="getAppCategory" resultType="com.labelwall.mall.entity.TopicCategory">
+        SELECT `id`,`name`
+        FROM wall_category_topic
+        WHERE parent_id = 1
     </select>
 </mapper>

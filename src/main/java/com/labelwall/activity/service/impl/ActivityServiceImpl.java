@@ -306,16 +306,18 @@ public class ActivityServiceImpl implements IActivityService {
         if (userId != null) {
             List<ActivityInfo> byStartUser = activityDao.selectByStartUserId(userId);
             List<ActivityInfo> byjoinUser = activityDao.selectByjoinUserId(userId);
-            for (int i = 0; i < activityInfos.size(); i++) {
-                for (Iterator<ActivityInfo> iter = byStartUser.iterator(); iter.hasNext(); ) {
-                    if (iter.next().getId() == activityInfos.get(i).getId()) {
+            int size = byStartUser.size();
+            for (int i = 0; i < size; i++) {
+                for (Iterator<ActivityInfo> iter = activityInfos.iterator(); iter.hasNext(); ) {
+                    if (iter.next().getId() == byStartUser.get(i).getId()) {
                         iter.remove();
                     }
                 }
             }
-            for (int i = 0; i < activityInfos.size(); i++) {
-                for (Iterator<ActivityInfo> iter = byjoinUser.iterator(); iter.hasNext(); ) {
-                    if (iter.next().getId() == activityInfos.get(i).getId()) {
+            size = byjoinUser.size();
+            for (int i = 0; i < size; i++) {
+                for (Iterator<ActivityInfo> iter = activityInfos.iterator(); iter.hasNext(); ) {
+                    if (iter.next().getId() == byjoinUser.get(i).getId()) {
                         iter.remove();
                     }
                 }

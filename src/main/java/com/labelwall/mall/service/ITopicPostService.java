@@ -3,6 +3,9 @@ package com.labelwall.mall.service;
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.TopicPostDto;
+import com.labelwall.mall.entity.TopicCategory;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2017-12-05.
@@ -49,4 +52,5 @@ public interface ITopicPostService {
      * @return
      */
     int updatePostReplyNum(Integer topicPostId);
+
 }

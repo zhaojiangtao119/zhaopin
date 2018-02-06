@@ -81,4 +81,10 @@ public class TopicCategoryServiceImpl implements ITopicCategoryService {
         }
         return topicCategorySet;
     }
+
+    @Override
+    public ResponseObject<List<TopicCategory>> getAppCategory() {
+        List<TopicCategory> topicCategoryList = topicCategoryMapper.getAppCategory();
+        return ResponseObject.successStautsData(topicCategoryList);
+    }
 }

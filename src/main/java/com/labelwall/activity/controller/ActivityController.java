@@ -32,13 +32,13 @@ public class ActivityController {
      * @param pageNum
      * @param pageSize
      * @param activity
+     * @param userId
      * @return
      */
     @RequestMapping(value = "query/{pageNum}/{pageSize}", method = RequestMethod.POST)
     public ResponseObject<PageInfo> query(HttpSession session, @PathVariable("pageNum") Integer pageNum,
-                                          @PathVariable("pageSize") Integer pageSize, ActivityDto activity) {
+                                          @PathVariable("pageSize") Integer pageSize, ActivityDto activity,Integer userId) {
         UserDto userInfo = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        Integer userId = null;
         if (userInfo != null) {
             userId = userInfo.getId();
         }

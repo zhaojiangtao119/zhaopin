@@ -33,4 +33,11 @@ public interface TopicCategoryMapper {
      * @return
      */
     List<TopicCategory> getCategoryChildrenByParentId(Integer categoryId);
+
+    /**
+     * 获取app的首页分类
+     *
+     * @return
+     */
+    List<TopicCategory> getAppCategory();
 }

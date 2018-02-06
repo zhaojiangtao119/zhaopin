@@ -2,6 +2,7 @@ package com.labelwall.mall.service;
 
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.TopicCategoryDto;
+import com.labelwall.mall.entity.TopicCategory;
 
 import java.util.List;
 
@@ -24,5 +25,12 @@ public interface ITopicCategoryService {
      * @return
      */
     ResponseObject<List<Integer>> getCategoryAndChildrenByCategoryId(Integer categoryId);
+
+    /**
+     * 获取APP分类
+     *
+     * @return
+     */
+    ResponseObject<List<TopicCategory>> getAppCategory();
 
 }
