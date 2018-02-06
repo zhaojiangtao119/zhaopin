@@ -341,4 +341,12 @@
         FROM wall_user
         WHERE email = #{email} AND password = #{password}
     </select>
+
+    <select id="selectByActivityId" parameterType="Integer" resultMap="BaseResultMap">
+        select s.id,s.username,s.head,s.school_name,s.location_province,
+               s.location_city,s.location_county,s.gender,s.nickname
+        from wall_user s left join  well_start_activity t
+            on  s.id = t.userId
+        where  t.activityId = #{activityId}
+    </select>
 </mapper>

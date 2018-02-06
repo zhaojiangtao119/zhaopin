@@ -6,7 +6,6 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
-import com.github.pagehelper.StringUtil;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.labelwall.common.Const;

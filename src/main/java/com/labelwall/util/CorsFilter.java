@@ -1,6 +1,6 @@
 package com.labelwall.util;
 
-import com.github.pagehelper.StringUtil;
+import com.github.pagehelper.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.servlet.*;

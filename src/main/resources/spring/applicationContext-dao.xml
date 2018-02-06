@@ -69,6 +69,7 @@
             <array>
                 <value>classpath:mappers/mall/*Mapper.xml</value>
                 <value>classpath:mappers/course/*Mapper.xml</value>
+                <value>classpath:mappers/activity/*Mapper.xml</value>
             </array>
         </property>
         <!-- 分页插件 -->
@@ -86,7 +87,7 @@
     </bean>
     <!--mybatis扫描dao（接口文件），生成mapper接口的代理对象-->
     <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.labelwall.mall.dao,com.labelwall.course.dao"/>
+        <property name="basePackage" value="com.labelwall.mall.dao,com.labelwall.course.dao,com.labelwall.activity.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 

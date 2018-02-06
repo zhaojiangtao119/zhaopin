@@ -112,4 +112,12 @@ public interface IUserService {
      * @return
      */
     ResponseObject restPassword(Integer userId, String oldPassword, String newPassword);
+
+    /**
+     * 获取用户信息
+     *
+     * @param activityId
+     * @return
+     */
+    User selectByActivityId(Integer activityId);
 }

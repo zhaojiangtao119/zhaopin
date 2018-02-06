@@ -198,7 +198,7 @@ public class UserServiceImpl implements IUserService {
         return ResponseObject.successStautsData(userDto);
     }
 
-    private User assembleUser(User user) {
+    private User assembleUser(User user) {//根据location名来获取各级的id
         if (StringUtils.isNotBlank(user.getLocationProvince())) {
             Integer provinceId = provinceService.findIdByProvinceName(user.getLocationProvince());
             if (provinceId != null) {
@@ -317,7 +317,6 @@ public class UserServiceImpl implements IUserService {
         UserDto userDto = new UserDto();
         user.setEmail(null);
         user.setPassword(null);
-        user.setPassword(null);
         user.setPhone(null);
         BeanUtils.copyProperties(user, userDto);
         userDto.setCreateTimeStr(DateTimeUtil.dateToStr(user.getCreateTime()));
@@ -380,5 +379,10 @@ public class UserServiceImpl implements IUserService {
             return ResponseObject.successStatus();
         }
         return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
+    }
+
+    @Override
+    public User selectByActivityId(Integer activityId) {
+        return userMapper.selectByActivityId(activityId);
     }
 }

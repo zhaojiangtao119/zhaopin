@@ -51,7 +51,8 @@ public class LocationController {
      * @return
      */
     @RequestMapping(value = "get_city_list_province_id", method = RequestMethod.GET)
-    public ResponseObject<List<City>> getCityListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
+    public ResponseObject<List<City>>
+    getCityListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
         ResponseObject<List<City>> response = cityService.getCityListByProvinceId(provinceId);
         return response;
     }
@@ -64,8 +65,9 @@ public class LocationController {
      * @return
      */
     @RequestMapping(value = "get_county_list", method = RequestMethod.GET)
-    public ResponseObject<List<County>> getCountyByProvinceIdCityId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId,
-                                                                    @RequestParam(value = "cityId", required = false) Integer cityId) {
+    public ResponseObject<List<County>>
+    getCountyByProvinceIdCityId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId,
+                                @RequestParam(value = "cityId", required = false) Integer cityId) {
         ResponseObject<List<County>> response = countyService.getCountyListByProvinceIdCityId(provinceId, cityId);
         return response;
     }
@@ -77,7 +79,8 @@ public class LocationController {
      * @return
      */
     @RequestMapping(value = "get_school_list_province_id", method = RequestMethod.GET)
-    public ResponseObject<List<School>> getSchoolListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
+    public ResponseObject<List<School>>
+    getSchoolListByProvinceId(@RequestParam(value = "provinceId", defaultValue = "1") Integer provinceId) {
         ResponseObject<List<School>> response = schoolService.getSchoolByProvinceId(provinceId);
         return response;
     }

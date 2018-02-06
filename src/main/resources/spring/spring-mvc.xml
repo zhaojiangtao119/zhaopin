@@ -92,6 +92,8 @@
             <mvc:exclude-mapping path="/comment/get_comment/**"/>
             <!--institution-->
             <mvc:exclude-mapping path="/institution/**"/>
+            <!--activity-->
+            <mvc:exclude-mapping path="/activity/**"/>
             <bean class="com.labelwall.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

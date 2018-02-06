@@ -255,7 +255,7 @@
         <dependency>
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
-            <version>4.1.0</version>
+            <version>4.2.1</version>
         </dependency>
 
         <dependency>
@@ -319,6 +319,8 @@
     <build>
         <finalName>mall</finalName>
         <plugins>
+
+
             <!--插件mybatis-generator-->
             <plugin>
                 <groupId>org.mybatis.generator</groupId>

@@ -83,4 +83,11 @@ public interface UserMapper {
      * @return
      */
     User loginEmail(@Param("email") String email, @Param("password") String md5Password);
+
+    /**
+     *
+     * @param activityId
+     * @return
+     */
+    User selectByActivityId(Integer activityId);
 }
