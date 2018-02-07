@@ -186,38 +186,45 @@
         select * from well_activity_info
         <where>
             status != 2
-            <if test="keyword != null and keyword != ''">
-                and (theme like '%' #{keyword} '%' or content like '%' #{keyword} '%' or location like '%' #{keyword}
+            <if test="activityDto.keyword != null and activityDto.keyword != ''">
+                and (theme like '%' #{activityDto.keyword} '%' or content like '%' #{activityDto.keyword} '%' or
+                location like '%' #{activityDto.keyword}
                 '%' )
             </if>
-            <if test="free != null and free != ''">
-                and free = #{free}
+            <if test="activityDto.free != null and activityDto.free != ''">
+                and free = #{activityDto.free}
             </if>
-            <if test="status != null and status != '' ">
-                and status = #{status}
+            <if test="activityDto.status != null and activityDto.status != '' ">
+                and status = #{activityDto.status}
             </if>
-            <if test="searchTime != null and searchTime != ''">
-                and DATE(starttime) = #{searchTime}
+            <if test="activityDto.searchTime != null and activityDto.searchTime != ''">
+                and DATE(starttime) = #{activityDto.searchTime}
             </if>
-            <if test="schoolId != null and schoolId != ''">
-                and schoolId = #{schoolId}
+            <if test="activityDto.schoolId != null and activityDto.schoolId != ''">
+                and schoolId = #{activityDto.schoolId}
             </if>
-            <if test="type != null and type != ''">
-                and `type` =#{type}
+            <if test="activityDto.type != null and activityDto.type != ''">
+                and `type` =#{activityDto.type}
             </if>
-            <if test="city != null and city!= ''">
-                and city like '%' #{city} '%'
+            <if test="activityDto.city != null and activityDto.city!= ''">
+                and city like '%' #{activityDto.city} '%'
             </if>
-            <if test="county != null and county!= ''">
-                and county like '%' #{county} '%'
+            <if test="activityDto.county != null and activityDto.county!= ''">
+                and county like '%' #{activityDto.county} '%'
+            </if>
+            <if test="activityIds != null">
+                AND id NOT IN
+                <foreach collection="activityIds" index="index" item="item" open="(" close=")" separator=",">
+                    #{item}
+                </foreach>
             </if>
         </where>
         <!-- 默认排序是即将开始的活动 -->
-        <if test="orderFeild == null and orderFeild == '' ">
+        <if test="activityDto.orderFeild == null and activityDto.orderFeild == '' ">
             order by detailStartTime
         </if>
-        <if test="orderFeild != null and orderFeild != '' ">
-            order by #{orderFeild}
+        <if test="activityDto.orderFeild != null and activityDto.orderFeild != '' ">
+            order by #{activityDto.orderFeild}
         </if>
     </select>
     <select id="selectByjoinUserId" parameterType="Integer" resultMap="activity">

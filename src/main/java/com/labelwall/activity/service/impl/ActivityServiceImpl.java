@@ -1,5 +1,6 @@
 package com.labelwall.activity.service.impl;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.entity.User;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.storage.QiniuStorage;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -302,11 +304,20 @@ public class ActivityServiceImpl implements IActivityService {
     @Override
     public ResponseObject<PageInfo> query(Integer userId, Integer pageNum, Integer pageSize, ActivityDto activity) {
         PageHelper.startPage(pageNum, pageSize);
-        List<ActivityInfo> activityInfos = activityDao.selectActivityByPage(activity);
+        List<ActivityInfo> activityInfos = activityDao.selectActivityByPage(activity,null);
         if (userId != null) {
             List<ActivityInfo> byStartUser = activityDao.selectByStartUserId(userId);
             List<ActivityInfo> byjoinUser = activityDao.selectByjoinUserId(userId);
-            int size = byStartUser.size();
+            List<Integer> activityIds = new ArrayList<>();
+            for (ActivityInfo activityInfo : byStartUser) {
+                activityIds.add(activityInfo.getId());
+            }
+            for (ActivityInfo activityInfo : byjoinUser) {
+                activityIds.add(activityInfo.getId());
+            }
+            PageHelper.startPage(pageNum, pageSize);
+            activityInfos = activityDao.selectActivityByPage(activity,activityIds);
+            /*int size = byStartUser.size();
             for (int i = 0; i < size; i++) {
                 for (Iterator<ActivityInfo> iter = activityInfos.iterator(); iter.hasNext(); ) {
                     if (iter.next().getId() == byStartUser.get(i).getId()) {
@@ -321,7 +332,7 @@ public class ActivityServiceImpl implements IActivityService {
                         iter.remove();
                     }
                 }
-            }
+            }*/
         }
         PageInfo pageInfo = new PageInfo(activityInfos);
         return ResponseObject.successStautsData(pageInfo);
@@ -348,26 +359,30 @@ public class ActivityServiceImpl implements IActivityService {
         activityDto.setStartUser(user);
         //3.已近加入的用户
         List<Integer> joinUserIds = activityDao.selectIdsByActivityId(activityInfo.getId(), 1);
-        List<User> joinUsers = userService.selectByUserIds(joinUserIds);
-        for (User joinUser : joinUsers) {
-            if (StringUtils.isBlank(joinUser.getHead())) {
-                joinUser.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
-            } else {
-                joinUser.setHead(QiniuStorage.getUserHeadUrl(joinUser.getHead()));
+        if (CollectionUtils.isNotEmpty(joinUserIds)) {
+            List<User> joinUsers = userService.selectByUserIds(joinUserIds);
+            for (User joinUser : joinUsers) {
+                if (StringUtils.isBlank(joinUser.getHead())) {
+                    joinUser.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
+                } else {
+                    joinUser.setHead(QiniuStorage.getUserHeadUrl(joinUser.getHead()));
+                }
             }
+            activityDto.setJoinUser(joinUsers);
         }
-        activityDto.setJoinUser(joinUsers);
         //4.待审核加入的用户
         List<Integer> noChackedJoinUserIds = activityDao.selectIdsByActivityId(activityInfo.getId(), 0);
-        List<User> noChackedJoinUsers = userService.selectByUserIds(joinUserIds);
-        for (User noCheckedJoinUser : noChackedJoinUsers) {
-            if (StringUtils.isBlank(noCheckedJoinUser.getHead())) {
-                noCheckedJoinUser.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
-            } else {
-                noCheckedJoinUser.setHead(QiniuStorage.getUserHeadUrl(noCheckedJoinUser.getHead()));
+        if (CollectionUtils.isNotEmpty(noChackedJoinUserIds)) {
+            List<User> noChackedJoinUsers = userService.selectByUserIds(joinUserIds);
+            for (User noCheckedJoinUser : noChackedJoinUsers) {
+                if (StringUtils.isBlank(noCheckedJoinUser.getHead())) {
+                    noCheckedJoinUser.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));
+                } else {
+                    noCheckedJoinUser.setHead(QiniuStorage.getUserHeadUrl(noCheckedJoinUser.getHead()));
+                }
             }
+            activityDto.setNoCheckedJoinUser(noChackedJoinUsers);
         }
-        activityDto.setNoCheckedJoinUser(noChackedJoinUsers);
         return ResponseObject.successStautsData(activityDto);
     }
 

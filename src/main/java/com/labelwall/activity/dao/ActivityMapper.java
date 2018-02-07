@@ -124,7 +124,8 @@ public interface ActivityMapper {
 
     List<ActivityInfo> selectByjoinUserId(@Param("userId") Integer userId);
 
-    List<ActivityInfo> selectActivityByPage(ActivityDto Dto);
+    List<ActivityInfo> selectActivityByPage(@Param("activityDto") ActivityDto activityDto,
+                                            @Param("activityIds") List<Integer> activityIds);
 
     /**
      * 根据主键获取活动信息
@@ -139,12 +140,15 @@ public interface ActivityMapper {
 
     /**
      * 获取指定用户发起的活动
+     *
      * @param userId
      * @return
      */
     List<ActivityInfo> selectUserStartByUserId(Integer userId);
+
     /**
      * 获取指定用户参与的活动
+     *
      * @param userId
      * @return
      */
