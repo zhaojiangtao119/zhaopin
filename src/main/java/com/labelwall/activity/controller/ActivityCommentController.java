@@ -33,5 +33,4 @@ public class ActivityCommentController {
                                                    @PathVariable("pageSize") Integer pageSize) {
         return activityCommentService.getCommentList(activityId, pageNum, pageSize);
     }
-
 }

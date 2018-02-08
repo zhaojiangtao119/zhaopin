@@ -91,12 +91,12 @@ public class CourseServiceImpl implements ICourseService {
     }
 
     @Override
-    public ResponseObject<List<Course>> getInstitutionCourse(CourseQueryDto courseQueryDto) {
+    public ResponseObject<PageInfo> getInstitutionCourse(CourseQueryDto courseQueryDto,
+                                                         Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
         List<Course> courseList = courseMapper.getInstitutionCourse(courseQueryDto);
-        if (CollectionUtils.isEmpty(courseList)) {
-            return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
-        }
-        return ResponseObject.successStautsData(courseList);
+        PageInfo pageInfo = new PageInfo(courseList);
+        return ResponseObject.successStautsData(pageInfo);
     }
 
     @Override

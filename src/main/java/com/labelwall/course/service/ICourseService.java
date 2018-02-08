@@ -62,7 +62,8 @@ public interface ICourseService {
      * @param courseQueryDto
      * @return
      */
-    ResponseObject<List<Course>> getInstitutionCourse(CourseQueryDto courseQueryDto);
+    ResponseObject<PageInfo> getInstitutionCourse(CourseQueryDto courseQueryDto,
+                                                  Integer pageNum, Integer pageSize);
 
     /**
      * 获取某一个教师的课程
