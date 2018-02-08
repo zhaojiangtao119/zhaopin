@@ -26,6 +26,7 @@
         <result column="detailContent" property="detailContent"/>
         <result column="city" property="city"/>
         <result column="county" property="county"/>
+        <result column="user_id" property="userId"/>
     </resultMap>
     <!--<resultMap type="com.lx.www.bean.School" id="school">
         <id column="id" property="id"/>
@@ -253,7 +254,7 @@
     <select id="selectIdsByActivityId" parameterType="map" resultType="java.lang.Integer">
         SELECT userId
         FROM well_join_activity
-        WHERE activityId = #{activityId} and status = #{status}
+        WHERE activityId = #{activityId} and `status` = #{status}
     </select>
     <select id="selectUserStartByUserId" parameterType="integer" resultMap="activity">
         SELECT wai.*

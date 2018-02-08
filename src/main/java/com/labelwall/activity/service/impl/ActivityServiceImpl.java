@@ -373,7 +373,7 @@ public class ActivityServiceImpl implements IActivityService {
         //4.待审核加入的用户
         List<Integer> noChackedJoinUserIds = activityDao.selectIdsByActivityId(activityInfo.getId(), 0);
         if (CollectionUtils.isNotEmpty(noChackedJoinUserIds)) {
-            List<User> noChackedJoinUsers = userService.selectByUserIds(joinUserIds);
+            List<User> noChackedJoinUsers = userService.selectByUserIds(noChackedJoinUserIds);
             for (User noCheckedJoinUser : noChackedJoinUsers) {
                 if (StringUtils.isBlank(noCheckedJoinUser.getHead())) {
                     noCheckedJoinUser.setHead(QiniuStorage.getUserHeadUrl(Const.DEFAULT_USER_HEAD));

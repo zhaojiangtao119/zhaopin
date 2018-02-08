@@ -29,6 +29,7 @@ public class ActivityInfo extends BaseBean {
     private String detailContent;// ����--�����
     private String city;
     private String county;
+    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -204,5 +205,13 @@ public class ActivityInfo extends BaseBean {
 
     public void setCounty(String county) {
         this.county = county;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

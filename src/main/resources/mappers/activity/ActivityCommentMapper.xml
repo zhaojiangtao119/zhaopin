@@ -13,8 +13,16 @@
             <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
         </constructor>
     </resultMap>
-    <resultMap id="ActivityComment" type="com.labelwall.activity.dto.ActivityCommentDto" extends="BaseResultMap">
+    <resultMap id="ActivityComment" type="com.labelwall.activity.dto.ActivityCommentDto">
         <constructor>
+            <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="activity_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="user_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="username" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="content" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="img" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
             <arg column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
             <arg column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         </constructor>

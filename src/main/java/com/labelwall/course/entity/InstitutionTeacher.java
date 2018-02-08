@@ -12,6 +12,7 @@ public class InstitutionTeacher extends BaseEntity {
     private String education;
     private String workExperience;
     private Integer institutionId;
+    private String avatar;
 
     public String getName() {
         return name;
@@ -51,5 +52,13 @@ public class InstitutionTeacher extends BaseEntity {
 
     public void setInstitutionId(Integer institutionId) {
         this.institutionId = institutionId;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

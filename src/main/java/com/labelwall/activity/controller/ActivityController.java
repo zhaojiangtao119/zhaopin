@@ -57,7 +57,7 @@ public class ActivityController {
     }
 
     /**
-     * 获取当前/指定用户的相关的活动(发起的活动)
+     * 获取当前/指定用户的相关的活动(发起的活动)，最近的10个
      *
      * @param userId
      * @return

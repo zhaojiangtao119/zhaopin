@@ -15,17 +15,21 @@
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="update_user" property="updateUser" jdbcType="VARCHAR"/>
         <result column="del" property="del" jdbcType="TINYINT"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <sql id="All_Columns">
         id,name,college,education,work_experience,institution_id,
-        create_time, create_user, update_time,update_user, del
+        create_time, create_user, update_time,update_user, del,avatar
     </sql>
     <select id="getTeacherByInstitutionId" resultMap="BeanResultMap" parameterType="int">
         SELECT
         <include refid="All_Columns"/>
         FROM wall_institutions_teacher
         WHERE institution_id = #{institutionId}
+        ORDER BY id
+        LIMIT 0,5
     </select>
     <select id="selectByPrimaryKey" resultMap="BeanResultMap" parameterType="int">
         SELECT

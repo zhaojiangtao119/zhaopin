@@ -12,6 +12,7 @@ public class ActivityCommentDto extends ActivityComment{
     private String createTimeStr;
     private String updateTimeStr;
 
+
     public ActivityCommentDto(Integer id, Integer activityId, Integer userId, String username,
                               String content, String img, Date createTime, Date updateTime,
                               String createTimeStr, String updateTimeStr) {
