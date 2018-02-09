@@ -47,7 +47,7 @@ public interface IActivityService {
 
 	List<UserInfo> getJoinUserNoCheck(ActivityInfo info);
 
-	int agreeJoin(ActivityInfo activity, UserInfo user);
+
 
 	int join(User user, ActivityInfo info, ActivityPayInfo order);
 
@@ -69,7 +69,7 @@ public interface IActivityService {
     // -------------------------------------------------------------------
 
     /**
-     * �查询活动列表
+     * 查询活动列表（都是可参加的活动）
      *
      * @param pageNum
      * @param pageSize
@@ -95,6 +95,7 @@ public interface IActivityService {
      * @return
      */
     ResponseObject<PageInfo> getActivityUserStart(Integer userId, Integer pageNum, Integer pageSize);
+
     /**
      * 获取指定用户的参加的活动
      *
@@ -104,4 +105,27 @@ public interface IActivityService {
      * @return
      */
     ResponseObject<PageInfo> getActivityUserJoin(Integer userId, Integer pageNum, Integer pageSize);
+
+
+    /**
+     * 同意申请用户加入活动
+     *
+     * @param startUserId
+     * @param activityId
+     * @param joinUserId
+     * @return
+     */
+    ResponseObject modifyAgreeUserJoin(Integer startUserId, Integer activityId, Integer joinUserId);
+    //    int agreeJoin(ActivityInfo activity, UserInfo user);
+
+
+    /**
+     * 加入某一个活动
+     *
+     * @param activityId
+     * @param userId
+     * @return
+     */
+    ResponseObject saveJoinActivity(Integer activityId, Integer userId);
+
 }

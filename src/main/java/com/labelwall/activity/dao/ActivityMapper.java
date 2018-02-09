@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.labelwall.activity.dto.ActivityDto;
 import com.labelwall.activity.entity.ActivityInfo;
+import com.labelwall.activity.entity.ActivityJoin;
 import com.labelwall.mall.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -91,7 +92,7 @@ public interface ActivityMapper {
 	List<UserInfo> getJoinUserNoCheck(Integer id);
 
 
-	int agreeJoin(@Param("activityId") Integer id, @Param("userId") Integer userId);
+
 
 
 	Integer insertJoinUser(Map<String, String> map);
@@ -118,7 +119,11 @@ public interface ActivityMapper {
 	List<ActivityInfo> selectHasJoin(User user);*/
 
 
-//	void quit(Map<String, Integer> map);
+    //	void quit(Map<String, Integer> map);
+    List<ActivityInfo> selectActivityAll();
+
+    int updateActivityStatus(@Param("activityId") Integer activityId,
+                             @Param("status") Integer status);
 
     List<ActivityInfo> selectByStartUserId(@Param("userId") Integer userId);
 
@@ -135,6 +140,13 @@ public interface ActivityMapper {
      */
     ActivityInfo selectByPrimaryKey(Integer activityId);
 
+    /**
+     * 获取与当前活动相关的用户（加入的、已经申请的）
+     *
+     * @param activityId
+     * @param status
+     * @return
+     */
     List<Integer> selectIdsByActivityId(@Param("activityId") Integer activityId,
                                         @Param("status") Integer status);
 
@@ -153,4 +165,30 @@ public interface ActivityMapper {
      * @return
      */
     List<ActivityInfo> selectUserJoinByUserId(Integer userId);
+
+    /**
+     * 同意申请用户加入活动
+     *
+     * @param activityId
+     * @param startUserId
+     * @param joinUserId
+     * @return
+     */
+    int agreeJoin(@Param("activityId") Integer activityId,
+                  @Param("startUserId") Integer startUserId,
+                  @Param("joinUserId") Integer joinUserId);
+
+    /**
+     * 获取该活动的参加人数
+     *
+     * @return
+     */
+    int getActivityUserNum(Integer activityId);
+
+    /**
+     * 申请加入活动
+     *
+     * @param activityJoin
+     */
+    int saveJoinActivity(ActivityJoin activityJoin);
 }

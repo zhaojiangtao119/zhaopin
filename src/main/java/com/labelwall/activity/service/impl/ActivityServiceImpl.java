@@ -1,18 +1,21 @@
 package com.labelwall.activity.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import com.labelwall.activity.dao.ActivityMapper;
 import com.labelwall.activity.dto.ActivityDto;
 import com.labelwall.activity.entity.ActivityInfo;
+import com.labelwall.activity.entity.ActivityJoin;
 import com.labelwall.activity.service.IActivityService;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.entity.User;
 import com.labelwall.mall.service.IUserService;
+import com.labelwall.util.DateTimeUtil;
 import com.labelwall.util.storage.QiniuStorage;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -303,8 +306,30 @@ public class ActivityServiceImpl implements IActivityService {
     // -------------------------------------------------------------------
     @Override
     public ResponseObject<PageInfo> query(Integer userId, Integer pageNum, Integer pageSize, ActivityDto activity) {
+
+        //TODO 获取活动列表之前，是否先判断修改活动的报名状态
+        //1.获取所有符合活动状态的活动集合
+        List<ActivityInfo> activityInfosList = activityDao.selectActivityAll();
+        //2.当前的时间
+        Date currentDate = new Date();
+        for (ActivityInfo activityInfo : activityInfosList) {
+            //3.判断活动的报名时间与当前时间大小
+            String startTimeStr = activityInfo.getStarttime();
+            Date startTime = DateTimeUtil.strToDate(startTimeStr);
+            String endTimeStr = activityInfo.getEndtime();
+            Date endTime = DateTimeUtil.strToDate(endTimeStr);
+            if (currentDate.compareTo(startTime) > 0 && currentDate.compareTo(endTime) < 0) {
+                //活动报名进行中
+                activityDao.updateActivityStatus(activityInfo.getId(), 1);
+            }
+            if (currentDate.compareTo(endTime) > 0) {
+                //活动报名结束
+                activityDao.updateActivityStatus(activityInfo.getId(), 2);
+            }
+        }
+
         PageHelper.startPage(pageNum, pageSize);
-        List<ActivityInfo> activityInfos = activityDao.selectActivityByPage(activity,null);
+        List<ActivityInfo> activityInfos = activityDao.selectActivityByPage(activity, null);
         if (userId != null) {
             List<ActivityInfo> byStartUser = activityDao.selectByStartUserId(userId);
             List<ActivityInfo> byjoinUser = activityDao.selectByjoinUserId(userId);
@@ -316,23 +341,7 @@ public class ActivityServiceImpl implements IActivityService {
                 activityIds.add(activityInfo.getId());
             }
             PageHelper.startPage(pageNum, pageSize);
-            activityInfos = activityDao.selectActivityByPage(activity,activityIds);
-            /*int size = byStartUser.size();
-            for (int i = 0; i < size; i++) {
-                for (Iterator<ActivityInfo> iter = activityInfos.iterator(); iter.hasNext(); ) {
-                    if (iter.next().getId() == byStartUser.get(i).getId()) {
-                        iter.remove();
-                    }
-                }
-            }
-            size = byjoinUser.size();
-            for (int i = 0; i < size; i++) {
-                for (Iterator<ActivityInfo> iter = activityInfos.iterator(); iter.hasNext(); ) {
-                    if (iter.next().getId() == byjoinUser.get(i).getId()) {
-                        iter.remove();
-                    }
-                }
-            }*/
+            activityInfos = activityDao.selectActivityByPage(activity, activityIds);
         }
         PageInfo pageInfo = new PageInfo(activityInfos);
         return ResponseObject.successStautsData(pageInfo);
@@ -400,5 +409,91 @@ public class ActivityServiceImpl implements IActivityService {
         List<ActivityInfo> activityInfoList = activityDao.selectUserJoinByUserId(userId);
         PageInfo pageInfo = new PageInfo(activityInfoList);
         return ResponseObject.successStautsData(pageInfo);
+    }
+
+    @Override
+    public ResponseObject modifyAgreeUserJoin(Integer startUserId, Integer activityId, Integer joinUserId) {
+        ActivityInfo activity = new ActivityInfo();
+        activity.setId(activityId);
+        User user = new User();
+        user.setId(joinUserId);
+        ActivityInfo activityInfo = activityDao.selectByPrimaryKey(activityId);
+        int count = activityDao.getActivityUserNum(activityId);
+        if (activityInfo.getNum_limt() <= count) {
+            //活动人数已满
+            return ResponseObject.failStatusMessage("活动人数已满");
+        }
+        int result = activityDao.agreeJoin(activityId, startUserId, joinUserId);
+        if (result > 0) {
+            return ResponseObject.successStatus();
+        } else {
+            return ResponseObject.failStatusMessage("加入失败");
+        }
+    }
+
+    @Override
+    public ResponseObject saveJoinActivity(Integer activityId, Integer userId) {
+        //加入活动，先决条件：1.判断该活动人数限制，2.判断用户相关活动时间是否冲突， 3.判断是免费还是付费
+        //TODO 活动参加的人数
+        ActivityInfo activityInfo = activityDao.selectByPrimaryKey(activityId);
+        int count = activityDao.getActivityUserNum(activityId);
+        if (activityInfo.getNum_limt() <= count) {
+            //活动人数已满
+            return ResponseObject.failStatusMessage("活动人数已满");
+        }
+        //判断用户的时间是否与当前活动时间冲突
+        ResponseObject validateTime = vaildateUserTime(activityInfo, userId);
+        if (!validateTime.isSuccess()) {
+            return validateTime;
+        }
+        //判断活动是否收费
+        if (activityInfo.getFree() == 1) {//收费
+            //TODO 通知前台跳转
+        } else if (activityInfo.getFree() == 0) {//免费
+            //直接申请加入活动
+            ActivityJoin activityJoin = new ActivityJoin();
+            activityJoin.setUserId(userId);
+            activityJoin.setActivityId(activityId);
+            int rowCount = activityDao.saveJoinActivity(activityJoin);
+            if (rowCount > 0) {
+                return ResponseObject.successStatus();
+            } else {
+                return ResponseObject.failStatusMessage("加入失败");
+            }
+        }
+        return null;
+    }
+
+    private ResponseObject vaildateUserTime(ActivityInfo currentJoinActivity, Integer userId) {
+        //获取当前用户发起的活动信息
+        List<ActivityInfo> start = activityDao.selectUserStartByUserId(userId);
+        Date infoStart = DateTimeUtil.strToDate(currentJoinActivity.getDetailStartTime());
+        Date infoEnd = DateTimeUtil.strToDate(currentJoinActivity.getDetailEndTime());
+        for (ActivityInfo activityDto : start) {
+            Date dtoStart = DateTimeUtil.strToDate(activityDto.getDetailStartTime());
+            Date dtoEnd = DateTimeUtil.strToDate(activityDto.getDetailEndTime());
+            // 如果所报名活动的活动开始时间在用户发起活动的时间内,失败
+            if (infoStart.compareTo(dtoStart) > 0 && infoStart.compareTo(dtoEnd) < 0) {
+                return ResponseObject.failStatusMessage("请注意您的时间安排是否冲突");
+                // 如果所报名活动的活动结束时间在用户已经发起活动的时间内，失败
+            } else if (infoStart.compareTo(dtoStart) < 0 && infoEnd.compareTo(dtoStart) > 0) {
+                return ResponseObject.failStatusMessage("请注意您的时间安排是否冲突");
+            }
+        }
+
+        //获取当前用户加入的活动信息
+        List<ActivityInfo> join = activityDao.selectUserJoinByUserId(userId);
+        for (ActivityInfo activityDto : join) {
+            Date dtoStart = DateTimeUtil.strToDate(activityDto.getDetailStartTime());
+            Date dtoEnd = DateTimeUtil.strToDate(activityDto.getDetailEndTime());
+            // 如果所报名活动的开始时间在用户已经参与活动的时间内,失败
+            if (infoStart.compareTo(dtoStart) > 0 && infoStart.compareTo(dtoEnd) < 0) {
+                return ResponseObject.failStatusMessage("请注意您的时间安排是否冲突");
+                // 如果所报名活动的结束时间在用户已经参与活动的时间内，失败
+            } else if (infoStart.compareTo(dtoStart) < 0 && infoEnd.compareTo(dtoStart) > 0) {
+                return ResponseObject.failStatusMessage("请注意您的时间安排是否冲突");
+            }
+        }
+        return ResponseObject.successStatus();
     }
 }

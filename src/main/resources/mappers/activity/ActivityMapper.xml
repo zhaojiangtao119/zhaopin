@@ -28,6 +28,15 @@
         <result column="county" property="county"/>
         <result column="user_id" property="userId"/>
     </resultMap>
+    <sql id="BaseColumn">
+        id,theme,content,free,DATE_FORMAT(creattime,'%Y-%m-%d %H:%I:%S') creattime
+        ,DATE_FORMAT(starttime,'%Y-%m-%d %H:%I:%S') starttime,
+        DATE_FORMAT(endtime,'%Y-%m-%d %H:%I:%S') endtime,num_limt,location,
+        status,amount,schoolId,style,`type`,posterURL,customContent,
+        DATE_FORMAT(detailStartTime,'%Y-%m-%d %H:%I:%S') detailStartTime,
+        DATE_FORMAT(detailEndTime,'%Y-%m-%d %H:%I:%S') detailEndTime,
+        detailContent,city,county,user_id
+    </sql>
     <!--<resultMap type="com.lx.www.bean.School" id="school">
         <id column="id" property="id"/>
         <result column="province_id" property="province_id"/>
@@ -183,8 +192,21 @@
         </where>
        and endtime &gt; NOW() order by id limit #{tog},#{pagerNumber}
     </select>-->
+    <select id="selectActivityAll" resultMap="activity">
+        SELECT
+        <include refid="BaseColumn"/>
+        FROM well_activity_info
+        WHERE `status` <![CDATA[<>]]> 2
+    </select>
+    <update id="updateActivityStatus" parameterType="map">
+        UPDATE well_activity_info
+        SET `status` = #{status}
+        WHERE id = #{activityId}
+    </update>
     <select id="selectActivityByPage" parameterType="com.labelwall.activity.dto.ActivityDto" resultMap="activity">
-        select * from well_activity_info
+        select
+        <include refid="BaseColumn"/>
+        from well_activity_info
         <where>
             status != 2
             <if test="activityDto.keyword != null and activityDto.keyword != ''">
@@ -229,7 +251,8 @@
         </if>
     </select>
     <select id="selectByjoinUserId" parameterType="Integer" resultMap="activity">
-        select * from well_activity_info t
+        select *
+        from well_activity_info t
         <where>
             <if test="userId !=null">
                 and t.id in (select activityId from well_join_activity where userId =#{userId} )
@@ -238,7 +261,8 @@
         and t.status !=2
     </select>
     <select id="selectByStartUserId" parameterType="Integer" resultMap="activity">
-        select * from well_activity_info t
+        select *
+        from well_activity_info t
         <where>
             <if test="userId !=null">
                 and t.id in (select activityId from well_start_activity where userId =#{userId})
@@ -247,7 +271,8 @@
         and t.status !=2
     </select>
     <select id="selectByPrimaryKey" parameterType="Integer" resultMap="activity">
-        SELECT *
+        SELECT
+        <include refid="BaseColumn"/>
         FROM well_activity_info
         WHERE id = #{activityId}
     </select>
@@ -266,6 +291,43 @@
         FROM well_activity_info wai,well_join_activity wja
         WHERE wai.id = wja.activityId AND wja.userId = #{userId}
     </select>
+    <update id="agreeJoin" parameterType="map">
+        UPDATE well_join_activity
+        SET `status` = 1
+        WHERE
+            activityId = (
+                SELECT
+                    activityId
+                FROM
+                    well_activity_info
+                WHERE
+                    user_id = #{startUserId}
+                AND id = #{activityId}
+            )
+        AND userId = #{joinUserId}
+    </update>
+    <select id="getActivityUserNum" parameterType="integer" resultType="int">
+       SELECT
+            COUNT(1)
+        FROM
+            well_join_activity
+        WHERE
+            activityId = #{acitivtyId}
+        AND `status` = 1;
+    </select>
+    <insert id="saveJoinActivity" parameterType="com.labelwall.activity.entity.ActivityJoin">
+        INSERT INTO `well_join_activity` (
+            `userId`,
+            `activityId`,
+            `createTime`
+        )
+        VALUES
+            (
+                #{userId},
+                #{activityId},
+                STR_TO_DATE(now(), "%Y-%m-%d %T")
+            );
+    </insert>
     <!--
     <select id="selectCountByPage" parameterType="map" resultType="int">
         select count(*) from well_activity_info 
