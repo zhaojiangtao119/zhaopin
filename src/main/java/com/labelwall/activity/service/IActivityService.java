@@ -128,4 +128,21 @@ public interface IActivityService {
      */
     ResponseObject saveJoinActivity(Integer activityId, Integer userId);
 
+    /**
+     * 验证用户是否加入了该活动
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    ResponseObject validateUserJoin(Integer userId, Integer activityId);
+
+    /**
+     * 用户主动退出活动
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    ResponseObject quitActivity(Integer userId, Integer activityId);
 }

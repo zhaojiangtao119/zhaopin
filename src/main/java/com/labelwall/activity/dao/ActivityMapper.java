@@ -191,4 +191,24 @@ public interface ActivityMapper {
      * @param activityJoin
      */
     int saveJoinActivity(ActivityJoin activityJoin);
+
+    /**
+     * 验证用户是否参加了该活动
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    int validateUserJoin(@Param("userId") Integer userId,
+                         @Param("activityId") Integer activityId);
+
+    /**
+     * 退出参加的活动
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    int quitActivity(@Param("userId") Integer userId,
+                     @Param("activityId") Integer activityId);
 }

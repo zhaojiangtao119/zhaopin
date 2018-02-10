@@ -29,13 +29,13 @@
         <result column="user_id" property="userId"/>
     </resultMap>
     <sql id="BaseColumn">
-        id,theme,content,free,DATE_FORMAT(creattime,'%Y-%m-%d %H:%I:%S') creattime
-        ,DATE_FORMAT(starttime,'%Y-%m-%d %H:%I:%S') starttime,
-        DATE_FORMAT(endtime,'%Y-%m-%d %H:%I:%S') endtime,num_limt,location,
-        status,amount,schoolId,style,`type`,posterURL,customContent,
-        DATE_FORMAT(detailStartTime,'%Y-%m-%d %H:%I:%S') detailStartTime,
-        DATE_FORMAT(detailEndTime,'%Y-%m-%d %H:%I:%S') detailEndTime,
-        detailContent,city,county,user_id
+        wai.id,wai.theme,wai.content,wai.free,DATE_FORMAT(wai.creattime,'%Y-%m-%d %H:%I:%S') creattime
+        ,DATE_FORMAT(wai.starttime,'%Y-%m-%d %H:%I:%S') starttime,
+        DATE_FORMAT(wai.endtime,'%Y-%m-%d %H:%I:%S') endtime,wai.num_limt,wai.location,
+        wai.status,wai.amount,wai.schoolId,wai.style,wai.`type`,wai.posterURL,wai.customContent,
+        DATE_FORMAT(wai.detailStartTime,'%Y-%m-%d %H:%I:%S') detailStartTime,
+        DATE_FORMAT(wai.detailEndTime,'%Y-%m-%d %H:%I:%S') detailEndTime,
+        wai.detailContent,wai.city,wai.county,wai.user_id
     </sql>
     <!--<resultMap type="com.lx.www.bean.School" id="school">
         <id column="id" property="id"/>
@@ -195,8 +195,8 @@
     <select id="selectActivityAll" resultMap="activity">
         SELECT
         <include refid="BaseColumn"/>
-        FROM well_activity_info
-        WHERE `status` <![CDATA[<>]]> 2
+        FROM well_activity_info wai
+        WHERE wai.`status` <![CDATA[<>]]> 2
     </select>
     <update id="updateActivityStatus" parameterType="map">
         UPDATE well_activity_info
@@ -206,37 +206,37 @@
     <select id="selectActivityByPage" parameterType="com.labelwall.activity.dto.ActivityDto" resultMap="activity">
         select
         <include refid="BaseColumn"/>
-        from well_activity_info
+        from well_activity_info wai
         <where>
-            status != 2
+            wai.status != 2
             <if test="activityDto.keyword != null and activityDto.keyword != ''">
-                and (theme like '%' #{activityDto.keyword} '%' or content like '%' #{activityDto.keyword} '%' or
-                location like '%' #{activityDto.keyword}
+                and (wai.theme like '%' #{activityDto.keyword} '%' or wai.content like '%' #{activityDto.keyword} '%' or
+                wai.location like '%' #{activityDto.keyword}
                 '%' )
             </if>
             <if test="activityDto.free != null and activityDto.free != ''">
-                and free = #{activityDto.free}
+                and wai.free = #{activityDto.free}
             </if>
             <if test="activityDto.status != null and activityDto.status != '' ">
-                and status = #{activityDto.status}
+                and wai.status = #{activityDto.status}
             </if>
             <if test="activityDto.searchTime != null and activityDto.searchTime != ''">
-                and DATE(starttime) = #{activityDto.searchTime}
+                and DATE(wai.starttime) = #{activityDto.searchTime}
             </if>
             <if test="activityDto.schoolId != null and activityDto.schoolId != ''">
-                and schoolId = #{activityDto.schoolId}
+                and wai.schoolId = #{activityDto.schoolId}
             </if>
             <if test="activityDto.type != null and activityDto.type != ''">
-                and `type` =#{activityDto.type}
+                and wai.`type` =#{activityDto.type}
             </if>
             <if test="activityDto.city != null and activityDto.city!= ''">
-                and city like '%' #{activityDto.city} '%'
+                and wai.city like '%' #{activityDto.city} '%'
             </if>
             <if test="activityDto.county != null and activityDto.county!= ''">
-                and county like '%' #{activityDto.county} '%'
+                and wai.county like '%' #{activityDto.county} '%'
             </if>
             <if test="activityIds != null">
-                AND id NOT IN
+                AND wai.id NOT IN
                 <foreach collection="activityIds" index="index" item="item" open="(" close=")" separator=",">
                     #{item}
                 </foreach>
@@ -244,37 +244,39 @@
         </where>
         <!-- 默认排序是即将开始的活动 -->
         <if test="activityDto.orderFeild == null and activityDto.orderFeild == '' ">
-            order by detailStartTime
+            order by wai.detailStartTime
         </if>
         <if test="activityDto.orderFeild != null and activityDto.orderFeild != '' ">
-            order by #{activityDto.orderFeild}
+            order by wai.#{activityDto.orderFeild}
         </if>
     </select>
     <select id="selectByjoinUserId" parameterType="Integer" resultMap="activity">
-        select *
-        from well_activity_info t
+        select
+        <include refid="BaseColumn"/>
+        from well_activity_info wai
         <where>
             <if test="userId !=null">
-                and t.id in (select activityId from well_join_activity where userId =#{userId} )
+                and wai.id in (select activityId from well_join_activity where userId =#{userId} )
             </if>
         </where>
-        and t.status !=2
+        and wai.status !=2
     </select>
     <select id="selectByStartUserId" parameterType="Integer" resultMap="activity">
-        select *
-        from well_activity_info t
+        select
+        <include refid="BaseColumn"/>
+        from well_activity_info wai
         <where>
             <if test="userId !=null">
-                and t.id in (select activityId from well_start_activity where userId =#{userId})
+                and wai.id in (select activityId from well_start_activity where userId =#{userId})
             </if>
         </where>
-        and t.status !=2
+        and wai.status !=2
     </select>
     <select id="selectByPrimaryKey" parameterType="Integer" resultMap="activity">
         SELECT
         <include refid="BaseColumn"/>
-        FROM well_activity_info
-        WHERE id = #{activityId}
+        FROM well_activity_info wai
+        WHERE wai.id = #{activityId}
     </select>
     <select id="selectIdsByActivityId" parameterType="map" resultType="java.lang.Integer">
         SELECT userId
@@ -282,12 +284,15 @@
         WHERE activityId = #{activityId} and `status` = #{status}
     </select>
     <select id="selectUserStartByUserId" parameterType="integer" resultMap="activity">
-        SELECT wai.*
+        SELECT
+        <include refid="BaseColumn"/>
         FROM well_activity_info wai,well_start_activity wsa
         WHERE wai.id = wsa.activityId AND wsa.userId = #{userId}
     </select>
+
     <select id="selectUserJoinByUserId" parameterType="integer" resultMap="activity">
-        SELECT wai.*
+        SELECT
+        <include refid="BaseColumn"/>
         FROM well_activity_info wai,well_join_activity wja
         WHERE wai.id = wja.activityId AND wja.userId = #{userId}
     </select>
@@ -328,87 +333,97 @@
                 STR_TO_DATE(now(), "%Y-%m-%d %T")
             );
     </insert>
+
+    <select id="validateUserJoin" parameterType="map" resultType="int">
+        SELECT COUNT(1)
+        FROM `well_join_activity`
+        WHERE userId = #{userId} AND activityId=#{activityId}
+    </select>
+    <delete id="quitActivity" parameterType="map">
+        DELETE FROM `well_join_activity`
+        WHERE userId = #{userId} AND activityId=#{activityId}
+    </delete>
     <!--
-    <select id="selectCountByPage" parameterType="map" resultType="int">
-        select count(*) from well_activity_info 
-        <where>
-            <if test="info.theme != null and info.theme != ''">
-                and theme like '%' #{info.theme} '%'
-            </if>
-            <if test="info.free != null and info.free != '' and info.free != 0">
-                and free = 1
-            </if>
-            <if test="info.status != null and info.status != '' and info.status != 0">
-                and status = 1
-            </if>
-            <if test="key!= null and key != ''">
-                and 
-                (theme like '%' #{key} '%' or content like '%' #{key} '%' or location like '%' #{key} '%'  )
-            </if>
-        </where>
-        order by id 
-    </select>
-    
-    
-    
-    <insert id="addOrder">
-        insert into well_activity_order (user_id,activity_id,WIDout_trade_no,WIDsubject,WIDtotal_fee,WIDbody,create_time,type) values (#{userId},#{info.id},#{order.WIDout_trade_no},#{order.WIDsubject},#{order.WIDtotal_fee},#{order.WIDbody},NOW(),#{order.type})
-    </insert>
-    
-    <update id="updateOrder">
-        update  well_activity_order set status =1 ,activity_id =#{activityId} where WIDout_trade_no =#{trade_no} and user_id=#{user_id}
-    </update>
-    
-    <select id="selectCountOrders" resultType="int">
-        select count(*) from well_activity_order where create_time &lt;= NOW() 
-    </select>
-    
-    <update id="cutAccount">
-        update well_account set balance = balance - #{num} where user_id=#{id} and (balance-#{num}) >=0
-    </update>
-    <update id="addAccount">
-        update well_account set balance = balance + #{num} where user_id=#{id} 
-    </update>
-    
-    <select id="selectAccountByuser" parameterType="int" resultType="long">
-        select account_id from well_account where user_id =#{value}
-    </select>
-    
-    <select id="selectOrder" parameterType="ActivityPayInfo" resultType="long">
-        select id from well_activity_order 
-        <where>
-            <if test="WIDout_trade_no !=null and WIDout_trade_no!=''">
-                WIDout_trade_no =#{WIDout_trade_no}
-            </if>
-            <if test="createtime!= null and createtime!=''">
-                create_time = #{createtime}
-            </if>
-        </where>
-    </select>
-    
-    
-    <insert id="insertTradeHistory" parameterType="AccountTradeInfo">
-        insert into well_trade_history (account_id,trade_type,trade_num,crate_time,order_id,user_id) values(#{account_id},#{trade_type},#{trade_num},#{crate_time},#{order_id},#{user_id})
-    </insert>
-    
-    <select id="selectByInfo" resultType="ActivityInfo">
-        select * from well_activity_info where id in (select activityId from well_start_activity where userId =#{user_id} ) and creattime = #{info.creattime}
-    </select>
-    
-    <insert id="insertStartUser" parameterType="map">
-        insert into well_start_activity (userId,activityId,createTime) values(#{userId},#{activityId},#{createTime})
-    </insert>
-    <insert id="insertJoinUser" parameterType="map">
-        insert into well_join_activity (userId,activityId,createTime,status) values(#{userId},#{activityId},#{createTime},1)
-    </insert>
-    <select id="getJoinUserNoCheck" parameterType="int" resultMap="com.lx.www.dao.LoginDao.userInfo">
-        select s.* 
-        from wall_user s left join  well_join_activity t 
-        on  s.id = t.userId 
-        where  t.activityId = #{id} and t.status = 0 
-        order by t.createTime asc 
-    </select>
-    <update id="agreeJoin">
-        update well_join_activity set status = 1 where userId= #{userId} and activityId = #{activityId}
-    </update>-->
+   <select id="selectCountByPage" parameterType="map" resultType="int">
+       select count(*) from well_activity_info
+       <where>
+           <if test="info.theme != null and info.theme != ''">
+               and theme like '%' #{info.theme} '%'
+           </if>
+           <if test="info.free != null and info.free != '' and info.free != 0">
+               and free = 1
+           </if>
+           <if test="info.status != null and info.status != '' and info.status != 0">
+               and status = 1
+           </if>
+           <if test="key!= null and key != ''">
+               and
+               (theme like '%' #{key} '%' or content like '%' #{key} '%' or location like '%' #{key} '%'  )
+           </if>
+       </where>
+       order by id
+   </select>
+
+
+
+   <insert id="addOrder">
+       insert into well_activity_order (user_id,activity_id,WIDout_trade_no,WIDsubject,WIDtotal_fee,WIDbody,create_time,type) values (#{userId},#{info.id},#{order.WIDout_trade_no},#{order.WIDsubject},#{order.WIDtotal_fee},#{order.WIDbody},NOW(),#{order.type})
+   </insert>
+
+   <update id="updateOrder">
+       update  well_activity_order set status =1 ,activity_id =#{activityId} where WIDout_trade_no =#{trade_no} and user_id=#{user_id}
+   </update>
+
+   <select id="selectCountOrders" resultType="int">
+       select count(*) from well_activity_order where create_time &lt;= NOW()
+   </select>
+
+   <update id="cutAccount">
+       update well_account set balance = balance - #{num} where user_id=#{id} and (balance-#{num}) >=0
+   </update>
+   <update id="addAccount">
+       update well_account set balance = balance + #{num} where user_id=#{id}
+   </update>
+
+   <select id="selectAccountByuser" parameterType="int" resultType="long">
+       select account_id from well_account where user_id =#{value}
+   </select>
+
+   <select id="selectOrder" parameterType="ActivityPayInfo" resultType="long">
+       select id from well_activity_order
+       <where>
+           <if test="WIDout_trade_no !=null and WIDout_trade_no!=''">
+               WIDout_trade_no =#{WIDout_trade_no}
+           </if>
+           <if test="createtime!= null and createtime!=''">
+               create_time = #{createtime}
+           </if>
+       </where>
+   </select>
+
+
+   <insert id="insertTradeHistory" parameterType="AccountTradeInfo">
+       insert into well_trade_history (account_id,trade_type,trade_num,crate_time,order_id,user_id) values(#{account_id},#{trade_type},#{trade_num},#{crate_time},#{order_id},#{user_id})
+   </insert>
+
+   <select id="selectByInfo" resultType="ActivityInfo">
+       select * from well_activity_info where id in (select activityId from well_start_activity where userId =#{user_id} ) and creattime = #{info.creattime}
+   </select>
+
+   <insert id="insertStartUser" parameterType="map">
+       insert into well_start_activity (userId,activityId,createTime) values(#{userId},#{activityId},#{createTime})
+   </insert>
+   <insert id="insertJoinUser" parameterType="map">
+       insert into well_join_activity (userId,activityId,createTime,status) values(#{userId},#{activityId},#{createTime},1)
+   </insert>
+   <select id="getJoinUserNoCheck" parameterType="int" resultMap="com.lx.www.dao.LoginDao.userInfo">
+       select s.*
+       from wall_user s left join  well_join_activity t
+       on  s.id = t.userId
+       where  t.activityId = #{id} and t.status = 0
+       order by t.createTime asc
+   </select>
+   <update id="agreeJoin">
+       update well_join_activity set status = 1 where userId= #{userId} and activityId = #{activityId}
+   </update>-->
 </mapper>

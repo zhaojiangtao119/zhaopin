@@ -279,7 +279,6 @@ public class UserServiceImpl implements IUserService {
         for (User user : userList) {
             user.setPassword(null);
             user.setPhone(null);
-            user.setEmail(null);
         }
         return userList;
     }
@@ -315,7 +314,6 @@ public class UserServiceImpl implements IUserService {
             user.setHead(QiniuStorage.getUserHeadUrl(user.getHead()));
         }
         UserDto userDto = new UserDto();
-        user.setEmail(null);
         user.setPassword(null);
         user.setPhone(null);
         BeanUtils.copyProperties(user, userDto);

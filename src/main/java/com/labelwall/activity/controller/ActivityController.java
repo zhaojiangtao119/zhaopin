@@ -100,7 +100,7 @@ public class ActivityController {
     }
 
     /**
-     * 主动加入活动
+     * 用户加入活动
      *
      * @param activityId
      * @param userId
@@ -110,5 +110,31 @@ public class ActivityController {
     public ResponseObject joinActivity(@PathVariable("activityId") Integer activityId,
                                        @PathVariable("userId") Integer userId) {
         return activityService.saveJoinActivity(activityId, userId);
+    }
+
+    /**
+     * 验证用户是否参加了该活动
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    @RequestMapping(value = "user/{userId}/{activityId}", method = RequestMethod.GET)
+    public ResponseObject validateUserJoin(@PathVariable("userId") Integer userId,
+                                           @PathVariable("activityId") Integer activityId) {
+        return activityService.validateUserJoin(userId, activityId);
+    }
+
+    /**
+     * 用户放弃参与该活动，不管用户是申请加入还是已通过加入
+     *
+     * @param userId
+     * @param activityId
+     * @return
+     */
+    @RequestMapping(value = "user/{userId}/{activityId}", method = RequestMethod.DELETE)
+    public ResponseObject quitAcitivty(@PathVariable("userId") Integer userId,
+                                       @PathVariable("activityId") Integer activityId) {
+        return activityService.quitActivity(userId, activityId);
     }
 }

@@ -13,6 +13,7 @@ import com.labelwall.activity.service.IActivityService;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.common.ResponseStatus;
+import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.User;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.DateTimeUtil;
@@ -433,7 +434,11 @@ public class ActivityServiceImpl implements IActivityService {
 
     @Override
     public ResponseObject saveJoinActivity(Integer activityId, Integer userId) {
-        //加入活动，先决条件：1.判断该活动人数限制，2.判断用户相关活动时间是否冲突， 3.判断是免费还是付费
+        //加入活动，先决条件：0.判断当前用户的信息是否完善 1.判断该活动人数限制，2.判断用户相关活动时间是否冲突， 3.判断是免费还是付费
+        ResponseObject validateUserInfo = validateUserInfo(userId);
+        if (!validateUserInfo.isSuccess()) {
+            return validateUserInfo;
+        }
         //TODO 活动参加的人数
         ActivityInfo activityInfo = activityDao.selectByPrimaryKey(activityId);
         int count = activityDao.getActivityUserNum(activityId);
@@ -462,6 +467,17 @@ public class ActivityServiceImpl implements IActivityService {
             }
         }
         return null;
+    }
+
+    private ResponseObject validateUserInfo(Integer userId) {
+        ResponseObject<UserDto> userDtoResponse = userService.selectByUserId(userId);
+        UserDto userDto = userDtoResponse.getData();
+        if (userDto != null) {
+            if (StringUtils.isBlank(userDto.getEmail())) {
+                return ResponseObject.failStatusMessage("请完善您的邮箱信息，方便联系");
+            }
+        }
+        return ResponseObject.successStatus();
     }
 
     private ResponseObject vaildateUserTime(ActivityInfo currentJoinActivity, Integer userId) {
@@ -495,5 +511,32 @@ public class ActivityServiceImpl implements IActivityService {
             }
         }
         return ResponseObject.successStatus();
+    }
+
+    @Override
+    public ResponseObject validateUserJoin(Integer userId, Integer activityId) {
+        if (userId == null || activityId == null) {
+            return ResponseObject.
+                    fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        int count = activityDao.validateUserJoin(userId, activityId);
+        if (count == 1) {
+            return ResponseObject.successStatus();//参加了该活动
+        }
+        return ResponseObject.failStatusMessage("没有参加该活动");
+    }
+
+    @Override
+    public ResponseObject quitActivity(Integer userId, Integer activityId) {
+        if (userId == null || activityId == null) {
+            return ResponseObject.
+                    fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        int rowCount = activityDao.quitActivity(userId, activityId);
+        if (rowCount > 0) {
+            //退出成功
+            return ResponseObject.successStatus();
+        }
+        return ResponseObject.failStatusMessage("退出失败");
     }
 }
