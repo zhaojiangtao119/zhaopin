@@ -3,11 +3,15 @@ package com.labelwall.activity.controller;
 import com.github.pagehelper.PageInfo;
 import com.labelwall.activity.dto.ActivityDto;
 import com.labelwall.activity.entity.ActivityInfo;
+import com.labelwall.activity.entity.ActivityStyles;
+import com.labelwall.activity.entity.ActivityTypes;
 import com.labelwall.activity.service.IActivityService;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.UserDto;
+import com.labelwall.mall.entity.School;
 import com.labelwall.mall.entity.User;
+import com.labelwall.mall.service.ISchoolService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018-02-05.
@@ -26,6 +31,8 @@ public class ActivityController {
 
     @Autowired
     private IActivityService activityService;
+    @Autowired
+    private ISchoolService schoolService;
 
     /**
      * 获取活动的列表（时间条件的过滤）
@@ -137,4 +144,33 @@ public class ActivityController {
                                        @PathVariable("activityId") Integer activityId) {
         return activityService.quitActivity(userId, activityId);
     }
+
+    /**
+     * 获得所有活动分类名
+     */
+    @RequestMapping(value = "/typeList", method = RequestMethod.GET)
+    public ResponseObject<List<ActivityTypes>> getType() {
+        return activityService.getAllTypes();
+    }
+
+    /**
+     * 获得所有活动形式
+     */
+    @RequestMapping(value = "/styleList", method = RequestMethod.GET)
+    public ResponseObject<List<ActivityStyles>> getStyle() {
+
+        return activityService.getAllStyles();
+    }
+
+    /**
+     * 通过省份的name来获取该省份下的学校
+     *
+     * @return
+     */
+    @RequestMapping(value = "school", method = RequestMethod.GET)
+    public ResponseObject<List<School>> getSchoolList(String provinceName) {
+        return schoolService.getSchoolList(provinceName);
+    }
+
+
 }

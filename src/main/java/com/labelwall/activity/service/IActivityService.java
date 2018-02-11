@@ -2,7 +2,11 @@ package com.labelwall.activity.service;
 
 import com.github.pagehelper.PageInfo;
 import com.labelwall.activity.dto.ActivityDto;
+import com.labelwall.activity.entity.ActivityStyles;
+import com.labelwall.activity.entity.ActivityTypes;
 import com.labelwall.common.ResponseObject;
+
+import java.util.List;
 
 
 public interface IActivityService {
@@ -145,4 +149,18 @@ public interface IActivityService {
      * @return
      */
     ResponseObject quitActivity(Integer userId, Integer activityId);
+
+    /**
+     * 获取活动的类型
+     *
+     * @return
+     */
+    ResponseObject<List<ActivityTypes>> getAllTypes();
+
+    /**
+     * 获取分类的形式
+     *
+     * @return
+     */
+    ResponseObject<List<ActivityStyles>> getAllStyles();
 }

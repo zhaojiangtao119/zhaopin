@@ -34,7 +34,6 @@ public class LocationController {
     /**
      * 获取省份
      *
-     *
      * @return
      */
     @RequestMapping(value = "get_province_list", method = RequestMethod.GET)
@@ -84,4 +83,6 @@ public class LocationController {
         ResponseObject<List<School>> response = schoolService.getSchoolByProvinceId(provinceId);
         return response;
     }
+
+
 }

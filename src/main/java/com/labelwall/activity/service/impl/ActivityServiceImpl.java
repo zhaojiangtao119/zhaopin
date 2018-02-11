@@ -9,6 +9,8 @@ import com.labelwall.activity.dao.ActivityMapper;
 import com.labelwall.activity.dto.ActivityDto;
 import com.labelwall.activity.entity.ActivityInfo;
 import com.labelwall.activity.entity.ActivityJoin;
+import com.labelwall.activity.entity.ActivityStyles;
+import com.labelwall.activity.entity.ActivityTypes;
 import com.labelwall.activity.service.IActivityService;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
@@ -538,5 +540,17 @@ public class ActivityServiceImpl implements IActivityService {
             return ResponseObject.successStatus();
         }
         return ResponseObject.failStatusMessage("退出失败");
+    }
+
+    @Override
+    public ResponseObject<List<ActivityTypes>> getAllTypes() {
+        List<ActivityTypes> activityTypesList = activityDao.getAllTypes();
+        return ResponseObject.successStautsData(activityTypesList);
+    }
+
+    @Override
+    public ResponseObject<List<ActivityStyles>> getAllStyles() {
+        List<ActivityStyles> activityStylesList = activityDao.getAllStyles();
+        return ResponseObject.successStautsData(activityStylesList);
     }
 }

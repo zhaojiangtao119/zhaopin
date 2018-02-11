@@ -300,38 +300,38 @@
         UPDATE well_join_activity
         SET `status` = 1
         WHERE
-            activityId = (
-                SELECT
-                    activityId
-                FROM
-                    well_activity_info
-                WHERE
-                    user_id = #{startUserId}
-                AND id = #{activityId}
-            )
+        activityId = (
+        SELECT
+        activityId
+        FROM
+        well_activity_info
+        WHERE
+        user_id = #{startUserId}
+        AND id = #{activityId}
+        )
         AND userId = #{joinUserId}
     </update>
     <select id="getActivityUserNum" parameterType="integer" resultType="int">
-       SELECT
-            COUNT(1)
+        SELECT
+        COUNT(1)
         FROM
-            well_join_activity
+        well_join_activity
         WHERE
-            activityId = #{acitivtyId}
+        activityId = #{acitivtyId}
         AND `status` = 1;
     </select>
     <insert id="saveJoinActivity" parameterType="com.labelwall.activity.entity.ActivityJoin">
         INSERT INTO `well_join_activity` (
-            `userId`,
-            `activityId`,
-            `createTime`
+        `userId`,
+        `activityId`,
+        `createTime`
         )
         VALUES
-            (
-                #{userId},
-                #{activityId},
-                STR_TO_DATE(now(), "%Y-%m-%d %T")
-            );
+        (
+        #{userId},
+        #{activityId},
+        STR_TO_DATE(now(), "%Y-%m-%d %T")
+        );
     </insert>
 
     <select id="validateUserJoin" parameterType="map" resultType="int">
@@ -343,6 +343,16 @@
         DELETE FROM `well_join_activity`
         WHERE userId = #{userId} AND activityId=#{activityId}
     </delete>
+    <select id="getAllTypes" resultType="com.labelwall.activity.entity.ActivityTypes">
+        SELECT id,conment
+        FROM well_activity_type
+        ORDER BY id
+    </select>
+    <select id="getAllStyles" resultType="com.labelwall.activity.entity.ActivityStyles">
+        SELECT id,conment
+        FROM well_activity_style
+        ORDER BY id
+    </select>
     <!--
    <select id="selectCountByPage" parameterType="map" resultType="int">
        select count(*) from well_activity_info

@@ -5,6 +5,8 @@ import java.util.List;
 import com.labelwall.activity.dto.ActivityDto;
 import com.labelwall.activity.entity.ActivityInfo;
 import com.labelwall.activity.entity.ActivityJoin;
+import com.labelwall.activity.entity.ActivityStyles;
+import com.labelwall.activity.entity.ActivityTypes;
 import com.labelwall.mall.entity.User;
 import org.apache.ibatis.annotations.Param;
 
@@ -211,4 +213,9 @@ public interface ActivityMapper {
      */
     int quitActivity(@Param("userId") Integer userId,
                      @Param("activityId") Integer activityId);
+
+
+    List<ActivityTypes> getAllTypes();
+
+    List<ActivityStyles> getAllStyles();
 }

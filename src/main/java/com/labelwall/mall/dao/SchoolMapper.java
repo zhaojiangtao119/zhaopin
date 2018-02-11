@@ -26,4 +26,6 @@ public interface SchoolMapper {
      * @return
      */
     String findNameBySchoolId(Integer schoolId);
+
+    List<School> getSchoolList();
 }

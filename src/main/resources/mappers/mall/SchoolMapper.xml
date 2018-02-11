@@ -118,4 +118,10 @@
     FROM wall_school
     WHERE id = #{schoolId}
   </select>
+    <select id="getSchoolList" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM wall_school
+        ORDER BY id
+    </select>
 </mapper>

@@ -19,4 +19,12 @@ public interface ISchoolService {
      * @return
      */
     String findNameBySchoolId(Integer schoolId);
+
+    /**
+     * 根据省份名称查询该省份下的学校
+     *
+     * @param provicneName
+     * @return
+     */
+    ResponseObject<List<School>> getSchoolList(String provicneName);
 }
