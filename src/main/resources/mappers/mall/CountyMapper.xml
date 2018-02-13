@@ -103,4 +103,7 @@
         FROM wall_county
         WHERE city_id = #{cityId} AND name = #{name}
     </select>
+    <select id="getNameById" resultType="string">
+        select name from wall_county where id =#{values}
+    </select>
 </mapper>

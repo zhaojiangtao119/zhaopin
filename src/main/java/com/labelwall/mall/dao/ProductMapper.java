@@ -27,4 +27,6 @@ public interface ProductMapper {
      */
     List<ProductDto> getProductList(@Param("productDto") ProductDto productDto,
                                     @Param("categoryIds") List<Integer> categoryIds);
+
+    List<ProductDto> getShopProductList(ProductDto productDto);
 }

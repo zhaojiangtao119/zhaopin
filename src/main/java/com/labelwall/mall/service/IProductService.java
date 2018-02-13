@@ -25,4 +25,6 @@ public interface IProductService {
      * @return
      */
     ResponseObject<ProductDto> getProductDetail(Integer productId);
+
+    int add(ProductDto dto);
 }

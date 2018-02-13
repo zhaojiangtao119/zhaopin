@@ -84,4 +84,7 @@
         WHERE province_id = #{provinceId}
         AND name = #{name}
     </select>
+    <select id="getNameById" resultType="string">
+        select name from wall_city where id =#{values}
+    </select>
 </mapper>

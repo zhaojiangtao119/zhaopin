@@ -172,5 +172,28 @@ public class ActivityController {
         return schoolService.getSchoolList(provinceName);
     }
 
+    /**
+     * 创建活动
+     * 将新建活动id返回回去
+     *
+     * @param activityInfo
+     * @return
+     */
+    @RequestMapping(value = "create", method = RequestMethod.POST)
+    public ResponseObject<Integer> createActivity(ActivityInfo activityInfo) {
+        return activityService.createFreeActivity(activityInfo);
+    }
 
+    /**
+     * APP创建活动成功后，将图片上传到七牛云，将图片的url存储进来
+     *
+     * @param userId
+     * @param activityId
+     * @param posterUrl
+     * @return
+     */
+    @RequestMapping(value = "poster", method = RequestMethod.PUT)
+    public ResponseObject updatePosterUrl(Integer userId, Integer activityId, String posterUrl) {
+        return activityService.updatePosterUrl(userId, activityId, posterUrl);
+    }
 }

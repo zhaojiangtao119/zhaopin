@@ -15,6 +15,17 @@
         <result property="provinceId" column="province_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="cityId" column="city_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result property="countyId" column="county_id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <!-- 添加...by李1.31 -->
+        <result column="shopType" property="shopType"/>
+        <result column="typeName" property="typeName"/>
+        <result column="locationType" property="locationType"/>
+        <result column="locationName" property="locationName"/>
+        <result column="schoolId" property="schoolId"/>
+        <result column="schoolName" property="schoolName"/>
+        <result column="tradeType" property="tradeType"/>
+        <result column="phone" property="phone"/>
+        <result column="topImgURL" property="topImgURL"/>
+        
         <result property="createTimeStr" column="create_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result property="updateTimeStr" column="update_time_str" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <association property="userDto" javaType="com.labelwall.mall.dto.UserDto">
@@ -32,9 +43,14 @@
     province_id,city_id,county_id,
     create_time,update_time
   </sql>
+  
+   
+    
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select  ws.id,ws.user_id,ws.name,ws.description,ws.product_category_id,ws.status,ws.level,ws.create_time,ws.update_time,
             DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+            ws.shopType,ws.typeName,ws.locationType,ws.locationName,ws.schoolId,ws.schoolName,
+            ws.tradeType,ws.phone,ws.topImgURL,
             wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
     from wall_shop ws,wall_user wu
     where  ws.user_id = wu.id AND ws.id = #{id,jdbcType=INTEGER}
@@ -43,15 +59,17 @@
     delete from wall_shop
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.labelwall.mall.entity.Shop">
+    <insert id="insert" parameterType="com.labelwall.mall.entity.Shop" useGeneratedKeys="true" keyProperty="id">
     insert into wall_shop (id, user_id, name, 
       description, product_category_id, status, 
-      level,province_id,city_id,county_id, create_time, update_time
+      level,province_id,city_id,county_id, create_time, update_time,
+      shopType,typeName,locationType,locationName,schoolId,schoolName,tradeType,phone,topImgURL
       )
     values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, 
       #{description,jdbcType=VARCHAR}, #{productCategoryId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{level,jdbcType=INTEGER},#{provinceId,jdbcType=INTEGER},#{cityId,jdbcType=INTEGER},#{countyId,jdbcType=INTEGER},
-       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},#{shopType},#{typeName},#{locationType},
+       #{locationName},#{schoolId},#{schoolName},#{tradeType},#{phone},#{topImgURL}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.labelwall.mall.entity.Shop">
@@ -191,32 +209,56 @@
         SELECT
         ws.id,ws.user_id,ws.name,ws.description,ws.product_category_id,ws.status,ws.level,ws.create_time,ws.update_time,
         DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%I:%S')
-        update_time_str,
+        update_time_str,ws.shopType,ws.typeName,ws.locationType,ws.locationName,ws.schoolId,ws.schoolName,ws.tradeType,ws.phone,ws.topImgURL,
         wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_shop ws,wall_user wu
         <where>
             ws.user_id = wu.id
-            <if test="keyword != null">
-                AND ws.name like CONCAT('%',#{keyword},'%') OR ws.description like CONCAT('%',#{keyword},'%')
+            <if test="dto.keyword != null">
+                AND ws.name like CONCAT('%',#{dto.keyword},'%') OR ws.description like CONCAT('%',#{dto.keyword},'%')
             </if>
-            <if test="productCategoryId != null">
-                AND ws.product_category_id = #{productCategoryId}
+            <if test="dto.productCategoryId != null">
+                AND ws.product_category_id = #{dto.productCategoryId}
             </if>
-            <if test="userId != null">
-                AND ws.user_id = #{userId}
+            <if test="dto.userId != null">
+                AND ws.user_id = #{dto.userId}
             </if>
-            <if test="level != null">
-                AND ws.level &gt;= #{level}
+            <if test="dto.level != null">
+                AND ws.level &gt;= #{dto.level}
             </if>
-            <if test="provinceId != null">
-                AND ws.province_id = #{provinceId}
+            <if test="dto.provinceId != null">
+                AND ws.province_id = #{dto.provinceId}
             </if>
-            <if test="cityId != null">
-                AND ws.city_id = #{cityId}
+            <if test="dto.cityId != null">
+                AND ws.city_id = #{dto.cityId}
             </if>
-            <if test="countyId != null">
-                AND ws.county_id = #{countyId}
+            <if test="dto.countyId != null">
+                AND ws.county_id = #{dto.countyId}
+            </if>
+            <if test="dto.schoolId != null">
+                and ws.schoolId = #{dto.schoolId}
+            </if>
+            <if test="dto.shopType != null">
+                and ws.shopType = #{dto.shopType}
+            </if>
+            <if test="dto.locationType != null">
+                and ws.locationType = #{dto.locationType}
+            </if>
+            <if test="dto.tradeType != null">
+                and ws.tradeType = #{dto.tradeType}
+            </if>
+            <if test="shopIdListOnService != null">
+            and ws.id in <foreach collection="shopIdListOnService" open="(" separator="," close=")" item="item">#{item}</foreach>
+            </if>
+            <if test="shopIdListOnProduct != null">
+            and ws.id in <foreach collection="shopIdListOnProduct" open="(" separator="," close=")" item="item">#{item}</foreach>
             </if>
         </where>
+    </select>
+    <select id="getShopOnServiceId" parameterType="int" resultType="int">
+        select shopId from wall_shop_service where serviceId=#{values}
+    </select>
+    <select id="getShopOnProductId" parameterType="int" resultType="int">
+        select shop_id from wall_product where id=#{values}
     </select>
 </mapper>

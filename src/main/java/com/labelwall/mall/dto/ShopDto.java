@@ -11,8 +11,19 @@ public class ShopDto extends Shop {
     private String updateTimeStr;
     private String keyword;
     private UserDto userDto;
+    private Integer serviceId;
+    private Integer productId;
+    
 
-    public String getCreateTimeStr() {
+    public Integer getProductId() {
+		return productId;
+	}
+
+	public void setProductId(Integer productId) {
+		this.productId = productId;
+	}
+
+	public String getCreateTimeStr() {
         return createTimeStr;
     }
 
@@ -20,7 +31,15 @@ public class ShopDto extends Shop {
         this.createTimeStr = createTimeStr;
     }
 
-    public String getUpdateTimeStr() {
+    public Integer getServiceId() {
+		return serviceId;
+	}
+
+	public void setServiceId(Integer serviceId) {
+		this.serviceId = serviceId;
+	}
+
+	public String getUpdateTimeStr() {
         return updateTimeStr;
     }
 

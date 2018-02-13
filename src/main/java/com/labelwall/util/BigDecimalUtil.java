@@ -36,4 +36,13 @@ public class BigDecimalUtil {
         //除法结果保留四舍五入两位小数
         return b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP);
     }
+
+    public static BigDecimal adds(double[] arms) {
+        BigDecimal result = BigDecimal.valueOf(100);
+        for (int i = 0; i < arms.length; i++) {
+            BigDecimal b1 = new BigDecimal(Double.toString(arms[i]));
+            result = result.add(b1);
+        }
+        return result;
+    }
 }

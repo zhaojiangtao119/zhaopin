@@ -2,6 +2,7 @@ package com.labelwall.activity.service;
 
 import com.github.pagehelper.PageInfo;
 import com.labelwall.activity.dto.ActivityDto;
+import com.labelwall.activity.entity.ActivityInfo;
 import com.labelwall.activity.entity.ActivityStyles;
 import com.labelwall.activity.entity.ActivityTypes;
 import com.labelwall.common.ResponseObject;
@@ -163,4 +164,22 @@ public interface IActivityService {
      * @return
      */
     ResponseObject<List<ActivityStyles>> getAllStyles();
+
+    /**
+     * 创建活动
+     *
+     * @param activityInfo
+     * @return
+     */
+    ResponseObject<Integer> createFreeActivity(ActivityInfo activityInfo);
+
+    /**
+     * APP创建活动成功后修改活动poster
+     *
+     * @param userId
+     * @param activityId
+     * @param posterUrl
+     * @return
+     */
+    ResponseObject updatePosterUrl(Integer userId, Integer activityId, String posterUrl);
 }

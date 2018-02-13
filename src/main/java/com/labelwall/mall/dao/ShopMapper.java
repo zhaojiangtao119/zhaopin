@@ -2,6 +2,8 @@ package com.labelwall.mall.dao;
 
 import com.labelwall.mall.dto.ShopDto;
 import com.labelwall.mall.entity.Shop;
+import com.labelwall.mall.entity.ShopServices;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -22,7 +24,18 @@ public interface ShopMapper {
      * 获取商铺列表
      *
      * @param shopDto
+     * @param shopIdListOnProduct
+     * @param shopIdListOnService
      * @return
      */
-    List<ShopDto> getShopList(ShopDto shopDto);
+    List<ShopDto> getShopList(@Param("dto") ShopDto shopDto,
+                              @Param("shopIdListOnService") List<Integer> shopIdListOnService,
+                              @Param("shopIdListOnProduct") List<Integer> shopIdListOnProduct);
+
+    List<Integer> getShopOnServiceId(Integer serviceId);
+
+    List<Integer> getShopOnProductId(Integer productId);
+
+    int addService(ShopServices service);
+
 }

@@ -218,4 +218,26 @@ public interface ActivityMapper {
     List<ActivityTypes> getAllTypes();
 
     List<ActivityStyles> getAllStyles();
+
+    /**
+     * 创建免费活动
+     *
+     * @return
+     */
+    int createFreeActivity(ActivityInfo activityInfo);
+
+    void createStartActivity(@Param("activityId") Integer activityId,
+                             @Param("userId") Integer userId);
+
+    /**
+     * 修改activity的posterUrl
+     *
+     * @param userId
+     * @param activityId
+     * @param posterUrl
+     * @return
+     */
+    int updatePosterUrl(@Param("userId") Integer userId,
+                        @Param("activityId") Integer activityId,
+                        @Param("posterUrl") String posterUrl);
 }

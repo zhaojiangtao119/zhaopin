@@ -35,4 +35,6 @@ public interface CountyMapper {
      * @return
      */
     Integer findByCountyName(@Param("cityId") Integer cityId, @Param("name") String name);
+
+    String getNameById(Integer countyId);
 }

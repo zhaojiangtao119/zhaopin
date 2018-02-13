@@ -228,4 +228,34 @@
         </where>
         ORDER BY wp.price
     </select>
+    <select id="getShopProductList" parameterType="com.labelwall.mall.dto.ProductDto" resultMap="BaseResultMap">
+        SELECT
+        wp.id,wp.category_id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S')
+        update_time_str,
+        ws.name shopName,ws.level
+        FROM wall_product wp,wall_shop ws
+        <where>
+            wp.shop_id = ws.id
+            <if test="keyword != null">
+                AND wp.name like CONCAT('%',#{keyword},'%') OR wp.subtitle like CONCAT('%',#{keyword},'%')
+            </if>
+            <if test="minPrice != null and maxPrice != null">
+                AND wp.price &gt; #{minPrice} AND wp.price &lt; #{maxPrice}
+            </if>
+            <if test="minPrice != null and maxPrice == null">
+                AND wp.price &lt; #{minPrice}
+            </if>
+            <if test="minPrice == null and maxPrice != null">
+                AND wp.price &gt; #{maxPrice}
+            </if>
+            <if test="categoryId != null">
+                AND wp.category_id = #{categoryId}
+            </if>
+            <if test="shopId != null">
+                AND wp.shop_id = #{shopId}
+            </if>
+        </where>
+        ORDER BY wp.price
+    </select>
 </mapper>

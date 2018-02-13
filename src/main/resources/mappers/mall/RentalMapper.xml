@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.labelwall.mall.dao.RentalMapper">
+   
+    <select id="getAllType" resultType="RentalType">
+        select * from wall_rental_type 
+    </select>
+    
+    <insert id="insert" parameterType="RentalShop">
+        insert into wall_rental_shop (userId,name,description,status,level,provinceId,cityId,countyId,createTime,updateTime,locationType,locationName,schoolId,schoolName,phone,topImgURL,rentalType)
+        values (#{userId},#{name},#{description},#{status},#{level},#{provinceId},#{cityId},
+        #{countyId},#{createTime},#{updateTime},#{locationType},#{locationName},#{schoolId},#{schoolName},#{phone},#{topImgURL},#{rentalType})
+    </insert>
+    
+    <select id="getAllCPU" resultType="RentalCPU" parameterType="RentalCPU">
+        select * from wall_rental_cpu 
+        <where>
+            <if test="cpuId != null">
+                and cpuId=#{cpuId}
+            </if>
+        </where>
+    </select>
+    <select id="getCPUById" resultType="RentalCPU" parameterType="int">
+        select * from wall_rental_cpu where cpuId=#{cpuId}
+    </select>
+    <select id="getAllmemory" resultType="RentalMemory" parameterType="RentalMemory">
+        select * from wall_rental_memory
+        <where>
+            <if test="memoryId != null">
+                and memoryId=#{memoryId}
+            </if>
+        </where>
+    </select>
+    <select id="getMemoryById" resultType="RentalMemory" parameterType="int">
+        select * from wall_rental_memory where memoryId=#{memoryId}
+    </select>
+    <select id="getAllcard" resultType="RentalCard" parameterType="RentalCard">
+        select * from wall_rental_card
+        <where>
+            <if test="cardId != null">
+                and cardId=#{cardId}
+            </if>
+        </where>
+    </select>
+    <select id="getCardById" resultType="RentalCard" parameterType="int">
+        select * from wall_rental_card where cardId=#{cardId}
+    </select>
+    <select id="getAlldisk" resultType="RentalDisk" parameterType="RentalDisk">
+        select * from wall_rental_disk
+        <where>
+            <if test="diskId != null">
+                and diskId=#{diskId}
+            </if>
+        </where>
+    </select>
+    <select id="getDiskById" resultType="RentalDisk" parameterType="int">
+        select * from wall_rental_disk where diskId=#{diskId}
+    </select>
+    <select id="getAllboard" resultType="RentalBoard" parameterType="RentalBoard">
+        select * from wall_rental_board
+        <where>
+            <if test="boardId != null">
+                and boardId=#{boardId}
+            </if>
+        </where>
+    </select>
+    <select id="getBoardById" resultType="RentalBoard" parameterType="int">
+        select * from wall_rental_board where boardId=#{boardId}
+    </select>
+    <select id="getAllpower" resultType="RentalPower" parameterType="RentalPower">
+        select * from wall_rental_power
+        <where>
+            <if test="powerId != null">
+                and powerId=#{powerId}
+            </if>
+        </where>
+    </select>
+    <select id="getPowerById" resultType="RentalPower" parameterType="int">
+        select * from wall_rental_power where powerId=#{powerId}
+    </select>
+    <select id="getAllcase" resultType="RentalCase" parameterType="RentalCase">
+        select * from wall_rental_case
+        <where>
+            <if test="caseId != null">
+                and caseId=#{caseId}
+            </if>
+        </where>
+    </select>
+    <select id="getCaseById" resultType="RentalCase" parameterType="int">
+        select * from wall_rental_case where caseId=#{caseId}
+    </select>
+    <select id="getAllradiator" resultType="RentalRadiator" parameterType="RentalRadiator">
+        select * from wall_rental_radiator
+        <where>
+            <if test="radiatorId != null">
+                and radiatorId=#{radiatorId}
+            </if>
+        </where>
+    </select>
+    <select id="getRadiatorById" resultType="RentalRadiator" parameterType="int">
+        select * from wall_rental_radiator where radiatorId=#{radiatorId}
+    </select>
+    <select id="getChoiceComputer" resultType="RentalComputer" parameterType="int">
+        select cpuId,boardId,caseId,memoryId from wall_rental_computer where cpuId= #{cpuId}
+    </select>
+    <select id="getAllRentalShop" resultType="RentalShop">
+        select * from wall_rental_shop 
+        <where>
+            id = 1
+            <if test="countyId != null">
+                or countyId =#{countyId}
+            </if>
+            <if test="schoolId != null">
+                or schoolId = #{schoolId}
+            </if>
+        </where>
+        order by level desc
+    </select>
+    <select id="getOrderCount" resultType="int">
+        select count(*) from wall_rental_order where DATE(createTime) = DATE(NOW())
+    </select>
+    
+    <insert id="insertRentalOrder" parameterType="RentalOrder">
+        insert into wall_rental_order (
+        	orderNum,userId,shopId,cpuId,memoryId,cardId,diskId,boardId,powerId,caseId,CDRom,radiatorId,unitPrice,
+        	quantity,totalPrice,orderName,createTime,updateTime,orderType
+        )
+        values(
+        	#{orderNum},#{userId},#{shopId},#{cpuId},#{memoryId},#{cardId},#{diskId},#{boardId},#{powerId},#{caseId},#{CDRom},#{radiatorId},
+        	#{unitPrice},#{quantity},#{totalPrice},#{orderName},#{createTime},#{updateTime},#{orderType}
+        )
+    </insert>
+    <select id="getOrderByShopId" parameterType="int" resultType="RentalOrder">
+        select * from wall_rental_order where shopId=#{shopId}
+    </select>
+</mapper>

@@ -22,4 +22,5 @@ public interface CityMapper {
 
     Integer findIdByCityName(@Param("provinceId") Integer provinceId, @Param("name") String name);
 
+    String getNameById(Integer cityId);
 }

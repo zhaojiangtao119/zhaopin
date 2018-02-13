@@ -1,9 +1,7 @@
 package com.labelwall.activity.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 import com.labelwall.activity.dao.ActivityMapper;
 import com.labelwall.activity.dto.ActivityDto;
@@ -20,8 +18,10 @@ import com.labelwall.mall.entity.User;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.DateTimeUtil;
 import com.labelwall.util.storage.QiniuStorage;
+import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTimeUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -466,6 +466,7 @@ public class ActivityServiceImpl implements IActivityService {
                 return ResponseObject.successStatus();
             } else {
                 return ResponseObject.failStatusMessage("加入失败");
+
             }
         }
         return null;
@@ -552,5 +553,77 @@ public class ActivityServiceImpl implements IActivityService {
     public ResponseObject<List<ActivityStyles>> getAllStyles() {
         List<ActivityStyles> activityStylesList = activityDao.getAllStyles();
         return ResponseObject.successStautsData(activityStylesList);
+    }
+
+    @Override
+    public ResponseObject<Integer> createFreeActivity(ActivityInfo activityInfo) {//免费活动的创建
+        if (activityInfo == null) {
+            ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(),
+                    ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //1.验证输入的时间是否正确
+        ResponseObject validateTime = validateActivityTime(activityInfo);
+        if (!validateTime.isSuccess()) {
+            return validateTime;
+        }
+        //2.验证当前用户的关联事件是否存在时间上的冲突
+        ResponseObject validateUserTime = vaildateUserTime(activityInfo, activityInfo.getUserId());
+        if (!validateUserTime.isSuccess()) {
+            return validateUserTime;
+        }
+        //3.将数据插入到数据库
+        activityInfo.setAmount(new BigDecimal("0"));
+        int rowCount = activityDao.createFreeActivity(activityInfo);
+        if (rowCount > 0) {
+            //生成成功
+            //4.修改well_start_activity;
+            activityDao.createStartActivity(activityInfo.getId(), activityInfo.getUserId());
+            return ResponseObject.successStautsData(activityInfo.getId());
+        }
+        return ResponseObject.failStatusMessage("创建失败");
+    }
+
+    private ResponseObject validateActivityTime(ActivityInfo activityInfo) {
+        //判断输入的时间格式是否正确
+        if (!DateTimeUtil.isValiDateFormat(activityInfo.getStarttime()) &&
+                !DateTimeUtil.isValiDateFormat(activityInfo.getEndtime()) &&
+                !DateTimeUtil.isValiDateFormat(activityInfo.getDetailStartTime()) &&
+                !DateTimeUtil.isValiDateFormat(activityInfo.getDetailEndTime())) {
+            return ResponseObject.failStatusMessage("时间格式不正确");
+        }
+        if (DateTimeUtil.strToDate(activityInfo.getDetailStartTime())
+                .compareTo(DateTimeUtil.strToDate(activityInfo.getEndtime())) <= 0) {
+            return ResponseObject.failStatusMessage("活动开始时间必须大于报名截止时间");
+        }
+        if (activityInfo.getStatus() == null) {//不能发布一个 报名开始时间比现在时间提前一个小时的活动，即排除用户今天发布一个昨天开始的活动
+            Calendar now = Calendar.getInstance();
+            now.add(Calendar.SECOND, -360);
+            if (DateTimeUtil.strToDate(activityInfo.getStarttime())
+                    .compareTo(now.getTime()) < 0) {
+                return ResponseObject.failStatusMessage("输入的时间有误");
+            }
+        }
+        //判断输入的开始时间是否小于结束时间
+        if (DateTimeUtil.strToDate(activityInfo.getStarttime())
+                .compareTo(DateTimeUtil.strToDate(activityInfo.getEndtime())) >= 0) {
+            return ResponseObject.failStatusMessage("报名开始时间不能大于结束时间");
+        }
+        if (DateTimeUtil.strToDate(activityInfo.getDetailStartTime())
+                .compareTo(DateTimeUtil.strToDate(activityInfo.getDetailEndTime())) >= 0) {
+            return ResponseObject.failStatusMessage("活动开始时间不能大于结束时间");
+        }
+        return ResponseObject.successStatus();
+    }
+
+    @Override
+    public ResponseObject updatePosterUrl(Integer userId, Integer activityId, String posterUrl) {
+        if (userId == null || activityId == null || posterUrl == null) {
+            return ResponseObject.fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        int rowCount = activityDao.updatePosterUrl(userId, activityId, posterUrl);
+        if (rowCount > 0) {
+            return ResponseObject.successStatus();
+        }
+        return ResponseObject.failStatusMessage("图片上传失败");
     }
 }

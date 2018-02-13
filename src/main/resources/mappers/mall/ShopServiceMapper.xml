@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.labelwall.mall.dao.ShopServiceMapper">
+
+
+    <select id="getServiceListByShopId" resultType="com.labelwall.mall.entity.ShopServices">
+        select * from wall_shop_service where shopId = #{values}
+    </select>
+    <select id="getServiceListByType" resultType="com.labelwall.mall.entity.ServiceType">
+	    select * from wall_service where parsentId = #{values}
+	</select>
+    <select id="getServiceTypeById" resultType="com.labelwall.mall.entity.ServiceType" parameterType="int">
+	    select * from wall_service where id=#{values}
+	</select>
+
+    <insert id="insertService" parameterType="com.labelwall.mall.entity.ShopServices">
+	    insert into wall_shop_service (shopId,serviceId,imgURL,price,theme,content,createTime,updateTime,serviceName) values 
+	    (#{shopId},#{serviceId},#{imgURL},#{price},#{theme},#{content},#{createTime},#{updateTime},#{serviceName})
+	</insert>
+</mapper>

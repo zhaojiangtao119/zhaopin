@@ -63,4 +63,9 @@ public class ProductServiceImpl implements IProductService {
         }
         return ResponseObject.fail(ResponseStatus.FAIL.getCode(), ResponseStatus.FAIL.getValue());
     }
+
+    @Override
+    public int add(ProductDto dto) {
+        return productMapper.insert(dto);
+    }
 }

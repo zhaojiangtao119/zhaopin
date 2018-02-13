@@ -353,6 +353,146 @@
         FROM well_activity_style
         ORDER BY id
     </select>
+
+    <insert id="createFreeActivity" parameterType="com.labelwall.activity.entity.ActivityInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO well_activity_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="theme != null and theme != ''">
+                theme,
+            </if>
+            <if test="content != null and content != ''">
+                content,
+            </if>
+            <if test="free != null">
+                free,
+            </if>
+            creattime,
+            <if test="starttime != null and starttime != ''">
+                starttime,
+            </if>
+            <if test="endtime != null and endtime != ''">
+                endtime,
+            </if>
+            <if test="num_limt != null">
+                num_limt,
+            </if>
+            <if test="location != null and location != ''">
+                location,
+            </if>
+            <if test="school != null and school != ''">
+                school,
+            </if>
+            <if test="schoolId != null">
+                schoolId,
+            </if>
+            <if test="type != null and type != ''">
+                `type`,
+            </if>
+            <if test="style != null and style != ''">
+                style,
+            </if>
+            <if test="posterURL != null and posterURL != ''">
+                posterURL,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="amount != null">
+                amount,
+            </if>
+            <if test="customContent != null and customContent != ''">
+                customContent,
+            </if>
+            <if test="detailStartTime != null and detailStartTime != ''">
+                detailStartTime,
+            </if>
+            <if test="detailEndTime != null and detailEndTime != ''">
+                detailEndTime,
+            </if>
+            <if test="city != null and city != ''">
+                city,
+            </if>
+            <if test="county != null and county != ''">
+                county,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="theme != null and theme != ''">
+                #{theme},
+            </if>
+            <if test="content != null and content != ''">
+                #{content},
+            </if>
+            <if test="free != null">
+                #{free},
+            </if>
+            now(),
+            <if test="starttime != null and starttime != ''">
+                #{starttime},
+            </if>
+            <if test="endtime != null and endtime != ''">
+                #{endtime},
+            </if>
+            <if test="num_limt != null">
+                #{num_limt},
+            </if>
+            <if test="location != null and location != ''">
+                #{location},
+            </if>
+            <if test="school != null and school != ''">
+                #{school},
+            </if>
+            <if test="schoolId != null">
+                #{schoolId},
+            </if>
+            <if test="type != null and type != ''">
+                #{type},
+            </if>
+            <if test="style != null and style != ''">
+                #{style},
+            </if>
+            <if test="posterURL != null and posterURL != ''">
+                #{posterURL},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="amount != null">
+                #{amount},
+            </if>
+            <if test="customContent != null and customContent != ''">
+                #{customContent},
+            </if>
+            <if test="detailStartTime != null and detailStartTime != ''">
+                #{detailStartTime},
+            </if>
+            <if test="detailEndTime != null and detailEndTime != ''">
+                #{detailEndTime},
+            </if>
+            <if test="city != null and city != ''">
+                #{city},
+            </if>
+            <if test="county != null and county != ''">
+                #{county},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+        </trim>
+    </insert>
+    <insert id="createStartActivity" parameterType="map">
+        insert INTO well_start_activity (userId,activityId,createTime)
+        VALUES(#{userId},#{activityId},DATE_FORMAT(now(),'%Y-%m-%d %T'));
+    </insert>
+    <update id="updatePosterUrl" parameterType="map">
+        UPDATE `well_activity_info`
+        SET posterURL = #{posterUrl}
+        WHERE user_id = #{userId} AND id = #{activityId}
+    </update>
     <!--
    <select id="selectCountByPage" parameterType="map" resultType="int">
        select count(*) from well_activity_info

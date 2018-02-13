@@ -6,6 +6,8 @@ import org.joda.time.Duration;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -49,5 +51,19 @@ public class DateTimeUtil {
         Duration duration = new Duration(beginDate, endDate);
         long millis = duration.getStandardMinutes();
         return millis;
+    }
+
+    //验证时间的格式
+    public static boolean isValiDateFormat(String dataStr) {
+        boolean falg = true;
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        format.setLenient(false);//
+        try {
+            format.parse(dataStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            falg = false;
+        }
+        return falg;
     }
 }

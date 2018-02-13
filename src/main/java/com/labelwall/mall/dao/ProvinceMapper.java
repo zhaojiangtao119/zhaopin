@@ -20,4 +20,6 @@ public interface ProvinceMapper {
     List<Province> getProvinceList();
 
     Integer findIdByProvinceName(String name);
+
+    String getNameById(Integer id);
 }
