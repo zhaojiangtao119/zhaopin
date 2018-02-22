@@ -124,4 +124,9 @@
         FROM wall_school
         ORDER BY id
     </select>
+    <select id="getSchoolIdByProNameSchName" parameterType="map" resultType="integer">
+        SELECT `id`
+        FROM wall_school
+        WHERE province_name = #{provinceName} AND `name` = #{schoolName}
+    </select>
 </mapper>

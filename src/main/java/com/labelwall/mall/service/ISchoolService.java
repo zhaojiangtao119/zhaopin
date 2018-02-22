@@ -27,4 +27,13 @@ public interface ISchoolService {
      * @return
      */
     ResponseObject<List<School>> getSchoolList(String provicneName);
+
+    /**
+     * 根据省份id，学校名称，获取学校的id
+     *
+     * @param provinceName
+     * @param schoolName
+     * @return
+     */
+    Integer getSchoolIdByProNameSchName(String provinceName, String schoolName);
 }

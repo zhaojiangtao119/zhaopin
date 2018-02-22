@@ -15,6 +15,7 @@ import com.labelwall.common.ResponseObject;
 import com.labelwall.common.ResponseStatus;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.User;
+import com.labelwall.mall.service.ISchoolService;
 import com.labelwall.mall.service.IUserService;
 import com.labelwall.util.DateTimeUtil;
 import com.labelwall.util.storage.QiniuStorage;
@@ -37,6 +38,8 @@ public class ActivityServiceImpl implements IActivityService {
     private ActivityMapper activityDao;
     @Autowired
     private IUserService userService;
+    @Autowired
+    private ISchoolService schoolService;
     /*@Autowired
     private LoginDao loginDao;
 
@@ -572,10 +575,17 @@ public class ActivityServiceImpl implements IActivityService {
             return validateUserTime;
         }
         //3.将数据插入到数据库
+        //获取schoolId
+        if (StringUtils.isNotBlank(activityInfo.getSchool()) &&
+                StringUtils.isNotBlank(activityInfo.getLocation())) {
+            Integer schoolId = schoolService.
+                    getSchoolIdByProNameSchName(activityInfo.getLocation(), activityInfo.getSchool());
+            activityInfo.setSchoolId(schoolId);
+        }
         activityInfo.setAmount(new BigDecimal("0"));
         int rowCount = activityDao.createFreeActivity(activityInfo);
         if (rowCount > 0) {
-            //生成成功
+            //创建成功
             //4.修改well_start_activity;
             activityDao.createStartActivity(activityInfo.getId(), activityInfo.getUserId());
             return ResponseObject.successStautsData(activityInfo.getId());

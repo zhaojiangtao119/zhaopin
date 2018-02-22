@@ -56,4 +56,13 @@ public class SchoolServiceImpl implements ISchoolService {
         }
         return ResponseObject.failStatusMessage("获取内容失败");
     }
+
+    @Override
+    public Integer getSchoolIdByProNameSchName(String provinceName, String schoolName) {
+        if (StringUtils.isNotBlank(provinceName) && StringUtils.isNotBlank(schoolName)) {
+            Integer schoolId = schoolMapper.getSchoolIdByProNameSchName(provinceName, schoolName);
+            return schoolId;
+        }
+        return null;
+    }
 }

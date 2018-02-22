@@ -1,6 +1,7 @@
 package com.labelwall.mall.dao;
 
 import com.labelwall.mall.entity.School;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,4 +29,14 @@ public interface SchoolMapper {
     String findNameBySchoolId(Integer schoolId);
 
     List<School> getSchoolList();
+
+    /**
+     * 获取学校id
+     *
+     * @param provinceName
+     * @param schoolName
+     * @return
+     */
+    Integer getSchoolIdByProNameSchName(@Param("provinceName") String provinceName,
+                                      @Param("schoolName") String schoolName);
 }
