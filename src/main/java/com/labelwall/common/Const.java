@@ -55,7 +55,7 @@ public class Const {
         }
     }
 
-    //订单状态
+    //商品订单状态
     public enum OrderStatusEnum {
         CANCELED(0, "已取消"),
         NO_PAY(10, "未支付"),
@@ -158,4 +158,25 @@ public class Const {
         long ORDER_QR = 120;
     }
 
+    //活动订单状态
+    public enum ActivityOrderStatus {
+        NO_PAY(0, "未支付"),
+        PAID(1, "已支付"),;
+
+        private int code;
+        private String value;
+
+        ActivityOrderStatus(int code, String value) {
+            this.code = code;
+            this.value = value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 }
