@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.labelwall.activity.dao.ActivityAccountOrderMapper">
-    <resultMap id="BaseResultMap" type="com.labelwall.activity.entity.ActivityAccountOrder">
+<mapper namespace="com.labelwall.activity.dao.ActivityAccountAddMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.activity.entity.ActivityAccountAdd">
         <id column="id" property="id" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result column="user_id" property="userId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-        <result column="activity_id" property="activityId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="account_id" property="accountId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result column="WIDout_trade_no" property="orderNo" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="WIDsubject" property="typeDesc" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="WIDtotal_fee" property="orderPrice"/>
@@ -14,12 +14,12 @@
         <result column="type" property="type" jdbcType="INTEGER" javaType="java.lang.Integer"/>
     </resultMap>
     <sql id="BaseColumn">
-      id,user_id,activity_id,WIDout_trade_no,WIDsubject,WIDtotal_fee,WIDbody,create_time,status,`type`
+      id,user_id,account_id,WIDout_trade_no,WIDsubject,WIDtotal_fee,WIDbody,create_time,status,`type`
     </sql>
-    <select id="getUserActivityOrder" parameterType="integer" resultMap="BaseResultMap">
+    <select id="getUserAccountAddList" resultMap="BaseResultMap">
         SELECT
         <include refid="BaseColumn"/>
-        FROM well_activity_order
-        WHERE user_id = #{userId}
+        FROM well_account_order
+        WHERE user_id = #{userId} AND account_id = #{accountId}
     </select>
 </mapper>

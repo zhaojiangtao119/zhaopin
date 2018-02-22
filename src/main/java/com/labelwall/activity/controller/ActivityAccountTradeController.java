@@ -1,7 +1,7 @@
 package com.labelwall.activity.controller;
 
-import com.labelwall.activity.entity.ActivityAccountOrder;
 import com.labelwall.activity.service.IActivityAccountOrderService;
+import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
 import com.labelwall.common.ResponseObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +31,18 @@ public class ActivityAccountTradeController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public ResponseObject<List<ActivityAccountOrderVo>> getUserActivityOrder(@PathVariable("userId") Integer userId) {
         return activityAccountOrderService.getUserAcitivtyOrder(userId);
+    }
+
+    /**
+     * 获取用户账户充值的交易记录
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    @RequestMapping(value = "/{userId}/{accountId}", method = RequestMethod.GET)
+    public ResponseObject<List<ActivityAccountAddVo>>
+    getUserAccountAddList(@PathVariable("userId") Integer userId, @PathVariable("accountId") Integer accountId) {
+        return activityAccountOrderService.getUserAccountAddList(userId, accountId);
     }
 }

@@ -1,6 +1,7 @@
 package com.labelwall.activity.dao;
 
 import com.labelwall.activity.entity.ActivityAccountOrder;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -15,4 +16,5 @@ public interface ActivityAccountOrderMapper {
      * @return
      */
     List<ActivityAccountOrder> getUserActivityOrder(Integer userId);
+
 }

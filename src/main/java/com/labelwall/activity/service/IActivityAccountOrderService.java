@@ -1,6 +1,7 @@
 package com.labelwall.activity.service;
 
 import com.labelwall.activity.entity.ActivityAccountOrder;
+import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
 import com.labelwall.common.ResponseObject;
 
@@ -18,4 +19,13 @@ public interface IActivityAccountOrderService {
      * @return
      */
     ResponseObject<List<ActivityAccountOrderVo>> getUserAcitivtyOrder(Integer userId);
+
+    /**
+     * 获取账户充值的交易记录
+     *
+     * @param userId
+     * @param accountId
+     * @return
+     */
+    ResponseObject<List<ActivityAccountAddVo>> getUserAccountAddList(Integer userId, Integer accountId);
 }
