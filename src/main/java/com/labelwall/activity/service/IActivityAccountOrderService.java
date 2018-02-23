@@ -7,6 +7,7 @@ import com.labelwall.activity.vo.ActivityAccountOrderVo;
 import com.labelwall.common.ResponseObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2018-02-22.
@@ -36,5 +37,31 @@ public interface IActivityAccountOrderService {
      * @param activityAccountAdd
      * @return
      */
-    ResponseObject<ActivityAccountAdd> createAccountAddOrder(ActivityAccountAdd activityAccountAdd);
+    ResponseObject<ActivityAccountAddVo> createAccountAddOrder(ActivityAccountAdd activityAccountAdd);
+
+    /**
+     * 充值订单的支付订单签名
+     *
+     * @param orderNo
+     * @param userId
+     * @return
+     */
+    String activityAccountOrderSign(Long orderNo, Integer userId);
+
+    /**
+     * 支付订单的支付宝回调
+     *
+     * @param parameterMap
+     * @return
+     */
+    String activityAccountAlipayCallback(Map parameterMap);
+
+    /**
+     * 获取订单详情
+     *
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    ActivityAccountAdd getAccountOrderDetail(Integer userId, Long orderNo);
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ public class ActivityAccountTradeController {
      * @param userId
      * @return
      */
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    @RequestMapping(value = "{userId}", method = RequestMethod.GET)
     public ResponseObject<List<ActivityAccountOrderVo>> getUserActivityOrder(@PathVariable("userId") Integer userId) {
         return activityAccountOrderService.getUserAcitivtyOrder(userId);
     }
@@ -41,7 +42,7 @@ public class ActivityAccountTradeController {
      * @param accountId
      * @return
      */
-    @RequestMapping(value = "/{userId}/{accountId}", method = RequestMethod.GET)
+    @RequestMapping(value = "{userId}/{accountId}", method = RequestMethod.GET)
     public ResponseObject<List<ActivityAccountAddVo>>
     getUserAccountAddList(@PathVariable("userId") Integer userId, @PathVariable("accountId") Integer accountId) {
         return activityAccountOrderService.getUserAccountAddList(userId, accountId);
@@ -53,8 +54,34 @@ public class ActivityAccountTradeController {
      * @param activityAccountAdd
      * @return
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseObject<ActivityAccountAdd> createAccountAddOrder(ActivityAccountAdd activityAccountAdd) {
+    @RequestMapping(value = "add", method = RequestMethod.POST)
+    public ResponseObject<ActivityAccountAddVo> createAccountAddOrder(ActivityAccountAdd activityAccountAdd) {
         return activityAccountOrderService.createAccountAddOrder(activityAccountAdd);
+    }
+
+    /**
+     * 根据orderNo，生成订单签名，将签名返回给app客户端
+     *
+     * @param orderNo
+     * @return
+     */
+    @RequestMapping(value = "sign", method = RequestMethod.POST)
+    public ResponseObject<String> appCreateOrder(Long orderNo, Integer userId) {
+        String signOrder = activityAccountOrderService.activityAccountOrderSign(orderNo, userId);
+        return ResponseObject.successStautsData(signOrder);
+    }
+
+    /**
+     * 支付宝支付完成后的回调接口  POST请求
+     * 支付宝支付结果的通知，一个Map,异步的通知参数
+     * 验签的过程
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "callbacks", method = RequestMethod.POST)
+    public String callbacks(HttpServletRequest request) {
+        return activityAccountOrderService.activityAccountAlipayCallback(request.getParameterMap());
+
     }
 }

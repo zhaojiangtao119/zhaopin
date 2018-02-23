@@ -660,6 +660,7 @@ public class OrderServiceImpl implements IOrderService {
         return signOrder;
     }
 
+    @SuppressWarnings("Duplicates")
     private String createSignOrder(Long orderNo, Integer userId) {
         //TODO 通过userId，orderNo获取该条订单信息，订单的付款金额，订单的Item详情，
         ResponseObject<OrderVo> responseOrder = getOrderDetail(userId, orderNo);
@@ -698,6 +699,7 @@ public class OrderServiceImpl implements IOrderService {
         return null;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public String alipayCallback(Map parameterMap) {
         boolean validateFlag = true;

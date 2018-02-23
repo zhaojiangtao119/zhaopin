@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.labelwall.activity.dao.ActivityAccountTradeHistoryMapper">
+    <resultMap id="BaseResultMap" type="com.labelwall.activity.entity.ActivityAccountTradeHistory">
+        <result column="user_id" property="userId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="account_id" property="accountId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="trade_num" property="jindouNum" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="create_time" property="createTime"/>
+        <result column="order_id" property="orderId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="orderType" property="orderType" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+    </resultMap>
+</mapper>

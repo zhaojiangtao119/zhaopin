@@ -32,4 +32,9 @@ public class ActivityAccountServiceImpl implements IActivityAccountService {
         }
         return ResponseObject.successStautsData(activityAccountVo);
     }
+
+    @Override
+    public int updateAccountJindouNum(Integer accountId, Integer jindouCount) {
+        return activityAccountMapper.updateAccountJindouNum(accountId, jindouCount);
+    }
 }

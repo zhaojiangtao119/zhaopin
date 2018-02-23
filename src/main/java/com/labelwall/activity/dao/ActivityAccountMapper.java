@@ -1,6 +1,7 @@
 package com.labelwall.activity.dao;
 
 import com.labelwall.activity.entity.ActivityAccount;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Created by Administrator on 2018-02-22.
@@ -8,4 +9,14 @@ import com.labelwall.activity.entity.ActivityAccount;
 public interface ActivityAccountMapper {
 
     ActivityAccount getUserAccount(Integer userId);
+
+    /**
+     * 充值成功修改账户金豆余额
+     *
+     * @param accountId
+     * @param jindouCount
+     * @return
+     */
+    int updateAccountJindouNum(@Param("accountId") Integer accountId,
+                               @Param("jindouCount") Integer jindouCount);
 }

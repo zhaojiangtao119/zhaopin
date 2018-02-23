@@ -4,7 +4,7 @@
     <resultMap id="BaseRequestMap" type="com.labelwall.activity.entity.ActivityAccount">
         <id column="account_id" property="id" jdbcType="INTEGER" javaType="java.lang.Long"/>
         <result column="user_id" property="userId" jdbcType="INTEGER" javaType="java.lang.Long"/>
-        <result column="balance" property="balance" />
+        <result column="balance" property="balance"/>
         <result column="create_time" property="createTime" jdbcType="VARCHAR" javaType="java.lang.String"/>
     </resultMap>
     <sql id="BaseColumn">
@@ -17,4 +17,9 @@
         FROM well_account
         WHERE user_id = #{userId}
     </select>
+    <update id="updateAccountJindouNum" parameterType="map">
+        UPDATE well_account
+        SET balance = balance + #{jindouCount}
+        WHERE account_id = #{accountId}
+    </update>
 </mapper>

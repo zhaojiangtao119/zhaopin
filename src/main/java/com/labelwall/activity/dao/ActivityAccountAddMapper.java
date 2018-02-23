@@ -39,10 +39,29 @@ public interface ActivityAccountAddMapper {
 
     /**
      * 修改订单状态
+     *
      * @param orderNo
      * @param status
      * @return
      */
     int updateAddOrderStatus(@Param("orderNo") String orderNo,
                              @Param("status") Integer status);
+
+    /**
+     * 获取指定的订单
+     *
+     * @param userId
+     * @param orderNo
+     * @return
+     */
+    ActivityAccountAdd getAccountOrderDetail(@Param("userId") Integer userId,
+                                             @Param("orderNo") Long orderNo);
+
+    /**
+     * 获取指定订单
+     *
+     * @param aLong
+     * @return
+     */
+    ActivityAccountAdd validateOrderParam(Long aLong);
 }
