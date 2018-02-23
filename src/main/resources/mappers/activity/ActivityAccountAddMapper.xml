@@ -12,9 +12,10 @@
         <result column="create_time" property="createTime" jdbcType="VARCHAR" javaType="java.lang.String"/>
         <result column="status" property="status" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result column="type" property="type" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="jindou_count" property="jindouCount" jdbcType="INTEGER" javaType="java.lang.Integer"/>
     </resultMap>
     <sql id="BaseColumn">
-      id,user_id,account_id,WIDout_trade_no,WIDsubject,WIDtotal_fee,WIDbody,create_time,status,`type`
+      id,user_id,account_id,WIDout_trade_no,WIDsubject,WIDtotal_fee,WIDbody,create_time,status,`type`,jindou_count
     </sql>
     <select id="getUserAccountAddList" resultMap="BaseResultMap">
         SELECT
@@ -22,4 +23,82 @@
         FROM well_account_order
         WHERE user_id = #{userId} AND account_id = #{accountId}
     </select>
+    <select id="getTodayOrderNum" parameterType="string" resultType="integer">
+        SELECT COUNT(1)
+        FROM well_account_order
+        WHERE create_time &gt;= #{todayDate}
+    </select>
+    <insert id="createAccountAddOrder" parameterType="com.labelwall.activity.entity.ActivityAccountAdd"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO well_account_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="orderNo != null and orderNo != ''">
+                WIDout_trade_no,
+            </if>
+            <if test="typeDesc != null ">
+                WIDsubject,
+            </if>
+            <if test="orderPrice != null">
+                WIDtotal_fee,
+            </if>
+            <if test="orderInfo != null">
+                WIDbody,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="jindouCount != null">
+                jindou_count,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="accountId != null">
+                #{accountId},
+            </if>
+            <if test="orderNo != null and orderNo != ''">
+                #{orderNo},
+            </if>
+            <if test="typeDesc != null ">
+                #{typeDesc},
+            </if>
+            <if test="orderPrice != null">
+                #{orderPrice},
+            </if>
+            <if test="orderInfo != null">
+                #{orderInfo},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="jindouCount != null">
+                #{jindouCount},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateAddOrderStatus" parameterType="map">
+        UPDATE well_account_order
+        SET `status` = #{status}
+        WHERE WIDout_trade_no = #{orderNo}
+    </update>
 </mapper>

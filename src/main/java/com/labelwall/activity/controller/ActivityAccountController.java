@@ -23,5 +23,4 @@ public class ActivityAccountController {
     public ResponseObject<ActivityAccountVo> getUserAccount(@PathVariable("userId") Integer userId) {
         return activityAccountService.getUserAccount(userId);
     }
-
 }

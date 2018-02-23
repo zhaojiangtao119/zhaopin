@@ -1,5 +1,6 @@
 package com.labelwall.activity.service;
 
+import com.labelwall.activity.entity.ActivityAccountAdd;
 import com.labelwall.activity.entity.ActivityAccountOrder;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
@@ -28,4 +29,12 @@ public interface IActivityAccountOrderService {
      * @return
      */
     ResponseObject<List<ActivityAccountAddVo>> getUserAccountAddList(Integer userId, Integer accountId);
+
+    /**
+     * 创建充值订单
+     *
+     * @param activityAccountAdd
+     * @return
+     */
+    ResponseObject<ActivityAccountAdd> createAccountAddOrder(ActivityAccountAdd activityAccountAdd);
 }

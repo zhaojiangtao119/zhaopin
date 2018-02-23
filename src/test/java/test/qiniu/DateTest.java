@@ -12,11 +12,14 @@ import java.util.logging.SimpleFormatter;
 public class DateTest {
 
     public static void main(String[] args) {
-        Date beginTime = DateTimeUtil.strToDate("2018-02-02 18:30:00");
+        /*Date beginTime = DateTimeUtil.strToDate("2018-02-02 18:30:00");
         Date endTime = DateTimeUtil.strToDate("2018-02-02 19:30:00");
         long millis = DateTimeUtil.dateInterval(beginTime, new Date());
         long s = millis/(1000*60*60);
 
-        System.err.print(millis);
+        System.err.print(millis);*/
+
+        String date = DateTimeUtil.changeDateFormat(DateTimeUtil.dateToStr(new Date()));
+        System.err.print(date);
     }
 }

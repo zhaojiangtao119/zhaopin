@@ -1,5 +1,6 @@
 package com.labelwall.activity.controller;
 
+import com.labelwall.activity.entity.ActivityAccountAdd;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
@@ -44,5 +45,16 @@ public class ActivityAccountTradeController {
     public ResponseObject<List<ActivityAccountAddVo>>
     getUserAccountAddList(@PathVariable("userId") Integer userId, @PathVariable("accountId") Integer accountId) {
         return activityAccountOrderService.getUserAccountAddList(userId, accountId);
+    }
+
+    /**
+     * 创建充值金豆的订单
+     *
+     * @param activityAccountAdd
+     * @return
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    public ResponseObject<ActivityAccountAdd> createAccountAddOrder(ActivityAccountAdd activityAccountAdd) {
+        return activityAccountOrderService.createAccountAddOrder(activityAccountAdd);
     }
 }

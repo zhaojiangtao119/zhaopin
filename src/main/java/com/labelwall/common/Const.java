@@ -179,4 +179,27 @@ public class Const {
             return value;
         }
     }
+
+    //活动账户充值订单状态
+    public enum ActivityAddOrderStatus {
+        FAIL_PAY(0, "已过期"),
+        PAID(1, "未支付"),
+        NO_PAY(2,"已支付");
+
+        private int code;
+        private String value;
+
+        ActivityAddOrderStatus(int code, String value) {
+            this.code = code;
+            this.value = value;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
 }

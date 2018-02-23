@@ -66,4 +66,14 @@ public class DateTimeUtil {
         }
         return falg;
     }
+
+    //改变时间的格式
+    public static String changeDateFormat(String dateStr) {
+        String[] date = dateStr.split(" ");
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(date[0]);
+        stringBuilder.append(" ");
+        stringBuilder.append("00:00:00");
+        return stringBuilder.toString();
+    }
 }

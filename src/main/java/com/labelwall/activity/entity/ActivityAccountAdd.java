@@ -10,11 +10,12 @@ public class ActivityAccountAdd extends BaseBean {
     private Integer accountId;
     private String orderNo;
     private String typeDesc;//订单类型描述
-    private double orderPrice;//订单价格
+    private Double orderPrice;//订单价格
     private String orderInfo;//订单信息
     private String createTime;
     private Integer type;//订单类型
     private Integer status;//订单状态
+    private Integer jindouCount;
 
     public Integer getId() {
         return id;
@@ -56,11 +57,11 @@ public class ActivityAccountAdd extends BaseBean {
         this.typeDesc = typeDesc;
     }
 
-    public double getOrderPrice() {
+    public Double getOrderPrice() {
         return orderPrice;
     }
 
-    public void setOrderPrice(double orderPrice) {
+    public void setOrderPrice(Double orderPrice) {
         this.orderPrice = orderPrice;
     }
 
@@ -94,5 +95,13 @@ public class ActivityAccountAdd extends BaseBean {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getJindouCount() {
+        return jindouCount;
+    }
+
+    public void setJindouCount(Integer jindouCount) {
+        this.jindouCount = jindouCount;
     }
 }
