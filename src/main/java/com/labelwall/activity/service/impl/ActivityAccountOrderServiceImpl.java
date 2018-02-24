@@ -11,14 +11,13 @@ import com.google.common.collect.Lists;
 import com.labelwall.activity.dao.ActivityAccountAddMapper;
 import com.labelwall.activity.dao.ActivityAccountOrderMapper;
 import com.labelwall.activity.dao.ActivityAccountTradeHistoryMapper;
-import com.labelwall.activity.entity.ActivityAccountAdd;
-import com.labelwall.activity.entity.ActivityAccountOrder;
-import com.labelwall.activity.entity.ActivityAccountTradeHistory;
-import com.labelwall.activity.entity.BaseBean;
+import com.labelwall.activity.entity.*;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.service.IActivityAccountService;
+import com.labelwall.activity.service.IActivityService;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
+import com.labelwall.activity.vo.ActivityAccountVo;
 import com.labelwall.common.*;
 import com.labelwall.util.DateTimeUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -44,6 +43,9 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
     private IActivityAccountService activityAccountService;
     @Autowired
     private ActivityAccountTradeHistoryMapper tradeHistoryMapper;
+    @Autowired
+    private IActivityService activityService;
+
 
     @Override
     public ResponseObject<List<ActivityAccountOrderVo>> getUserAcitivtyOrder(Integer userId) {
@@ -309,7 +311,7 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
                 activityAccountOrder.getOrderInfo() == null ||
                 activityAccountOrder.getType() == null) {
             return ResponseObject.
-                    fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+                    failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         //组装活动订单对象
         if (activityAccountOrder.getType() == 0) {
@@ -339,5 +341,45 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
             orderVo.setStatusDesc(Const.ActivityOrderStatus.PAID.getValue());
         }
         return ResponseObject.successStautsData(orderVo);
+    }
+
+    @Override
+    public ResponseObject modifyPayActivityOrder(String orderNo, ActivityInfo activityInfo) {
+        if (StringUtils.isBlank(orderNo) || activityInfo == null) {
+            return ResponseObject.
+                    failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //1.创建活动
+        ResponseObject<ActivityInfo> responseObject = activityService.createChargeActivity(activityInfo);
+        if (!responseObject.isSuccess()) {
+            return responseObject;
+        }
+        //2.修改订单的状态，acitivityId
+        activityInfo = responseObject.getData();
+        Integer activityId = activityInfo.getId();
+        ActivityAccountOrder acitivityOrder = new ActivityAccountOrder();
+        acitivityOrder.setActivityId(activityId);
+        acitivityOrder.setOrderNo(orderNo);
+        acitivityOrder.setStatus(1);//订单已支付
+        activityAccountOrderMapper.updateSelectiveOrder(acitivityOrder);
+        //3.修改用户账户金豆余额
+        ResponseObject<ActivityAccountVo> activityAccountResponse =
+                activityAccountService.getUserAccount(activityInfo.getUserId());
+        if (!activityAccountResponse.isSuccess()) {
+            return activityAccountResponse;
+        }
+        ActivityAccountVo activityAccountVo = activityAccountResponse.getData();
+        activityAccountService.updateAccountSubJindouNum(activityAccountVo.getId(), activityInfo.getAmount());
+        //4.添加交易记录,accountId,tradeType(1),jindouNum,orderId,createTime,userId,orderType(1)
+        ActivityAccountTradeHistory tradeHistory = new ActivityAccountTradeHistory();
+        tradeHistory.setAccountId(Integer.valueOf(String.valueOf(activityAccountVo.getId())));
+        tradeHistory.setTradeType(1);
+        tradeHistory.setJindouNum(Integer.valueOf(String.valueOf(activityInfo.getAmount())));
+        tradeHistory.setUserId(activityInfo.getUserId());
+        tradeHistory.setOrderType(1);
+        acitivityOrder = activityAccountOrderMapper.getActivityOrderByOrderNo(orderNo);
+        tradeHistory.setOrderId(acitivityOrder.getId());
+        tradeHistoryMapper.insertSelective(tradeHistory);
+        return ResponseObject.successStatus();
     }
 }

@@ -32,4 +32,20 @@ public interface ActivityAccountOrderMapper {
      * @return
      */
     int createAccountOrder(ActivityAccountOrder activityAccountOrder);
+
+    /**
+     * 修改订单的状态，
+     *
+     * @param acitivityOrder
+     * @return
+     */
+    int updateSelectiveOrder(ActivityAccountOrder acitivityOrder);
+
+    /**
+     * 根据orderNo获取订单信息
+     *
+     * @param orderNo
+     * @return
+     */
+    ActivityAccountOrder getActivityOrderByOrderNo(String orderNo);
 }

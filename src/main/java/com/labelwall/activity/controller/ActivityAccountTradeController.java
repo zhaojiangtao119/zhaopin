@@ -2,6 +2,7 @@ package com.labelwall.activity.controller;
 
 import com.labelwall.activity.entity.ActivityAccountAdd;
 import com.labelwall.activity.entity.ActivityAccountOrder;
+import com.labelwall.activity.entity.ActivityInfo;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
@@ -97,5 +98,16 @@ public class ActivityAccountTradeController {
         return activityAccountOrderService.createAccountOrder(activityAccountOrder);
     }
 
-
+    /**
+     * 创建收费活动支付成功后的操作:创建活动，修改活动订单的状态，修改用户账户的余额，修改账户交易的历史记录
+     * 需要的参数：活动的所有参数，订单号，userId(活动参数中有)
+     *
+     * @param orderNo
+     * @param activityInfo
+     * @return
+     */
+    @RequestMapping(value = "pay/{orderNo}", method = RequestMethod.POST)
+    public ResponseObject payOrder(@PathVariable("orderNo") String orderNo, ActivityInfo activityInfo) {
+        return activityAccountOrderService.modifyPayActivityOrder(orderNo, activityInfo);
+    }
 }

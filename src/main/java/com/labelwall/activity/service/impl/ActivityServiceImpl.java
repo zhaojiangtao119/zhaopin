@@ -636,4 +636,39 @@ public class ActivityServiceImpl implements IActivityService {
         }
         return ResponseObject.failStatusMessage("图片上传失败");
     }
+
+    @Override
+    public ResponseObject validateActivityInfo(ActivityInfo activityInfo) {
+        //1.验证输入的时间是否正确
+        ResponseObject validateTime = validateActivityTime(activityInfo);
+        if (!validateTime.isSuccess()) {
+            return validateTime;
+        }
+        //2.验证当前用户的关联事件是否存在时间上的冲突
+        ResponseObject validateUserTime = vaildateUserTime(activityInfo, activityInfo.getUserId());
+        if (!validateUserTime.isSuccess()) {
+            return validateUserTime;
+        }
+        return ResponseObject.successStatus();
+    }
+
+    @Override
+    public ResponseObject<ActivityInfo> createChargeActivity(ActivityInfo activityInfo) {
+        //3.将数据插入到数据库
+        //获取schoolId
+        if (StringUtils.isNotBlank(activityInfo.getSchool()) &&
+                StringUtils.isNotBlank(activityInfo.getLocation())) {
+            Integer schoolId = schoolService.
+                    getSchoolIdByProNameSchName(activityInfo.getLocation(), activityInfo.getSchool());
+            activityInfo.setSchoolId(schoolId);
+        }
+        int rowCount = activityDao.createFreeActivity(activityInfo);
+        if (rowCount > 0) {
+            //创建成功
+            //4.修改well_start_activity;
+            activityDao.createStartActivity(activityInfo.getId(), activityInfo.getUserId());
+            return ResponseObject.successStautsData(activityInfo);
+        }
+        return ResponseObject.failStatusMessage("创建失败");
+    }
 }

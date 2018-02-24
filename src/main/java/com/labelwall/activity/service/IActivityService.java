@@ -182,4 +182,22 @@ public interface IActivityService {
      * @return
      */
     ResponseObject updatePosterUrl(Integer userId, Integer activityId, String posterUrl);
+
+
+
+    /**
+     * 创建收费活动验证活动基本信息
+     *
+     * @param activityInfo
+     * @return
+     */
+    ResponseObject validateActivityInfo(ActivityInfo activityInfo);
+
+    /**
+     * 创建收费活动
+     *
+     * @param activityInfo
+     * @return
+     */
+    ResponseObject<ActivityInfo> createChargeActivity(ActivityInfo activityInfo);
 }

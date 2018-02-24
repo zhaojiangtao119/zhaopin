@@ -179,6 +179,7 @@ public class UserServiceImpl implements IUserService {
             try {
                 byte[] userHead = userDto.getMultipartFile().getBytes();
                 String userHeadKey = QiniuStorage.uploadUserHead(userHead);
+                String url = QiniuStorage.getUserHeadUrl(userHeadKey);
                 user.setHead(userHeadKey);
             } catch (IOException e) {
                 logger.error("用户头像解析图片失败", e);

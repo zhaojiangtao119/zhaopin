@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * Created by Administrator on 2018-02-22.
  */
@@ -36,5 +38,10 @@ public class ActivityAccountServiceImpl implements IActivityAccountService {
     @Override
     public int updateAccountJindouNum(Integer accountId, Integer jindouCount) {
         return activityAccountMapper.updateAccountJindouNum(accountId, jindouCount);
+    }
+
+    @Override
+    public int updateAccountSubJindouNum(Long accountId, BigDecimal jindouCount) {
+        return activityAccountMapper.updateAccountSubJindouNum(accountId, jindouCount);
     }
 }

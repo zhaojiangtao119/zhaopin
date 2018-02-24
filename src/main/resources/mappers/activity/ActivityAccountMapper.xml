@@ -22,4 +22,9 @@
         SET balance = balance + #{jindouCount}
         WHERE account_id = #{accountId}
     </update>
+    <update id="updateAccountSubJindouNum" parameterType="map">
+        UPDATE well_account
+        SET balance = balance - #{jindouCount}
+        WHERE account_id = #{accountId}
+    </update>
 </mapper>

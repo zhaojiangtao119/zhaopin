@@ -2,6 +2,7 @@ package com.labelwall.activity.service;
 
 import com.labelwall.activity.entity.ActivityAccountAdd;
 import com.labelwall.activity.entity.ActivityAccountOrder;
+import com.labelwall.activity.entity.ActivityInfo;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
 import com.labelwall.common.ResponseObject;
@@ -72,4 +73,13 @@ public interface IActivityAccountOrderService {
      * @return
      */
     ResponseObject<ActivityAccountOrderVo> createAccountOrder(ActivityAccountOrder activityAccountOrder);
+
+    /**
+     * 支付创建活动的订单
+     *
+     * @param orderNo
+     * @param activityInfo
+     * @return
+     */
+    ResponseObject modifyPayActivityOrder(String orderNo, ActivityInfo activityInfo);
 }

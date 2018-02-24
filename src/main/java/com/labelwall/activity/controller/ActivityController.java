@@ -173,7 +173,7 @@ public class ActivityController {
     }
 
     /**
-     * 创建活动
+     * 创建免费活动
      * 将新建活动id返回回去
      *
      * @param activityInfo
@@ -195,5 +195,16 @@ public class ActivityController {
     @RequestMapping(value = "poster", method = RequestMethod.PUT)
     public ResponseObject updatePosterUrl(Integer userId, Integer activityId, String posterUrl) {
         return activityService.updatePosterUrl(userId, activityId, posterUrl);
+    }
+
+    /**
+     * 创建收费活动订单之前验证活动基本信息是否满足后台的验证要求
+     *
+     * @param activityInfo
+     * @return
+     */
+    @RequestMapping(value = "validate", method = RequestMethod.POST)
+    public ResponseObject validateActivityInfo(ActivityInfo activityInfo) {
+        return activityService.validateActivityInfo(activityInfo);
     }
 }
