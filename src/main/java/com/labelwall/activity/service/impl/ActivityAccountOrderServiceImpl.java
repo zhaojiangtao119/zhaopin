@@ -14,6 +14,7 @@ import com.labelwall.activity.dao.ActivityAccountTradeHistoryMapper;
 import com.labelwall.activity.entity.ActivityAccountAdd;
 import com.labelwall.activity.entity.ActivityAccountOrder;
 import com.labelwall.activity.entity.ActivityAccountTradeHistory;
+import com.labelwall.activity.entity.BaseBean;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.service.IActivityAccountService;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
@@ -133,7 +134,9 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
         activityAccountAdd.setStatus(1);
         activityAccountAdd.setOrderInfo("个人账户豆子充值");
         //生成订单号：
-        String orderNo = this.assembleOrderNo();
+        String todayStr = DateTimeUtil.changeDateFormat(DateTimeUtil.dateToStr(new Date()));
+        Integer orderCount = activityAccountAddMapper.getTodayOrderNum(todayStr);
+        String orderNo = this.assembleOrderNo(orderCount);
         if (orderNo == null) {
             return ResponseObject.failStatusMessage("生成订单失败");
         }
@@ -150,10 +153,8 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
     }
 
     //生成订单号：年+月+日+时+分+秒+（当日已经生成的订单数+1）
-    private String assembleOrderNo() {
+    private String assembleOrderNo(Integer orderCount) {
         //获取今天的订单数
-        String todayStr = DateTimeUtil.changeDateFormat(DateTimeUtil.dateToStr(new Date()));
-        Integer orderCount = activityAccountAddMapper.getTodayOrderNum(todayStr);
         String orderNum = String.valueOf(orderCount);
         final int size = 5 - orderNum.length();
         for (int i = 0; i < size; i++) {
@@ -298,5 +299,45 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
         tradeHistory.setTradeType(1);//正1表示充值/收入
         tradeHistory.setOrderType(0);//0表示用户对账户的充值记录，1是账户对活动的支出或收入
         int rowCount = tradeHistoryMapper.insertSelective(tradeHistory);
+    }
+
+    @Override
+    public ResponseObject<ActivityAccountOrderVo> createAccountOrder(ActivityAccountOrder activityAccountOrder) {
+        //需要前端传递的参数有，userId，金豆num，activityTitle，activityType
+        if (activityAccountOrder.getUserId() == null ||
+                activityAccountOrder.getOrderPrice() == null ||
+                activityAccountOrder.getOrderInfo() == null ||
+                activityAccountOrder.getType() == null) {
+            return ResponseObject.
+                    fail(ResponseStatus.ERROR_PARAM.getCode(), ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //组装活动订单对象
+        if (activityAccountOrder.getType() == 0) {
+            activityAccountOrder.setTypeDesc("发起活动");
+        } else if (activityAccountOrder.getType() == 1) {
+            activityAccountOrder.setTypeDesc("参与活动");
+        }
+        //订单号
+        String todayStr = DateTimeUtil.changeDateFormat(DateTimeUtil.dateToStr(new Date()));
+        Integer orderCount = activityAccountOrderMapper.getTodayOrderNum(todayStr);
+        String orderNo = this.assembleOrderNo(orderCount);
+        if (orderNo == null) {
+            return ResponseObject.failStatusMessage("生成订单失败");
+        }
+        activityAccountOrder.setOrderNo(orderNo);
+        activityAccountOrder.setCreateTime(DateTimeUtil.dateToStr(new Date()));
+        activityAccountOrder.setStatus(0);//订单未支付
+        int rowCount = activityAccountOrderMapper.createAccountOrder(activityAccountOrder);
+        if (rowCount < 1) {
+            return ResponseObject.failStatusMessage("生成订单失败");
+        }
+        ActivityAccountOrderVo orderVo = new ActivityAccountOrderVo();
+        BeanUtils.copyProperties(activityAccountOrder, orderVo);
+        if (orderVo.getStatus() == Const.ActivityOrderStatus.NO_PAY.getCode()) {
+            orderVo.setStatusDesc(Const.ActivityOrderStatus.NO_PAY.getValue());
+        } else if (orderVo.getStatus() == Const.ActivityOrderStatus.PAID.getCode()) {
+            orderVo.setStatusDesc(Const.ActivityOrderStatus.PAID.getValue());
+        }
+        return ResponseObject.successStautsData(orderVo);
     }
 }

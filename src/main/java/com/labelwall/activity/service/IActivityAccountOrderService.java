@@ -64,4 +64,12 @@ public interface IActivityAccountOrderService {
      * @return
      */
     ActivityAccountAdd getAccountOrderDetail(Integer userId, Long orderNo);
+
+    /**
+     * 创建活动时生成的订单
+     *
+     * @param activityAccountOrder
+     * @return
+     */
+    ResponseObject<ActivityAccountOrderVo> createAccountOrder(ActivityAccountOrder activityAccountOrder);
 }

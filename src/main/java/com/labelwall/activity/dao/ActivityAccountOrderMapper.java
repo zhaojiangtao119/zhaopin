@@ -17,4 +17,19 @@ public interface ActivityAccountOrderMapper {
      */
     List<ActivityAccountOrder> getUserActivityOrder(Integer userId);
 
+    /**
+     * 获取今天的订单数目
+     *
+     * @param todayStr
+     * @return
+     */
+    Integer getTodayOrderNum(String todayStr);
+
+    /**
+     * 创建活动订单
+     *
+     * @param activityAccountOrder
+     * @return
+     */
+    int createAccountOrder(ActivityAccountOrder activityAccountOrder);
 }

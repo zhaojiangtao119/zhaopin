@@ -22,4 +22,71 @@
         FROM well_activity_order
         WHERE user_id = #{userId}
     </select>
+    <select id="getTodayOrderNum" parameterType="string" resultType="integer">
+        SELECT COUNT(1)
+        FROM well_activity_order
+        WHERE create_time <![CDATA[>]]> #{todayStr}
+    </select>
+
+    <insert id="createAccountOrder" parameterType="com.labelwall.activity.entity.ActivityAccountOrder">
+        INSERT INTO `well_activity_order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="activityId != null">
+                activity_id,
+            </if>
+            <if test="orderNo != null">
+                WIDout_trade_no,
+            </if>
+            <if test="typeDesc != null">
+                WIDsubject,
+            </if>
+            <if test="orderPrice != null">
+                WIDtotal_fee,
+            </if>
+            <if test="orderInfo != null">
+                WIDbody,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="activityId != null">
+                #{activityId},
+            </if>
+            <if test="orderNo != null">
+                #{orderNo},
+            </if>
+            <if test="typeDesc != null">
+                #{typeDesc},
+            </if>
+            <if test="orderPrice != null">
+                #{orderPrice},
+            </if>
+            <if test="orderInfo != null">
+                #{orderInfo},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+        </trim>
+    </insert>
 </mapper>

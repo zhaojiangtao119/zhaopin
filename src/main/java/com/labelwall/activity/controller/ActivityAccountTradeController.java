@@ -1,6 +1,7 @@
 package com.labelwall.activity.controller;
 
 import com.labelwall.activity.entity.ActivityAccountAdd;
+import com.labelwall.activity.entity.ActivityAccountOrder;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
@@ -84,4 +85,17 @@ public class ActivityAccountTradeController {
         return activityAccountOrderService.activityAccountAlipayCallback(request.getParameterMap());
 
     }
+
+    /**
+     * 创建收费活动时创建的订单
+     *
+     * @param activityAccountOrder
+     * @return
+     */
+    @RequestMapping(value = "add/a", method = RequestMethod.POST)
+    public ResponseObject<ActivityAccountOrderVo> createAccountOrder(ActivityAccountOrder activityAccountOrder) {
+        return activityAccountOrderService.createAccountOrder(activityAccountOrder);
+    }
+
+
 }
