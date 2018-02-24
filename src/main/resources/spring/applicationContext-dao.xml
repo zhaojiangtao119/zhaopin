@@ -9,7 +9,7 @@
      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!--扫描bean-->
+    <!--扫描bean，使用注解创建类对象-->
     <context:component-scan base-package="com.labelwall" annotation-config="true">
         <!--spring不扫描controller层-->
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
@@ -87,7 +87,8 @@
     </bean>
     <!--mybatis扫描dao（接口文件），生成mapper接口的代理对象-->
     <bean name="mapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.labelwall.mall.dao,com.labelwall.course.dao,com.labelwall.activity.dao"/>
+        <property name="basePackage"
+                  value="com.labelwall.mall.dao,com.labelwall.course.dao,com.labelwall.activity.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 

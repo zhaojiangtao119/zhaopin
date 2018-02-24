@@ -4,9 +4,56 @@
     <resultMap id="BaseResultMap" type="com.labelwall.activity.entity.ActivityAccountTradeHistory">
         <result column="user_id" property="userId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result column="account_id" property="accountId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+        <result column="trade_type" property="tradeType" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result column="trade_num" property="jindouNum" jdbcType="INTEGER" javaType="java.lang.Integer"/>
-        <result column="create_time" property="createTime"/>
+        <result column="crate_time" property="createTime"/>
         <result column="order_id" property="orderId" jdbcType="INTEGER" javaType="java.lang.Integer"/>
         <result column="orderType" property="orderType" jdbcType="INTEGER" javaType="java.lang.Integer"/>
     </resultMap>
+
+    <insert id="insertSelective" parameterType="com.labelwall.activity.entity.ActivityAccountTradeHistory">
+        INSERT INTO `well_trade_history`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="accountId != null">
+                account_id,
+            </if>
+            <if test="tradeType != null">
+                trade_type,
+            </if>
+            <if test="jindouNum != null">
+                trade_num,
+            </if>
+            crate_time,
+            <if test="orderId != null">
+                order_id,
+            </if>
+            <if test="orderType != null">
+                orderType,
+            </if>
+        </trim>
+        <trim prefix="VALUES(" suffixOverrides="," suffix=")">
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="accountId != null">
+                #{accountId},
+            </if>
+            <if test="tradeType != null">
+                #{tradeType},
+            </if>
+            <if test="jindouNum != null">
+                #{jindouNum},
+            </if>
+            now(),
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+            <if test="orderType != null">
+                #{orderType},
+            </if>
+        </trim>
+    </insert>
 </mapper>

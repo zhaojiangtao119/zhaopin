@@ -10,16 +10,15 @@ import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.google.common.collect.Lists;
 import com.labelwall.activity.dao.ActivityAccountAddMapper;
 import com.labelwall.activity.dao.ActivityAccountOrderMapper;
+import com.labelwall.activity.dao.ActivityAccountTradeHistoryMapper;
 import com.labelwall.activity.entity.ActivityAccountAdd;
 import com.labelwall.activity.entity.ActivityAccountOrder;
+import com.labelwall.activity.entity.ActivityAccountTradeHistory;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.service.IActivityAccountService;
 import com.labelwall.activity.vo.ActivityAccountAddVo;
 import com.labelwall.activity.vo.ActivityAccountOrderVo;
 import com.labelwall.common.*;
-import com.labelwall.mall.entity.Order;
-import com.labelwall.mall.entity.OrderItem;
-import com.labelwall.mall.vo.OrderVo;
 import com.labelwall.util.DateTimeUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -27,10 +26,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.SimpleFormatter;
 
 /**
  * Created by Administrator on 2018-02-22.
@@ -44,6 +41,8 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
     private ActivityAccountAddMapper activityAccountAddMapper;
     @Autowired
     private IActivityAccountService activityAccountService;
+    @Autowired
+    private ActivityAccountTradeHistoryMapper tradeHistoryMapper;
 
     @Override
     public ResponseObject<List<ActivityAccountOrderVo>> getUserAcitivtyOrder(Integer userId) {
@@ -197,7 +196,7 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
         model.setProductCode("QUICK_MSECU11RITY_PAY");
         request.setBizModel(model);
         //支付宝请求回调的服务端地址
-        request.setNotifyUrl("http://4hfax4.natappfree.cc/zhaopin/app/order/callbacks");
+        request.setNotifyUrl("http://dg4vnv.natappfree.cc/zhaopin/activity/account/trade/callbacks");
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute
             response = alipayClient.sdkExecute(request);
@@ -281,11 +280,23 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
             //修改用户的额账户的金豆余额
             int rowCount = activityAccountService.
                     updateAccountJindouNum(activityAccountAdd.getAccountId(), activityAccountAdd.getJindouCount());
-            //TODO 修改账户的充值记录
-
+            //修改账户的充值记录
+            updateUserAccountHistory(activityAccountAdd);
             validateFlag = true;
             return validateFlag;
         }
         return validateFlag;
+    }
+
+    private void updateUserAccountHistory(ActivityAccountAdd activityAccountAdd) {
+        //需要的参数有：accountId,orderId,userId,jindouNum,tradeType,orderType,createTime
+        ActivityAccountTradeHistory tradeHistory = new ActivityAccountTradeHistory();
+        tradeHistory.setAccountId(activityAccountAdd.getAccountId());
+        tradeHistory.setOrderId(activityAccountAdd.getId());
+        tradeHistory.setUserId(activityAccountAdd.getUserId());
+        tradeHistory.setJindouNum(activityAccountAdd.getJindouCount());
+        tradeHistory.setTradeType(1);//正1表示充值/收入
+        tradeHistory.setOrderType(0);//0表示用户对账户的充值记录，1是账户对活动的支出或收入
+        int rowCount = tradeHistoryMapper.insertSelective(tradeHistory);
     }
 }
