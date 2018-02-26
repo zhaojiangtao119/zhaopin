@@ -20,6 +20,10 @@ public class Const {
         int ROLE_CUSTOMER = 1;
     }
 
+    public interface RedisCacheExTime{
+        int REDIS_SESSION_EXTIME = 60 * 30;//设置登录session的在redis中保存的时间
+    }
+
     public interface PostClickType {
         int LIKE_CLICK = 0;
         int DISLIKE_CLICK = 1;

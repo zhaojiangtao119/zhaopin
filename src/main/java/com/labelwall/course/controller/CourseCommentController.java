@@ -1,18 +1,23 @@
 package com.labelwall.course.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.labelwall.common.Const;
-import com.labelwall.common.ResponseObject;
-import com.labelwall.course.dto.CourseCommentDto;
-import com.labelwall.course.service.ICourseCommentService;
-import com.labelwall.mall.dto.UserDto;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import com.github.pagehelper.PageInfo;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.course.dto.CourseCommentDto;
+import com.labelwall.course.service.ICourseCommentService;
+import com.labelwall.mall.dto.UserDto;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
 
 /**
  * Created by Administrator on 2017-12-13.
@@ -47,8 +52,13 @@ public class CourseCommentController {
      * @return
      */
     @RequestMapping(value = "publish_comment", method = RequestMethod.POST)
-    public ResponseObject<CourseCommentDto> publishComment(HttpSession session, CourseCommentDto courseCommentDto) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<CourseCommentDto> publishComment(HttpServletRequest request, CourseCommentDto courseCommentDto) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return courseCommentService.publishComment(userDto, courseCommentDto);
     }
 

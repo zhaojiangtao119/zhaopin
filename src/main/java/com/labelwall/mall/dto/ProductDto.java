@@ -2,6 +2,7 @@ package com.labelwall.mall.dto;
 
 import com.labelwall.mall.entity.Product;
 import com.labelwall.mall.entity.Shop;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Administrator on 2017-12-06.
@@ -14,8 +15,29 @@ public class ProductDto extends Product {
     private Shop shop;
     private Double minPrice;
     private Double maxPrice;
+    private MultipartFile mainImg;
+    private MultipartFile subImg;
+    
+    
+    
 
-    public String getCreateTimeStr() {
+    public MultipartFile getMainImg() {
+		return mainImg;
+	}
+
+	public void setMainImg(MultipartFile mainImg) {
+		this.mainImg = mainImg;
+	}
+
+	public MultipartFile getSubImg() {
+		return subImg;
+	}
+
+	public void setSubImg(MultipartFile subImg) {
+		this.subImg = subImg;
+	}
+
+	public String getCreateTimeStr() {
         return createTimeStr;
     }
 

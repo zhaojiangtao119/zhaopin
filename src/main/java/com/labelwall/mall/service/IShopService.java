@@ -5,6 +5,7 @@ import com.labelwall.mall.dto.ShopDto;
 import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.Shop;
 import com.labelwall.mall.entity.ShopServices;
+import com.labelwall.mall.entity.TradeType;
 
 import java.util.List;
 
@@ -44,4 +45,10 @@ public interface IShopService {
 	List<Integer> getShopOnProductId(Integer productId);
 	//添加服务
 	int insertShopService(ShopServices service);
+	//删除商铺中的某件商品
+	ResponseObject<String> deletePro(ShopDto shopDetailByUserId, Integer productId);
+	//删除商铺中某项服务
+	ResponseObject<String> deleteService(ShopDto shopDetailByUserId, Integer serviceId);
+	//获得所有交易类型商铺的可选  类别（比如：书店、小卖部、、、、）
+	List<TradeType> getAllTradeType();
 }

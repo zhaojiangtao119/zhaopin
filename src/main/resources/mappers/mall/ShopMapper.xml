@@ -261,4 +261,7 @@
     <select id="getShopOnProductId" parameterType="int" resultType="int">
         select shop_id from wall_product where id=#{values}
     </select>
+    <select id="getAllTradeType" resultType="TradeType">
+        select id,name,DATE_FORMAT(createTime,'%Y-%m-%d %H:%I:%S') createTime,DATE_FORMAT(updateTime,'%Y-%m-%d %H:%I:%S') updateTime from wall_trade_shoptype
+    </select>
 </mapper>

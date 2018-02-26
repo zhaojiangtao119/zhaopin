@@ -42,6 +42,22 @@ public class QiniuStorage {
         return key;
     }
 
+    public static String uploadProductMainImage(byte[] productMainImg) {
+    	 String key = QiniuWrapper.upload(productMainImg, QiniuKeyGenerator.generatorProductMainImageKey(), false);
+         if (StringUtils.isBlank(key)) {
+             return null;
+         }
+         return key;
+	}
+
+	public static String uploadProductSubImage(byte[] productSubImg) {
+		 String key = QiniuWrapper.upload(productSubImg, QiniuKeyGenerator.generatorProductSubImageKey(), false);
+	        if (StringUtils.isBlank(key)) {
+	            return null;
+	        }
+	        return key;
+	}
+    
     //上传支付二维码图片
     public static String updateOrderPayImage(byte[] buff,String uploadKey){
         String key = QiniuWrapper.upload(buff, uploadKey, false);
@@ -50,7 +66,27 @@ public class QiniuStorage {
         }
         return key;
     }
+    
+    //上传商铺主题图片
+    public static String uploadShopTopImg(byte[] buff){
+    	 String key = QiniuWrapper.upload(buff, QiniuKeyGenerator.generatorShopTopImageKey(), false);
+         if (StringUtils.isBlank(key)) {
+             return null;
+         }
+         return key;
+    }
 
+    //上传服务图片
+    public static String uploadServiceImg(byte[] serviceImg) {
+    	String key = QiniuWrapper.upload(serviceImg, QiniuKeyGenerator.generatorShopServiceImageKey(), false);
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
+        return key;
+	}
+    
+    
+    
     public static String getUserHeadUrl(String key){
         return QiniuWrapper.getUrl(key,ThumbModel.THUMB_64.getValue());
     }
@@ -74,4 +110,8 @@ public class QiniuStorage {
     public static boolean fileIsExist(String key){
         return QiniuWrapper.fileIsExist(key);
     }
+
+	
+
+	
 }

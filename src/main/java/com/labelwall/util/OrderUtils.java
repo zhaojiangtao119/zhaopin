@@ -14,6 +14,4 @@ public class OrderUtils {
 		String result=date.format(new Date())+num;
 		return result;
 	}
-	
-	
 }

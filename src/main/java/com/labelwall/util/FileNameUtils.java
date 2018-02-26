@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
-public class StringUtils {
+public class FileNameUtils {
 	 public static String renameFileName(String fileName) {
 	        String formatDate = new SimpleDateFormat("yyMMddHHmmss").format(new Date()); // ��ǰʱ���ַ���
 	        int random = new Random().nextInt(10000);

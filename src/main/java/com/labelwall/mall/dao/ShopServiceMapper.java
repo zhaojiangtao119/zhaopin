@@ -7,12 +7,19 @@ import java.util.List;
 
 public interface ShopServiceMapper {
 
-	List<ShopServices> getServiceListByShopId(Integer id);
 
+	//获得所有的可供选择的服务类型
 	List<ServiceType> getServiceListByType(int type);
-
-	int insertService(ShopServices service);
-
 	ServiceType getServiceTypeById(Integer serviceId);
+
+	
+	
+	List<ShopServices> getServiceListByShopId(Integer id);
+	
+	int insertService(ShopServices service);
+	//根据ID获得服务详情
+	ShopServices getServiceDetailById(Integer serviceId);
+	//根据ID删除服务
+	int deleteServiceById(Integer serviceId);
 
 }

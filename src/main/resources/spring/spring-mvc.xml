@@ -43,9 +43,9 @@
             2.xml文件的配置形式：使用标签<mvc:cors>来全局配置，所有的方法都可通过指定的域来进行访问。
                 属性path，可以过滤访问链接，*：标识匹配到下一层，**:匹配到所有层。
     -->
-    <mvc:cors>
+    <!--<mvc:cors>
         <mvc:mapping path="/**"/>
-    </mvc:cors>
+    </mvc:cors>-->
 
     <mvc:interceptors>
         <!--登录拦截器-->
@@ -53,10 +53,9 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/auth/**"/>
             <!--用户登录注册-->
-            <mvc:exclude-mapping path="/user/login"/>
+             <mvc:exclude-mapping path="/user/login"/>
             <mvc:exclude-mapping path="/user/register"/>
             <mvc:exclude-mapping path="/user/check_username_email"/>
-            <mvc:exclude-mapping path="/user/get_user_info/*"/>
             <!--区域-->
             <mvc:exclude-mapping path="/location/**"/>
             <!--帖子及回复-->

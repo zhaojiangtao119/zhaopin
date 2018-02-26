@@ -1,17 +1,23 @@
 package com.labelwall.course.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.labelwall.common.Const;
-import com.labelwall.common.ResponseObject;
-import com.labelwall.course.service.ITeacherFollowsService;
-import com.labelwall.mall.dto.UserDto;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import com.github.pagehelper.PageInfo;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.course.service.ITeacherFollowsService;
+import com.labelwall.mall.dto.UserDto;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
 
 /**
  * Created by Administrator on 2017-12-14.
@@ -31,9 +37,14 @@ public class TeacherFollowsController {
      * @return
      */
     @RequestMapping(value = "is_follows/{id}", method = RequestMethod.GET)
-    public ResponseObject<Boolean> isFollows(HttpSession session,
+    public ResponseObject<Boolean> isFollows(HttpServletRequest request,
                                              @PathVariable("id") Integer courseId) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return teacherFollowsService.isFollows(userDto.getId(), courseId);
     }
 
@@ -45,9 +56,14 @@ public class TeacherFollowsController {
      * @return
      */
     @RequestMapping(value = "do_follows/{id}", method = RequestMethod.POST)
-    public ResponseObject doFollows(HttpSession session,
+    public ResponseObject doFollows(HttpServletRequest request,
                                     @PathVariable("id") Integer courseId) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return teacherFollowsService.doFollows(userDto, courseId);
     }
 
@@ -60,10 +76,15 @@ public class TeacherFollowsController {
      * @return
      */
     @RequestMapping(value = "get_teacher/{pageNum}/{pageSize}", method = RequestMethod.GET)
-    public ResponseObject<PageInfo> getTeacher(HttpSession session,
+    public ResponseObject<PageInfo> getTeacher(HttpServletRequest request,
                                                @PathVariable("pageNum") Integer pageNum,
                                                @PathVariable("pageSize") Integer pageSize) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return teacherFollowsService.getTeacher(userDto.getId(), pageNum, pageSize);
     }
 }

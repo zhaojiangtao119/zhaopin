@@ -1,8 +1,14 @@
 package com.labelwall.interceptor;
 
 import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
 import com.labelwall.mall.dto.UserDto;
+import com.labelwall.util.CookieUtil;
 import com.labelwall.util.HttpUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -16,7 +22,14 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断用户是否登录
-        UserDto userDto = (UserDto) request.getSession().getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		request.getRequestDispatcher("/auth/noLogin").forward(request, response);
+    		return false;
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
+//        UserDto userDto = (UserDto) request.getSession().getAttribute(Const.CURRENT_USER);
         if (userDto != null) {
             return true;
         }

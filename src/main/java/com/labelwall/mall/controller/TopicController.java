@@ -1,5 +1,18 @@
 package com.labelwall.mall.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
@@ -11,12 +24,9 @@ import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.service.ITopicCategoryService;
 import com.labelwall.mall.service.ITopicPostReplyService;
 import com.labelwall.mall.service.ITopicPostService;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
 
 /**
  * Created by Administrator on 2017-12-05.
@@ -80,9 +90,14 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "publish_post", method = RequestMethod.POST)
-    public ResponseObject<TopicPostDto> publishPost(HttpSession session, TopicPostDto topicPostDto) {
+    public ResponseObject<TopicPostDto> publishPost(HttpServletRequest request, TopicPostDto topicPostDto) {
         //TODO 创建帖子的，用户登录
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         if (topicPostDto == null || StringUtils.isBlank(topicPostDto.getTitle())) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
@@ -139,9 +154,14 @@ public class TopicController {
      * @return
      */
     @RequestMapping(value = "publish_post_reply", method = RequestMethod.POST)
-    public ResponseObject<TopicPostReplyDto> publishPostReply(HttpSession session, TopicPostReplyDto topicPostReplyDto) {
+    public ResponseObject<TopicPostReplyDto> publishPostReply(HttpServletRequest request, TopicPostReplyDto topicPostReplyDto) {
         //TODO 帖子的回复 判断是否登录
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         if (StringUtils.isBlank(topicPostReplyDto.getImage()) && StringUtils.isBlank(topicPostReplyDto.getContent())) {
             return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }

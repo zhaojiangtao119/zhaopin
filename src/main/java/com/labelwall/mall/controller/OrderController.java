@@ -11,6 +11,11 @@ import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.service.IOrderService;
 import com.labelwall.mall.vo.OrderProductVo;
 import com.labelwall.mall.vo.OrderVo;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
+
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,95 +41,131 @@ public class OrderController {
     /**
      * 创建订单
      *
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping(value = "create_order", method = RequestMethod.POST)
-    public ResponseObject<OrderVo> createOrder(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<OrderVo> createOrder(HttpServletRequest request) {
+//        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return orderService.createOrder(userDto.getId());
     }
 
     /**
      * 立即购买某一个商品
      *
-     * @param session
+     * @param request
      * @param productId
      * @param quantity
      * @return
      */
     @RequestMapping(value = "buy", method = RequestMethod.POST)
-    public ResponseObject<OrderVo> buyProduct(HttpSession session, Integer productId, Integer quantity) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<OrderVo> buyProduct(HttpServletRequest request, Integer productId, Integer quantity) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return orderService.buyProduct(userDto.getId(), productId, quantity);
     }
 
     /**
      * 取消订单
      *
-     * @param session
+     * @param request
      * @param orderNo
      * @return
      */
     @RequestMapping(value = "cancel_order/{orderNo}", method = RequestMethod.PUT)
-    public ResponseObject cancelOrder(HttpSession session,
+    public ResponseObject cancelOrder(HttpServletRequest request,
                                       @PathVariable("orderNo") Long orderNo) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return orderService.cancelOrder(userDto.getId(), orderNo);
     }
 
     /**
      * 获取订单列表
      *
-     * @param session
+     * @param request
      * @param pageNum
      * @param pageSize
      * @return
      */
     @RequestMapping(value = "user_order_list/{pageNum}/{pageSize}", method = RequestMethod.GET)
-    public ResponseObject<PageInfo> userOrderList(HttpSession session,
+    public ResponseObject<PageInfo> userOrderList(HttpServletRequest request,
                                                   @PathVariable(value = "pageNum") Integer pageNum,
                                                   @PathVariable(value = "pageSize") Integer pageSize) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return orderService.userOrderList(userDto.getId(), pageNum, pageSize);
     }
 
     /**
      * 获取订单详情
      *
-     * @param session
+     * @param request
      * @param orderNo
      * @return
      */
     @RequestMapping(value = "get_order_detail/{orderNo}", method = RequestMethod.GET)
-    public ResponseObject<OrderVo> getOrderDetail(HttpSession session,
+    public ResponseObject<OrderVo> getOrderDetail(HttpServletRequest request,
                                                   @PathVariable("orderNo") Long orderNo) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return orderService.getOrderDetail(userDto.getId(), orderNo);
     }
 
     /**
      * 获取购物车中已经选中的商品详情
      *
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping(value = "get_order_cart_product", method = RequestMethod.GET)
-    public ResponseObject<OrderProductVo> getOrderCartProduct(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<OrderProductVo> getOrderCartProduct(HttpServletRequest request) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return orderService.getOrderCartProduct(userDto.getId());
     }
 
     /**
      * 订单支付
      *
-     * @param session
+     * @param request
      * @param orderNo
      * @return
      */
     @RequestMapping(value = "order_pay")
-    public ResponseObject orderPay(HttpSession session, Long orderNo) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject orderPay(HttpServletRequest request,HttpSession session, Long orderNo) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         String path = session.getServletContext().getRealPath("upload");
         return orderService.orderPay(orderNo, userDto.getId(), path);
     }
@@ -176,14 +217,19 @@ public class OrderController {
     /**
      * 查询订单支付状态
      *
-     * @param session
+     * @param request
      * @param orderNo
      * @return
      */
     @RequestMapping(value = "query_order_pay_status/{orderNo}", method = RequestMethod.GET)
-    public ResponseObject<Boolean> queryOrderPayStatus(HttpSession session,
+    public ResponseObject<Boolean> queryOrderPayStatus(HttpServletRequest request,
                                                        @PathVariable("orderNo") Long orderNo) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         ResponseObject responseObject = orderService.queryOrderPayStatus(userDto.getId(), orderNo);
         if (responseObject.isSuccess()) {
             return ResponseObject.successStautsData(true);

@@ -17,4 +17,12 @@
 	    insert into wall_shop_service (shopId,serviceId,imgURL,price,theme,content,createTime,updateTime,serviceName) values 
 	    (#{shopId},#{serviceId},#{imgURL},#{price},#{theme},#{content},#{createTime},#{updateTime},#{serviceName})
 	</insert>
+
+	<select id="getServiceDetailById" parameterType="int" resultType="ShopServices">
+		select * from wall_shop_service where id = #{values}
+	</select>
+
+	<delete id="deleteServiceById" parameterType="int">
+		delete from wall_shop_service where id = #{values}
+	</delete>
 </mapper>

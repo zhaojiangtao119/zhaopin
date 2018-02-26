@@ -9,8 +9,13 @@ import com.labelwall.mall.dto.UserDto;
 import com.labelwall.mall.entity.*;
 import com.labelwall.mall.service.IRentalService;
 import com.labelwall.mall.service.IUserService;
-import com.labelwall.util.StringUtils;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.FileNameUtils;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
+
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -77,7 +82,7 @@ public class RentalController {
             // 其他文件格式不处理
             if ("png".equalsIgnoreCase(ext) || "jpg".equalsIgnoreCase(ext) || "gif".equalsIgnoreCase(ext)) {
                 // 重命名上传的文件名
-                String targetFileName = StringUtils.renameFileName(tmpFileName);
+                String targetFileName = FileNameUtils.renameFileName(tmpFileName);
                 // 保存的新文件
                 File target = new File(targetDirectory, targetFileName);
 
@@ -90,8 +95,13 @@ public class RentalController {
                 shop.setTopImgURL(request.getContextPath() + "/tmp/" + targetFileName);
             }
         }
-        UserDto user = getUser();
-        int result = rentalService.openShop(shop, user);
+        String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
+        int result = rentalService.openShop(shop, userDto);
         if (result > 0) {
             return ResponseObject.successStatus();
         } else {
@@ -223,10 +233,16 @@ public class RentalController {
      */
     @RequestMapping(value = "/getAllShop/{pageNum}/{pageSize}", method = RequestMethod.POST)
     public ResponseObject<PageInfo> getAllShop(@PathVariable(value = "pageNum") Integer pageNum,
-                                               @PathVariable(value = "pageSize") Integer pageSize) {
-        UserDto user = getUser();
+                                               @PathVariable(value = "pageSize") Integer pageSize,
+                                               HttpServletRequest request) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         PageHelper.startPage(pageNum, pageSize);
-        List<RentalShop> list = rentalService.getAllRentalShop(user);
+        List<RentalShop> list = rentalService.getAllRentalShop(userDto);
         PageInfo pageInfo = new PageInfo(list);
         return ResponseObject.successStautsData(pageInfo);
     }
@@ -237,13 +253,18 @@ public class RentalController {
      * @return
      */
     @RequestMapping(value = "/createOrder", method = RequestMethod.POST)
-    public ResponseObject<RentalOrder> creatOrder(RentalComputer com, @RequestParam("shopId") Integer shopId, @RequestParam("rentalMounth") Integer rentalMounth, @RequestParam("buyNum") Integer buyNum) {
+    public ResponseObject<RentalOrder> creatOrder(RentalComputer com,HttpServletRequest request, @RequestParam("shopId") Integer shopId, @RequestParam("rentalMounth") Integer rentalMounth, @RequestParam("buyNum") Integer buyNum) {
         if (com.getCpuId() == null || com.getMemoryId() == null || com.getCardId() == null || com.getDiskId() == null || com.getBoardId() == null || com.getCaseId() == null || com.getPowerId() == null) {
             return ResponseObject.fail(-1, "由于您选择的配件不足以组装一台电脑，不支持租赁");
         }
 //		rentalService.creatOrder(com);
-        UserDto user = getUser();
-        return rentalService.creatOrder(com, shopId, rentalMounth, buyNum, user.getId());
+        String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
+        return rentalService.creatOrder(com, shopId, rentalMounth, buyNum, userDto.getId());
     }
 
     /**
@@ -252,15 +273,20 @@ public class RentalController {
      * @return
      */
     @RequestMapping(value = "/buyComputer", method = RequestMethod.POST)
-    public ResponseObject<RentalOrder> buyComputer(RentalComputer com, @RequestParam("shopId") Integer shopId, @RequestParam("buyNum") Integer buyNum) {
+    public ResponseObject<RentalOrder> buyComputer(RentalComputer com,HttpServletRequest request, @RequestParam("shopId") Integer shopId, @RequestParam("buyNum") Integer buyNum) {
         if (com.getCpuId() == null && com.getMemoryId() == null && com.getCardId() == null && com.getDiskId() == null && com.getBoardId() == null && com.getPowerId() == null && com.getCaseId() == null && com.getRadiatorId() == null) {
             return ResponseObject.fail(-2, "您没有选择任何配件");
         }
-        UserDto user = getUser();
-        if (user == null) {
+        String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
+        if (userDto == null) {
             return ResponseObject.fail(-3, "您尚未登录，请登录！");
         } else {
-            return rentalService.buyComputer(com, user, shopId, buyNum);
+            return rentalService.buyComputer(com, userDto, shopId, buyNum);
         }
     }
 
@@ -274,13 +300,5 @@ public class RentalController {
         return rentalService.getOrderByShopId(shopId);
     }
 
-    //绑定当前用户的信息
-    public UserDto getUser() {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        if (userDto == null) {
-            ResponseObject<UserDto> response = userService.login("管理员", "123456789");
-            return response.getData();
-        }
-        return userDto;
-    }
+    
 }

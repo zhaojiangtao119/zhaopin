@@ -1,19 +1,23 @@
 package com.labelwall.course.controller;
 
-import com.github.pagehelper.PageInfo;
-import com.labelwall.common.Const;
-import com.labelwall.common.ResponseObject;
-import com.labelwall.course.dto.CourseDto;
-import com.labelwall.course.service.ICourseCollectionsService;
-import com.labelwall.mall.dto.UserDto;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
-import java.util.List;
+import com.github.pagehelper.PageInfo;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.course.service.ICourseCollectionsService;
+import com.labelwall.mall.dto.UserDto;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
 
 /**
  * Created by Administrator on 2017-12-13.
@@ -33,9 +37,14 @@ public class CourseCollectionsController {
      * @return
      */
     @RequestMapping(value = "is_collection/{id}", method = RequestMethod.GET)
-    public ResponseObject<Boolean> isCollection(HttpSession session,
+    public ResponseObject<Boolean> isCollection(HttpServletRequest request,
                                                 @PathVariable("id") Integer courseId) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return courseCollectionsService.isCollection(userDto.getId(), courseId);
     }
 
@@ -47,9 +56,14 @@ public class CourseCollectionsController {
      * @return
      */
     @RequestMapping(value = "do_collection/{id}", method = RequestMethod.POST)
-    public ResponseObject doCollection(HttpSession session,
+    public ResponseObject doCollection(HttpServletRequest request,
                                        @PathVariable("id") Integer courseId) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return courseCollectionsService.doCollection(userDto, courseId);
     }
 
@@ -62,10 +76,15 @@ public class CourseCollectionsController {
      * @return
      */
     @RequestMapping(value = "get_course/{pageNum}/{pageSize}", method = RequestMethod.GET)
-    public ResponseObject<PageInfo> getCourse(HttpSession session,
+    public ResponseObject<PageInfo> getCourse(HttpServletRequest request,
                                               @PathVariable("pageNum") Integer pageNum,
                                               @PathVariable("pageSize") Integer pageSize) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return courseCollectionsService.getCourse(userDto.getId(), pageNum, pageSize);
     }
 }

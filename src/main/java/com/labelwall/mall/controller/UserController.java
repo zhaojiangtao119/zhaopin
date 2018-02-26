@@ -3,13 +3,17 @@ package com.labelwall.mall.controller;
 import com.github.pagehelper.PageInfo;
 import com.labelwall.common.Const;
 import com.labelwall.common.ResponseObject;
-import com.labelwall.exception.CustomException;
 import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.entity.User;
 import com.labelwall.mall.service.IUserService;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -26,6 +30,8 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+//    private HttpServletRequest request;
+//    private HttpServletResponse response;
 
     /**
      * 登录，参数：username,password 响应：userVo
@@ -38,12 +44,14 @@ public class UserController {
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public ResponseObject<UserDto> login(@RequestParam(value = "username") String username,
                                          @RequestParam(value = "password") String password,
+                                         HttpServletResponse resp,
                                          HttpSession session) throws Exception {
         //用户登录
         ResponseObject<UserDto> response = userService.login(username, password);
         if (response.isSuccess()) {
             //TODO 登录成功来设置用户的session或者使用shiro
-            session.setAttribute(Const.CURRENT_USER, response.getData());
+            CookieUtil.writeLoginToken(resp, session.getId());
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.objToString(response.getData()), Const.RedisCacheExTime.REDIS_SESSION_EXTIME);
         }
         return response;
     }
@@ -51,32 +59,42 @@ public class UserController {
     /**
      * 退出
      *
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping(value = "logout", method = RequestMethod.POST)
-    public ResponseObject logout(HttpSession session) {
-        session.removeAttribute(Const.CURRENT_USER);
+    public ResponseObject logout(HttpServletRequest request, HttpServletResponse resp) {
+        String loginToken = CookieUtil.readLoginToken(request);
+        CookieUtil.delLoginToken(request, resp);
+        RedisPoolUtil.del(loginToken);
         return ResponseObject.successStatus();
     }
 
     /**
      * 获取用户信息(用户登录后获取个人信息)
      *
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping(value = "get_user_info", method = RequestMethod.GET)
-    public ResponseObject<UserDto> getUserInfo(HttpSession session) {
+    public ResponseObject<UserDto> getUserInfo(HttpServletRequest request) {
         //TODO 获取用户信息需要登录
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return ResponseObject.successStautsData(userDto);
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)) {
+            return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+        }
+        String json = RedisPoolUtil.get(loginToken);
+        UserDto userDto = JsonUtil.stringToObj(json, UserDto.class);
+        if (userDto != null) {
+            return ResponseObject.successStautsData(userDto);
+        }
+        return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
     }
 
-    @RequestMapping(value = "get_user_info/{userId}", method = RequestMethod.GET)
-    public ResponseObject<UserDto> getUserInfo(@PathVariable("userId") Integer userId) {
-        return userService.selectByUserId(userId);
-    }
+//    @RequestMapping(value = "get_user_info/{userId}", method = RequestMethod.GET)
+//    public ResponseObject<UserDto> getUserInfo(@PathVariable("userId") Integer userId) {
+//        return userService.selectByUserId(userId);
+//    }
 
     /**
      * 注册
@@ -112,14 +130,20 @@ public class UserController {
      * @return
      */
     @RequestMapping(value = "modify_user_info", method = RequestMethod.PUT)
-    public ResponseObject modifyUserInfo(HttpSession session, UserDto userDtoNew) {
+    public ResponseObject modifyUserInfo(HttpServletRequest request, HttpServletResponse resp, HttpSession session, UserDto userDtoNew) {
         //TODO 修改信息,需要登录
-        UserDto userDtoOld = (UserDto) session.getAttribute(Const.CURRENT_USER);
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)) {
+            return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+        }
+        String json = RedisPoolUtil.get(loginToken);
+        UserDto userDtoOld = JsonUtil.stringToObj(json, UserDto.class);
         userDtoNew.setId(userDtoOld.getId());
         userDtoNew.setUsername(userDtoOld.getUsername());//不允许用户修改用户名
         ResponseObject response = userService.modifyUserInfo(userDtoNew);
         if (response.isSuccess()) {
-            session.setAttribute(Const.CURRENT_USER, response.getData());
+            CookieUtil.writeLoginToken(resp, session.getId());
+            RedisPoolUtil.setEx(session.getId(), JsonUtil.objToString(response.getData()), Const.RedisCacheExTime.REDIS_SESSION_EXTIME);
         }
         return response;
     }
@@ -129,16 +153,24 @@ public class UserController {
      *
      * @param passwordOld
      * @param passwordNew
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping(value = "reset_password", method = RequestMethod.POST)
     public ResponseObject resetPassword(@RequestParam("passwordOld") String passwordOld,
                                         @RequestParam("passwordNew") String passwordNew,
-                                        HttpSession session) {
+                                        HttpServletRequest request, HttpServletResponse resp) {
         //TODO 修改密码判断用户是否登录
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
-        return userService.modifyPassword(userDto.getId(), passwordOld, passwordNew);
+        String loginToken = CookieUtil.readLoginToken(request);
+        if (StringUtils.isEmpty(loginToken)) {
+            return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+        }
+        String json = RedisPoolUtil.get(loginToken);
+        UserDto user = JsonUtil.stringToObj(json, UserDto.class);
+        if (user == null) {
+            return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+        }
+        return userService.restPassword(user.getId(), passwordOld, passwordNew);
     }
 
     /**
@@ -155,4 +187,6 @@ public class UserController {
                                                @PathVariable("pageSize") Integer pageSize) {
         return userService.searchUser(userDto, pageNum, pageSize);
     }
+
+
 }

@@ -1,18 +1,24 @@
 package com.labelwall.mall.controller;
 
-import com.labelwall.common.Const;
-import com.labelwall.common.ResponseObject;
-import com.labelwall.mall.dto.ShopCartDto;
-import com.labelwall.mall.dto.UserDto;
-import com.labelwall.mall.service.IShopCartService;
-import com.labelwall.mall.vo.CartVo;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import com.labelwall.common.Const;
+import com.labelwall.common.ResponseObject;
+import com.labelwall.mall.dto.ShopCartDto;
+import com.labelwall.mall.dto.UserDto;
+import com.labelwall.mall.service.IShopCartService;
+import com.labelwall.mall.vo.CartVo;
+import com.labelwall.util.CookieUtil;
+import com.labelwall.util.JsonUtil;
+import com.labelwall.util.RedisPoolUtil;
 
 /**
  * Created by Administrator on 2017-12-07.
@@ -31,8 +37,13 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "get_cart_list", method = RequestMethod.GET)
-    public ResponseObject<CartVo> getCartList(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<CartVo> getCartList(HttpServletRequest request) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.getCartList(userDto.getId());
     }
 
@@ -44,8 +55,13 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "add_cart", method = RequestMethod.POST)
-    public ResponseObject<CartVo> addCart(HttpSession session, ShopCartDto shopCartDto) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<CartVo> addCart(HttpServletRequest request, ShopCartDto shopCartDto) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         shopCartDto.setUserId(userDto.getId());
         return shopCartService.addCart(shopCartDto);
     }
@@ -58,8 +74,13 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "update_quantity", method = RequestMethod.PUT)
-    public ResponseObject<CartVo> updateQuantity(HttpSession session, ShopCartDto shopCartDto) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<CartVo> updateQuantity(HttpServletRequest request, ShopCartDto shopCartDto) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         shopCartDto.setUserId(userDto.getId());
         return shopCartService.updateQuantity(shopCartDto);
     }
@@ -72,10 +93,15 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "remove_cart/{productIds}", method = RequestMethod.DELETE)
-    public ResponseObject<CartVo> removeCart(HttpSession session,
+    public ResponseObject<CartVo> removeCart(HttpServletRequest request,
                                              @PathVariable("productIds") String productIds) {
         //TODO 批量删除的规则，可以使用 数组 来接收服务端传递的参数（商品的id），
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.removeCart(userDto.getId(), productIds);
     }
 
@@ -86,8 +112,13 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "select_all", method = RequestMethod.GET)
-    public ResponseObject<CartVo> selectAll(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<CartVo> selectAll(HttpServletRequest request) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.updateSelectOrUnSelect(userDto.getId(), null, Const.Cart.CHECKED);
     }
 
@@ -100,8 +131,13 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "un_select_all", method = RequestMethod.GET)
-    public ResponseObject<CartVo> unSelectAll(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<CartVo> unSelectAll(HttpServletRequest request) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.updateSelectOrUnSelect(userDto.getId(), null, Const.Cart.UN_CHECKED);
     }
 
@@ -114,9 +150,14 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "select/{productId}", method = RequestMethod.GET)
-    public ResponseObject<CartVo> select(HttpSession session,
+    public ResponseObject<CartVo> select(HttpServletRequest request,
                                          @PathVariable("productId") Integer productId) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.updateSelectOrUnSelect(userDto.getId(), productId, Const.Cart.CHECKED);
     }
 
@@ -129,9 +170,14 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "un_select/{productId}", method = RequestMethod.GET)
-    public ResponseObject<CartVo> unSelect(HttpSession session,
+    public ResponseObject<CartVo> unSelect(HttpServletRequest request,
                                            @PathVariable("productId") Integer productId) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.updateSelectOrUnSelect(userDto.getId(), productId, Const.Cart.UN_CHECKED);
     }
 
@@ -143,8 +189,13 @@ public class ShopCartController {
      * @return
      */
     @RequestMapping(value = "get_cart_product_num", method = RequestMethod.GET)
-    public ResponseObject<Integer> getCartProductNum(HttpSession session) {
-        UserDto userDto = (UserDto) session.getAttribute(Const.CURRENT_USER);
+    public ResponseObject<Integer> getCartProductNum(HttpServletRequest request) {
+    	String loginToken=CookieUtil.readLoginToken(request);
+    	if(StringUtils.isEmpty(loginToken)){
+    		return ResponseObject.failStatusMessage("用户未登录，无法获取用户信息");
+    	}
+    	String json=RedisPoolUtil.get(loginToken);
+    	UserDto userDto=JsonUtil.stringToObj(json, UserDto.class);
         return shopCartService.getCartProductCount(userDto.getId());
     }
 }

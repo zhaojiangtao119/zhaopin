@@ -1,6 +1,7 @@
 package com.labelwall.mall.dto;
 
 import com.labelwall.mall.entity.Shop;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Administrator on 2017-12-06.
@@ -13,6 +14,9 @@ public class ShopDto extends Shop {
     private UserDto userDto;
     private Integer serviceId;
     private Integer productId;
+
+    //上传图片
+    private MultipartFile shopImg;
     
 
     public Integer getProductId() {
@@ -61,5 +65,13 @@ public class ShopDto extends Shop {
 
     public void setUserDto(UserDto userDto) {
         this.userDto = userDto;
+    }
+
+    public MultipartFile getShopImg() {
+        return shopImg;
+    }
+
+    public void setShopImg(MultipartFile shopImg) {
+        this.shopImg = shopImg;
     }
 }
