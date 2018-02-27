@@ -23,5 +23,5 @@ public interface ActivityAccountMapper {
                                @Param("jindouCount") Integer jindouCount);
 
     int updateAccountSubJindouNum(@Param("accountId") Long accountId,
-                                  @Param("jindouCount") BigDecimal jindouCount);
+                                  @Param("jindouCount") Integer jindouCount);
 }

@@ -89,6 +89,7 @@ public class ActivityAccountTradeController {
 
     /**
      * 创建收费活动时创建的订单
+     * 加入活动收费活动时创建的订单
      *
      * @param activityAccountOrder
      * @return
@@ -104,10 +105,21 @@ public class ActivityAccountTradeController {
      *
      * @param orderNo
      * @param activityInfo
-     * @return
+     * @return 新建活动的id
      */
     @RequestMapping(value = "pay/{orderNo}", method = RequestMethod.POST)
-    public ResponseObject payOrder(@PathVariable("orderNo") String orderNo, ActivityInfo activityInfo) {
+    public ResponseObject<Integer> payOrder(@PathVariable("orderNo") String orderNo, ActivityInfo activityInfo) {
         return activityAccountOrderService.modifyPayActivityOrder(orderNo, activityInfo);
+    }
+
+    /**
+     * 加入收费活动支付成功后的操作:1.修改订单状态，2.修改账户余额，3.创建trade_histroy,4.activity_join新建记录，
+     *
+     * @param accountOrder
+     * @return 新建活动的id
+     */
+    @RequestMapping(value = "pay/join", method = RequestMethod.POST)
+    public ResponseObject<Integer> payJoinOrder(ActivityAccountOrder accountOrder) {
+        return activityAccountOrderService.modifyPayJoinActivityOrder(accountOrder);
     }
 }

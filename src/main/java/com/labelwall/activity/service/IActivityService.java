@@ -184,7 +184,6 @@ public interface IActivityService {
     ResponseObject updatePosterUrl(Integer userId, Integer activityId, String posterUrl);
 
 
-
     /**
      * 创建收费活动验证活动基本信息
      *
@@ -200,4 +199,14 @@ public interface IActivityService {
      * @return
      */
     ResponseObject<ActivityInfo> createChargeActivity(ActivityInfo activityInfo);
+
+    /**
+     * 加入收费活动时验证用户时间与活动时间是否冲突
+     *
+     * @param activityId
+     * @param userId
+     * @return
+     */
+    ResponseObject validateActivityInfoJoin(Integer activityId, Integer userId);
+
 }

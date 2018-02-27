@@ -11,6 +11,8 @@ import com.google.common.collect.Lists;
 import com.labelwall.activity.dao.ActivityAccountAddMapper;
 import com.labelwall.activity.dao.ActivityAccountOrderMapper;
 import com.labelwall.activity.dao.ActivityAccountTradeHistoryMapper;
+import com.labelwall.activity.dao.ActivityMapper;
+import com.labelwall.activity.dto.ActivityDto;
 import com.labelwall.activity.entity.*;
 import com.labelwall.activity.service.IActivityAccountOrderService;
 import com.labelwall.activity.service.IActivityAccountService;
@@ -45,6 +47,8 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
     private ActivityAccountTradeHistoryMapper tradeHistoryMapper;
     @Autowired
     private IActivityService activityService;
+    @Autowired
+    private ActivityMapper activityDao;
 
 
     @Override
@@ -344,18 +348,18 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
     }
 
     @Override
-    public ResponseObject modifyPayActivityOrder(String orderNo, ActivityInfo activityInfo) {
+    public ResponseObject<Integer> modifyPayActivityOrder(String orderNo, ActivityInfo activityInfo) {
         if (StringUtils.isBlank(orderNo) || activityInfo == null) {
             return ResponseObject.
                     failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
         }
         //1.创建活动
-        ResponseObject<ActivityInfo> responseObject = activityService.createChargeActivity(activityInfo);
+        ResponseObject responseObject = activityService.createChargeActivity(activityInfo);
         if (!responseObject.isSuccess()) {
             return responseObject;
         }
         //2.修改订单的状态，acitivityId
-        activityInfo = responseObject.getData();
+        activityInfo = (ActivityInfo) responseObject.getData();
         Integer activityId = activityInfo.getId();
         ActivityAccountOrder acitivityOrder = new ActivityAccountOrder();
         acitivityOrder.setActivityId(activityId);
@@ -363,23 +367,66 @@ public class ActivityAccountOrderServiceImpl implements IActivityAccountOrderSer
         acitivityOrder.setStatus(1);//订单已支付
         activityAccountOrderMapper.updateSelectiveOrder(acitivityOrder);
         //3.修改用户账户金豆余额
-        ResponseObject<ActivityAccountVo> activityAccountResponse =
+        ResponseObject activityAccountResponse =
                 activityAccountService.getUserAccount(activityInfo.getUserId());
         if (!activityAccountResponse.isSuccess()) {
             return activityAccountResponse;
         }
-        ActivityAccountVo activityAccountVo = activityAccountResponse.getData();
-        activityAccountService.updateAccountSubJindouNum(activityAccountVo.getId(), activityInfo.getAmount());
+        ActivityAccountVo activityAccountVo = (ActivityAccountVo) activityAccountResponse.getData();
+        activityAccountService.updateAccountSubJindouNum(activityAccountVo.getId(),
+                Integer.valueOf(String.valueOf(activityInfo.getAmount())));
         //4.添加交易记录,accountId,tradeType(1),jindouNum,orderId,createTime,userId,orderType(1)
         ActivityAccountTradeHistory tradeHistory = new ActivityAccountTradeHistory();
         tradeHistory.setAccountId(Integer.valueOf(String.valueOf(activityAccountVo.getId())));
-        tradeHistory.setTradeType(1);
+        tradeHistory.setTradeType(-1);
         tradeHistory.setJindouNum(Integer.valueOf(String.valueOf(activityInfo.getAmount())));
         tradeHistory.setUserId(activityInfo.getUserId());
         tradeHistory.setOrderType(1);
         acitivityOrder = activityAccountOrderMapper.getActivityOrderByOrderNo(orderNo);
         tradeHistory.setOrderId(acitivityOrder.getId());
         tradeHistoryMapper.insertSelective(tradeHistory);
+        //5.添加记录到activity_start
+        activityDao.createStartActivity(activityInfo.getId(), activityInfo.getUserId());
+        return ResponseObject.successStautsData(activityInfo.getId());
+    }
+
+    @Override
+    public ResponseObject<Integer> modifyPayJoinActivityOrder(ActivityAccountOrder accountOrder) {
+        if (accountOrder.getUserId() == null ||
+                accountOrder.getOrderNo() == null ||
+                accountOrder.getActivityId() == null ||
+                accountOrder.getOrderPrice() == null) {
+            return ResponseObject.
+                    failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //1.修改订单状态
+        ActivityAccountOrder updateOrderStatus = new ActivityAccountOrder();
+        updateOrderStatus.setActivityId(accountOrder.getActivityId());
+        updateOrderStatus.setOrderNo(accountOrder.getOrderNo());
+        updateOrderStatus.setStatus(1);//订单已支付
+        activityAccountOrderMapper.updateSelectiveOrder(updateOrderStatus);
+        //2.修改账户余额
+        ResponseObject activityAccountResponse =
+                activityAccountService.getUserAccount(accountOrder.getUserId());
+        if (!activityAccountResponse.isSuccess()) {
+            return activityAccountResponse;
+        }
+        ActivityAccountVo activityAccountVo = (ActivityAccountVo) activityAccountResponse.getData();
+        activityAccountService.updateAccountSubJindouNum(activityAccountVo.getId(),accountOrder.getOrderPrice());
+        //3.创建trade_history
+        ActivityAccountTradeHistory tradeHistory = new ActivityAccountTradeHistory();
+        tradeHistory.setAccountId(Integer.valueOf(String.valueOf(activityAccountVo.getId())));
+        tradeHistory.setTradeType(-1);
+        tradeHistory.setJindouNum(Integer.valueOf(String.valueOf(accountOrder.getOrderPrice())));
+        tradeHistory.setUserId(accountOrder.getUserId());
+        tradeHistory.setOrderType(1);
+        tradeHistory.setOrderId(accountOrder.getId());
+        tradeHistoryMapper.insertSelective(tradeHistory);
+        //4.创建activity_join记录
+        ActivityJoin activityJoin = new ActivityJoin();
+        activityJoin.setUserId(accountOrder.getUserId());
+        activityJoin.setActivityId(accountOrder.getActivityId());
+        activityDao.saveJoinActivity(activityJoin);
         return ResponseObject.successStatus();
     }
 }

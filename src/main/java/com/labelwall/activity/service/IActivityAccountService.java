@@ -29,10 +29,11 @@ public interface IActivityAccountService {
 
     /**
      * 创建活动时消耗金豆数量
+     * 加入活动时消耗的数量
      *
      * @param id
      * @param amount
      * @return
      */
-    int updateAccountSubJindouNum(Long id, BigDecimal amount);
+    int updateAccountSubJindouNum(Long id, Integer amount);
 }

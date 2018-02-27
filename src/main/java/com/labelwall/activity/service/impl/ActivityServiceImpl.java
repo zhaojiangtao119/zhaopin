@@ -671,4 +671,19 @@ public class ActivityServiceImpl implements IActivityService {
         }
         return ResponseObject.failStatusMessage("创建失败");
     }
+
+    @Override
+    public ResponseObject validateActivityInfoJoin(Integer activityId, Integer userId) {
+        if (activityId == null || userId == null) {
+            return ResponseObject.failStatusMessage(ResponseStatus.ERROR_PARAM.getValue());
+        }
+        //TODO  验证加入活动的人数
+        ActivityInfo activityInfo = activityDao.selectByPrimaryKey(activityId);
+        //验证当前用户的关联事件是否存在时间上的冲突
+        ResponseObject validateUserTime = vaildateUserTime(activityInfo, userId);
+        if (!validateUserTime.isSuccess()) {
+            return validateUserTime;
+        }
+        return ResponseObject.successStatus();
+    }
 }

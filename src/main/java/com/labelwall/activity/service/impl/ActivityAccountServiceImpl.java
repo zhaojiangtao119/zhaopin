@@ -41,7 +41,7 @@ public class ActivityAccountServiceImpl implements IActivityAccountService {
     }
 
     @Override
-    public int updateAccountSubJindouNum(Long accountId, BigDecimal jindouCount) {
+    public int updateAccountSubJindouNum(Long accountId, Integer jindouCount) {
         return activityAccountMapper.updateAccountSubJindouNum(accountId, jindouCount);
     }
 }

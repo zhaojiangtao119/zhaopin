@@ -68,6 +68,7 @@ public interface IActivityAccountOrderService {
 
     /**
      * 创建活动时生成的订单
+     * 加入活动是生成的订单
      *
      * @param activityAccountOrder
      * @return
@@ -81,5 +82,13 @@ public interface IActivityAccountOrderService {
      * @param activityInfo
      * @return
      */
-    ResponseObject modifyPayActivityOrder(String orderNo, ActivityInfo activityInfo);
+    ResponseObject<Integer> modifyPayActivityOrder(String orderNo, ActivityInfo activityInfo);
+
+    /**
+     * 支付加入活动订单加入收费活动
+     *
+     * @param accountOrder
+     * @return
+     */
+    ResponseObject<Integer> modifyPayJoinActivityOrder(ActivityAccountOrder accountOrder);
 }

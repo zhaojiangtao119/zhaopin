@@ -10,7 +10,7 @@ public class ActivityAccountOrder extends BaseBean {
     private Integer activityId;
     private String orderNo;
     private String typeDesc;//订单类型描述
-    private Double orderPrice;//订单价格
+    private Integer orderPrice;//订单价格
     private String orderInfo;//订单信息
     private String createTime;
     private Integer type;//订单类型
@@ -56,11 +56,11 @@ public class ActivityAccountOrder extends BaseBean {
         this.typeDesc = typeDesc;
     }
 
-    public Double getOrderPrice() {
+    public Integer getOrderPrice() {
         return orderPrice;
     }
 
-    public void setOrderPrice(Double orderPrice) {
+    public void setOrderPrice(Integer orderPrice) {
         this.orderPrice = orderPrice;
     }
 

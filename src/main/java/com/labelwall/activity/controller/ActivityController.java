@@ -207,4 +207,16 @@ public class ActivityController {
     public ResponseObject validateActivityInfo(ActivityInfo activityInfo) {
         return activityService.validateActivityInfo(activityInfo);
     }
+
+    /**
+     * 加入活动时判断用户的时间与加入活动的时间是否存在冲突
+     *
+     * @param activityId
+     * @param userId
+     * @return
+     */
+    @RequestMapping(value = "validate/join", method = RequestMethod.POST)
+    public ResponseObject validateActivityInfoJoin(Integer activityId, Integer userId) {
+        return activityService.validateActivityInfoJoin(activityId, userId);
+    }
 }

@@ -28,7 +28,8 @@
         WHERE create_time <![CDATA[>]]> #{todayStr}
     </select>
 
-    <insert id="createAccountOrder" parameterType="com.labelwall.activity.entity.ActivityAccountOrder">
+    <insert id="createAccountOrder" parameterType="com.labelwall.activity.entity.ActivityAccountOrder"
+            useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `well_activity_order`
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="userId != null">
