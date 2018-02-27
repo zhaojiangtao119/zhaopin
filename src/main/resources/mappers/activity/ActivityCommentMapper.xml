@@ -144,8 +144,8 @@
     <select id="getCommentMapper" parameterType="integer" resultMap="ActivityComment">
         SELECT
         <include refid="Base_Column_List"/>,
-        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
-        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%S') update_time_str
         FROM well_activity_comment
         WHERE activity_id = #{activityId}
     </select>

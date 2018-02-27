@@ -50,7 +50,7 @@
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
-                DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+                DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d %H:%i:%S') update_time_str,
               wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
         WHERE wtp.user_id = wu.id AND wtp.id = #{id,jdbcType=INTEGER}
@@ -230,8 +230,8 @@
     <select id="getTopicPost" resultMap="BaseResultMap" parameterType="com.labelwall.mall.dto.TopicPostDto">
         SELECT
         wtp.id,wtp.title,wtp.content,wtp.user_id,wtp.school_id,wtp.reply_num,wtp.image,wtp.topic_id,wtp.like_num,wtp.dislike_num,wtp.create_time,wtp.update_time,
-        DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d
-        %H:%I:%S') update_time_str,
+        DATE_FORMAT(wtp.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(wtp.update_time,'%Y-%m-%d
+        %H:%i:%S') update_time_str,
         wu.id userId, wu.username, wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_topic_post wtp,wall_user wu
         <where>

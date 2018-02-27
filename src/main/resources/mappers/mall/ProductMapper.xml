@@ -28,7 +28,7 @@
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT wp.id,wp.category_id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
-        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%i:%S') update_time_str,
           ws.name shopName,ws.level
         FROM wall_product wp,wall_shop ws
         WHERE wp.shop_id = ws.id AND wp.id = #{id,jdbcType=INTEGER}
@@ -195,7 +195,7 @@
     <select id="getProductList" parameterType="map" resultMap="BaseResultMap">
         SELECT
         wp.id,wp.category_id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
-        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S')
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%i:%S')
         update_time_str,
         ws.name shopName,ws.level
         FROM wall_product wp,wall_shop ws
@@ -231,7 +231,7 @@
     <select id="getShopProductList" parameterType="com.labelwall.mall.dto.ProductDto" resultMap="BaseResultMap">
         SELECT
         wp.id,wp.category_id,wp.name,wp.subtitle,wp.main_image,wp.sub_image,wp.detail,wp.price,wp.stock,wp.status,wp.shop_id,wp.create_time,wp.update_time,
-        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%I:%S')
+        DATE_FORMAT(wp.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(wp.update_time,'%Y-%m-%d %H:%i:%S')
         update_time_str,
         ws.name shopName,ws.level
         FROM wall_product wp,wall_shop ws

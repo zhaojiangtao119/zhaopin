@@ -28,8 +28,8 @@
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="map">
         select
         <include refid="Base_Column_List"/>,
-        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
-        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%S') update_time_str
         from wall_shopping
         where id = #{id,jdbcType=INTEGER} and user_id = #{userId}
     </select>
@@ -182,8 +182,8 @@
     <select id="getShoppingByUserId" resultMap="BaseResultMap" parameterType="int">
         SELECT
         <include refid="Base_Column_List"/>,
-        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
-        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%S') update_time_str
         FROM wall_shopping
         WHERE user_id = #{userId}
         ORDER BY selected DESC
@@ -201,8 +201,8 @@
     <select id="getShoppingByUserIdSelected" parameterType="map" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>,
-        DATE_FORMAT(create_time,'%Y-%m-%d %H:%I:%S') create_time_str,
-        DATE_FORMAT(update_time,'%Y-%m-%d %H:%I:%S') update_time_str
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%S') create_time_str,
+        DATE_FORMAT(update_time,'%Y-%m-%d %H:%i:%S') update_time_str
         FROM wall_shopping
         WHERE user_id = #{userId} AND selected = #{selected}
     </select>

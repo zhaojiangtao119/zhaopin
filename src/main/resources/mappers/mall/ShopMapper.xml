@@ -48,7 +48,7 @@
     
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select  ws.id,ws.user_id,ws.name,ws.description,ws.product_category_id,ws.status,ws.level,ws.create_time,ws.update_time,
-            DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%I:%S') update_time_str,
+            DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%i:%S') update_time_str,
             ws.shopType,ws.typeName,ws.locationType,ws.locationName,ws.schoolId,ws.schoolName,
             ws.tradeType,ws.phone,ws.topImgURL,
             wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
@@ -208,7 +208,7 @@
     <select id="getShopList" parameterType="com.labelwall.mall.dto.ShopDto" resultMap="BaseResultMap">
         SELECT
         ws.id,ws.user_id,ws.name,ws.description,ws.product_category_id,ws.status,ws.level,ws.create_time,ws.update_time,
-        DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%I:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%I:%S')
+        DATE_FORMAT(ws.create_time,'%Y-%m-%d %H:%i:%S') create_time_str,DATE_FORMAT(ws.update_time,'%Y-%m-%d %H:%i:%S')
         update_time_str,ws.shopType,ws.typeName,ws.locationType,ws.locationName,ws.schoolId,ws.schoolName,ws.tradeType,ws.phone,ws.topImgURL,
         wu.id userId,wu.username,wu.head,wu.school_name,wu.location_province,wu.location_city
         FROM wall_shop ws,wall_user wu
@@ -262,6 +262,6 @@
         select shop_id from wall_product where id=#{values}
     </select>
     <select id="getAllTradeType" resultType="TradeType">
-        select id,name,DATE_FORMAT(createTime,'%Y-%m-%d %H:%I:%S') createTime,DATE_FORMAT(updateTime,'%Y-%m-%d %H:%I:%S') updateTime from wall_trade_shoptype
+        select id,name,DATE_FORMAT(createTime,'%Y-%m-%d %H:%i:%S') createTime,DATE_FORMAT(updateTime,'%Y-%m-%d %H:%i:%S') updateTime from wall_trade_shoptype
     </select>
 </mapper>

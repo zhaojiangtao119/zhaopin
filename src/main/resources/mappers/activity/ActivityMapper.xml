@@ -29,12 +29,12 @@
         <result column="user_id" property="userId"/>
     </resultMap>
     <sql id="BaseColumn">
-        wai.id,wai.theme,wai.content,wai.free,DATE_FORMAT(wai.creattime,'%Y-%m-%d %H:%I:%S') creattime
-        ,DATE_FORMAT(wai.starttime,'%Y-%m-%d %H:%I:%S') starttime,
-        DATE_FORMAT(wai.endtime,'%Y-%m-%d %H:%I:%S') endtime,wai.num_limt,wai.location,
+        wai.id,wai.theme,wai.content,wai.free,DATE_FORMAT(wai.creattime,'%Y-%m-%d %H:%i:%S') creattime
+        ,DATE_FORMAT(wai.starttime,'%Y-%m-%d %H:%i:%S') starttime,
+        DATE_FORMAT(wai.endtime,'%Y-%m-%d %H:%i:%S') endtime,wai.num_limt,wai.location,
         wai.status,wai.amount,wai.schoolId,wai.style,wai.`type`,wai.posterURL,wai.customContent,
-        DATE_FORMAT(wai.detailStartTime,'%Y-%m-%d %H:%I:%S') detailStartTime,
-        DATE_FORMAT(wai.detailEndTime,'%Y-%m-%d %H:%I:%S') detailEndTime,
+        DATE_FORMAT(wai.detailStartTime,'%Y-%m-%d %H:%i:%S') detailStartTime,
+        DATE_FORMAT(wai.detailEndTime,'%Y-%m-%d %H:%i:%S') detailEndTime,
         wai.detailContent,wai.city,wai.county,wai.user_id
     </sql>
     <!--<resultMap type="com.lx.www.bean.School" id="school">
